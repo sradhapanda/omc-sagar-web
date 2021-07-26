@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<Script>
+$( document ).ready(function() {
+   var myVal = $("#myVal").val(); 
+   //alert(myVal)
+   if(myVal=='1'){
+	   $("#yes").prop("checked", true); 
+   }else{
+	   $("#no").prop("checked", true); 
+   }
+});
+</Script>
+</head>
+
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<!-- <li><a href="add-section-master">Upload Documents</a></li> -->
+				</ol>
+			</div>
+		</div>
+		<div class="card-title">
+			<h4>Send Mail</h4>
+		</div>
+		<div class="container-fluid">
+
+			<div class="card">
+			<form action="#" th:action="@{mail}"
+							th:object="${mail}" autocomplete="off" method="post"
+							onsubmit="return validateForm();">
+
+				<div class="row" >
+				<input type="hidden" id="myVal" th:value="${session.MAILSTATUS}">
+					<label><input type="radio" th:field="*{mailStatus}" id="yes" th:value="1"  > On</label>
+						<label><input type="radio" th:field="*{mailStatus}" id="no"
+						th:value="0"> Off</label>
+
+
+
+				</div>
+				<div class="col-md-12">
+						<div class="form-group">
+							<input type="submit" value="Submit" class="btn btn-success" /> <input
+								type="reset" value="Cancel" class="btn btn-warning"
+								onclick="window.location.reload();" />
+						</div>
+					</div>
+				</form>
+			</div>
+
+		</div>
+
+
+		<!-- Modal End-->
+		<!-- /# row -->
+	</div>
+</div>
+</html>

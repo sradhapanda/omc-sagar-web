@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script type="text/javascript">
+	function validateForm() {
+		if (!blankValidation("tProcessName", "TextField",
+				"Process Name can not be left blank"))
+			return false;
+		if (!checkSpecialCharacterFirst("tProcessName", " Invalid Process Name"))
+			return false;
+		if (!blankValidation("tProcessDescription", "TextField",
+				"Process Description can not be left blank"))
+			return false;
+
+		if (!blankValidation("tProcessStatus", "SelectBox",
+				"Status can not be left blank"))
+			return false;
+
+	}
+</script>
+
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="index.html">Home</a></li>
+					<li class="active"><span>Add Process </span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Add Process</h4>
+			</div>
+			<div class="container-fluid">
+
+				<div class="card">
+					<div class="card-body">
+						<div class="basic-elements">
+							<form action="#" th:action="@{add-process-master}"
+								th:object="${processMaster}" method="post"
+								onsubmit="return validateForm();" autocomplete="off">
+								<div class="row">
+									<span style="color: red;" id="errorMsg"> </span>
+									<div th:if="${message != null}">
+										<span th:text="${message}" style="color: red;"> </span>
+									</div>
+								</div>
+								<input type="hidden" th:field="*{tProcess}" />
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Process Name</label> <input type="text"
+												class="form-control" name="tProcessName" value=""
+												th:field="*{tProcessName}">
+										</div>
+
+										<div class="form-group">
+											<label>Process Status</label> <select class="form-control"
+												th:field="*{tProcessStatus}">
+												<option th:value="null">Select</option>
+												<option th:value="true">Active</option>
+												<option th:value="false">Inactive</option>
+											</select>
+										</div>
+
+									</div>
+									<div class="col-lg-6">
+
+										<div class="form-group">
+											<label>Process Description</label>
+
+											<textarea name="tProcessDescription" cols="" rows=""
+												th:field="*{tProcessDescription}"
+												class="form-control textarea"></textarea>
+										</div>
+									</div>
+									<div class="col-md-12">
+									<div class="form-group">
+										<input type="submit" value="Submit" class="btn btn-success" />
+										<input type="reset" value="Cancel" class="btn btn-warning"
+											onclick="window.location.reload();" />
+									</div>
+									</div>
+								</div>
+
+							</form>
+						</div>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</html>

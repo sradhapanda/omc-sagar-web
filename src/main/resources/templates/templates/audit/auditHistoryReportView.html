@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script src="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<style type="text/css">
+textarea {
+    overflow: auto;
+    resize: vertical;
+    width: 350px;
+}
+
+.zoombox3 {
+    position: relative;
+    background: #f00;
+    height: 28px;
+    width: 18px;
+    color: #fff;
+    padding: 5px;
+    top: -35px;
+    right: -331px;
+    border-radius: 2px;
+}
+</style>
+
+<script type="text/javascript">
+
+	$(function () {  
+		CKEDITOR.replace('commentNote')
+		CKEDITOR.replace('viewQues')
+	})
+	 
+	$(document).ready(function() {
+		getAuditNo();
+		
+		$("#param5").datetimepicker({
+			format : 'd-m-Y',
+		//	minDate:new Date(),
+			closeOnDateSelect : true,
+			timepicker : false,
+		})
+		$("#param6").datetimepicker({
+			format : 'd-m-Y',
+			//minDate:new Date(),
+			closeOnDateSelect : true,
+			timepicker : false,
+		})
+		$('#tblTheme').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-audit-history-ThroughAjax',
+				'data' : function(d) {
+					d.param1 = $('#param1').val();
+					d.param2 = $('#param2').val();
+					d.param7 = $('#param7').val();
+					d.param4 = $('#param4').val();
+					d.param5 = $('#param5').val();
+					d.param6 = $('#param6').val();
+				}
+			},
+			'dataSrc' : "",
+			'columns' : [ {
+				'data' : 'auditInitiate'
+			}, {
+				'data' : 'auditType'
+			}, {
+				'data' : 'financialYear'
+			}, {
+				'data' : 'status'
+			}, {
+				'data' : 'initiatedDate'
+			/* }, {
+				'data' : 'summary' */
+		/* 	}, {
+				'data' : 'document' */
+			
+			} ]
+		});
+		});
+	function searchData() {
+		$('#tblTheme').DataTable().draw();
+	}	
+		
+	function getAuditNo() {
+		var currentVal = $("#param1").val();
+		if(currentVal==='ADTM005'){
+			$("#quarter").show();
+		}
+		if (currentVal) {
+			$.ajax({
+				type : 'POST',
+				url : 'view-initiated-audit-document-report',
+				contentType : false,
+				data : currentVal,
+				success : function(response) {
+					$("#param2").empty();
+					$("#param2").append(
+							"<option value>Select</option>");
+					for (var i = 0; i < response.body.length; i++) {
+						var option = $("<option></option>");
+						$(option).val(response.body[i].key);
+						$(option).html(response.body[i].key);
+						$("#param2").append(option);
+					}
+				},
+				error : function(data) {
+					console.log(data)
+				}
+			});
+		} else {
+			$("#param2").empty();
+			$("#param2").append(
+			"<option value>Select</option>");
+		}
+	}
+
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<!-- <li><a th:href="@{/audit/initiate-audit}"> Audit Details
+						</a></li> -->
+					<li class="active"><span>Audit Details</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Audit Details</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+					<div id="demo" >
+						<div class="search-field">
+								<div class="row">
+						<div class="col-lg-3">
+								<label>Audit Type</label> 
+									 <select  class="form-control"
+												id="param1">
+												<option value="">Select</option>
+												<option th:each="c,iter:${auditTypeList}"
+													th:value="${c.key}" th:text="${c.name}" th:selected="${c.key==auditType}"></option>
+											</select>
+							</div>
+							<div class="col-lg-2">
+								<label>Audit No</label> 
+									<select  class="form-control"
+												id="param2">
+												<option value="">Select</option>
+												<option th:each="c,iter:${auditNoList}"
+													th:value="${c.key}" th:text="${c.key}"></option>
+											</select>
+							</div>
+								<div class="col-lg-2">
+									<label>Financial Year</label> <select class="form-control"
+										id="param7">
+										<option value="">Select</option>
+										<option th:each="c,iter:${financialYearList}"
+											th:value="${c.key}" th:text="${c.name}"></option>
+									</select>
+								</div>
+								<div class="col-lg-2">
+								<label>Department</label>
+									<select  class="form-control"
+												id="param4">
+												<option value="">Select</option>
+												<option th:each="c,iter:${departmentList}"
+													th:value="${c.key}" th:text="${c.name}"></option>
+											</select>
+							</div>
+							<div class="col-lg-2">
+								<label>Start Date</label>
+									<input class="form-control"
+									type="text" placeholder="Enter Date" name="" id="param5">
+							</div>
+							<div class="col-lg-2">
+								<label>End Date</label>
+									<input class="form-control"
+									type="text" placeholder="Enter Date" name="" id="param6">
+							</div>
+							
+							<div class="col-md-2 mrt_10">
+								<div class="form-group filtersearch">
+									<button class="btn btn-info" onclick="searchData()">Search</button>
+								</div>
+							</div>
+						</div>
+
+
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="table-responsive" style="width: 100%;">
+							<table id="tblTheme" class="table table-bordered">
+								<thead>
+									<tr>
+										<th>Initiated Audit</th>
+										<th>Audit Type</th>
+										<th>Financial Year</th>
+										<th>Status</th>
+										<th>Initiated Date</th>
+										<!-- <th>Summary</th> -->
+									<!-- 	<th>Documents</th> -->
+										<!-- <th align="center">Action</th> -->
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div style="clear: both;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content" style="width: 750px;">
+					<div class="modal-header">
+						<h4 class="modal-title">View Initiate Audit</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<table style="width: 100%; border: 0;" id="table1">
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="details" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">Notes</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					
+					<div class="modal-body">
+						<input type="hidden" id="id" />
+						<input type="hidden" id="auditType" />
+						<input type="hidden" id="audit" />
+						<label>Upload Document :</label> <input type="file"
+							id="fileUploadReq" style="display: block;"
+							onchange="saveFileReq()">
+						<div id="uploadedImgDivReq"></div>
+						
+							<div class="form-group">
+							<label>Comment :</label>
+							<div class="box-body pad">
+									
+								<textarea id="commentNote" class="form-control textarea" name="commentNote" rows="10" cols="80">
+								
+								</textarea>
+									
+								</div>
+						</div>
+						
+					</div>
+					
+					<div class="modal-footer">		
+						<button type="button" class="btn btn-danger" id="saveNotes">Save</button>				
+						<button type="button" class="btn btn-danger" onclick="sendDetails();">Send</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+			<div id="viewDetails" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">View Notes</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="id" />
+						<div class="modal-body">
+							<table width="100%" border="0" id="viewNotes">
+							</table>
+						
+					
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+	</div>
+</div>
+</html>

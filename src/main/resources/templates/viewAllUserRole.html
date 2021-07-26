@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>UserRole</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- Styles -->
+<!-- font css -->
+<link href="assets/css/lib/font-awesome.min.css" rel="stylesheet">
+<link href="assets/css/lib/themify-icons.css" rel="stylesheet">
+<!-- for sidebar css -->
+<link href="assets/css/lib/menubar/sidebar.css" rel="stylesheet">
+<!-- bootstrap css -->
+<link href="assets/css/lib/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/style.css" rel="stylesheet">
+<!-- bootstrap datatable  -->
+<link href="datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+</head>
+<body>
+	<h1 >View UserRole with Ajax</h1>
+	<div>
+		<label>UserRole</label><input type="text" id="param1" value="" />
+		<label>Department</label><input type="text" id="param2" value="" />
+		<input  type="button" class="btn btn-info" value="Search" onclick="searchData()" />
+	</div>
+	<table class="table table-bordered" id="example">
+		<thead>
+			<tr>
+				<th>UserRoleName</th>
+				<th>Department</th>
+				<th>Description</th>
+				<th>Status</th>
+				<th>Action</th>
+				<th>Delete</th>
+			</tr>
+			
+		</thead>
+		
+	</table>
+
+
+	<script src="assets/js/lib/jquery.min.js"></script>
+	<script src="assets/js/lib/jquery.nanoscroller.min.js"></script>
+	<!-- Data Tables-->
+	<!-- nano scroller -->
+	<script src="assets/js/lib/menubar/sidebar.js"></script>
+	<!-- sidebar -->
+	<script src="assets/js/lib/bootstrap.min.js"></script>
+	<script src="assets/js/scripts.js"></script>
+
+	<!-- Page level plugins -->
+	<script src="datatables/jquery.dataTables.min.js"></script>
+	<script src="datatables/dataTables.bootstrap4.min.js"></script>
+	<script type="text/javascript">
+		
+			$('#example').DataTable({
+				'processing' : true,
+				'serverSide' : true,
+				'searching' : false,
+				'ordering' : false,
+				"ajax" : {
+					'url' : 'viewUserRoleThroughAjax',
+					'data' : function(d) {
+						d.param1 = $('#param1').val();
+						d.param2 = $('#param2').val();
+					
+					}
+				},
+				'dataSrc' : "",
+				'columns' : [
+					{'data' : 'userRoleName'},
+					{'data' : 'department'},
+					{'data' : 'description'},
+					{'data' : 'activity'},
+					{'data' : 'action'},
+					{'data' : 'delete'}
+				]
+			});
+		
+		function searchData() {
+			$('#example').DataTable().draw();
+		}	
+	</script>
+	<!-- Page level custom scripts -->
+	<script src="assets/js/datatables-demo.js"></script>
+
+</body>
+</html>

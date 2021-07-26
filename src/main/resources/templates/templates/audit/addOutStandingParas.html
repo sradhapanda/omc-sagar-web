@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+
+<head>
+
+
+<script>
+function validateForm(){
+	
+	if (!blankValidation("irs", "TextArea","Please Select IRS"))
+		return false;
+	if (!blankValidation("paras", "TextArea","Please Select PARAS"))
+			return false;
+	if (!blankValidation("moneyValue", "TextArea","Please Select Money Value"))
+				return false;
+}
+
+ /*
+ To chaeck onlyNumeric **ON KYE UP****************
+  */
+  function checkNum(fieldId) {
+ var tempVal = $("#" + fieldId).val().replace(/[^0-9\.]/g, '');
+ $("#" + fieldId).val(tempVal);
+} 
+</script>
+
+
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<!-- <li class="active"><span>Finance</span></li> -->
+				</ol>
+			</div>
+			<div class="col-md-12">
+				<!--Alert Box-->
+				<div class="alert alert-success alert-dismissible"
+					style="display: none;">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<strong>Success!</strong> Indicates a successful or positive
+					action.
+				</div>
+				<div class="alert alert-danger alert-dismissible"
+					style="display: none;">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<strong>Success!</strong> Indicates a successful or positive
+					action.
+				</div>
+				<div class="alert alert-warning alert-dismissible"
+					style="display: none;">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<strong>Success!</strong> Indicates a successful or positive
+					action.
+				</div>
+			</div>
+			<div class="card-title">
+				<h4>Out Standing Paras</h4>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<div class="basic-elements">
+						<!--  -->
+						<form action="#" th:action="@{add-outstanding-paras}"
+							th:object="${paras}" autocomplete="off" method="post"
+							onsubmit="return validateForm();">
+							<div class="row">
+								<span style="color: red;" id="errorMsg"></span>
+								<div th:if="${message != null}">
+									<span th:text="${message}" style="color: red;"></span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-6">
+
+									<input type="hidden" th:field="*{id}" />
+									<div class="form-group">
+										
+										<label>Financial Year</label> <select class="form-control"
+											th:field="*{year}">
+											<option th:value="null">--Select Year--</option>
+											<option th:each="c:${financialYearList}" th:value='${c.key}'
+												th:text="${c.name}"></option>
+										</select>
+										</div>
+									<div class="form-group">
+									<label>IRs</label> <input type="text" class="form-control"
+											th:field="*{irs}" onkeyup="checkNum('irs')" name=""
+											value="">
+									</div>
+									
+									<div class="form-group">
+										<label>Paras</label> <input class="form-control"
+											th:field="*{paras}" onkeyup="checkNum('paras')">
+										
+									</div>
+									
+									<div class="form-group">
+										<label>Money Value</label>
+										<input type="text"  th:field="*{moneyValue}"
+											class="form-control " onkeyup="checkNum('moneyValue')">
+									</div>
+									</div>
+									<div class="col-lg-12">
+									<div class="form-group">
+										<input type="submit" value="Submit" class="btn btn-success" />
+										<input type="reset" value="Cancel" class="btn btn-warning"
+											onclick="window.location.reload();" />
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div style="clear: both;"></div>
+		</div>
+
+	</div>
+</div>
+</body>
+</html>

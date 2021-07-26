@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script>
+	//Deleting the employee
+	
+	const ipAPI = 'https://api.ipify.org?format=json'
+	function deleteemployee(id){
+	 //var data = id.split(",");
+			swal.fire({
+			title	: "Are you sure want to Delete?",
+			text	: "Once Deleted,Can't revert back !",
+			type : "warning",
+	
+			showCancelButton	: true,
+			confirmButtonColor	: "#DD6BB5",
+			confirmButtonText	:"Delete",
+			showLoaderOnConfirm	: true,
+			reverseButtons : true,
+			preConfirm: () => {
+				return fetch(ipAPI)
+				.then(response => response.json())
+				.then(data => Swal.insertQueueStep(data.ip))
+				.catch(() => {
+				Swal.insertQueueStep({
+					type: 'error',
+					title: 'Unable to get your public IP'
+			, })
+			})
+		  } 
+		}).then((result) => {
+		if(result.value){
+			$.ajax({
+				type	: "GET",
+				url : "/employee/view-employee-delete?id=" +id,
+				dataType	: "json",
+				contentType	: "application/json",
+				data	: JSON.stringify(id),
+				success	: function(response){
+					console.log(response);
+					if(response.message=="success"){
+						
+						swal({
+							title	: "Data Deleted Successfully.",
+							type: "success",
+					}).then(function(){
+						location.reload(); 
+					})
+					}else{
+						swal({
+							title:response.code,
+							text: response.message,
+							type:"warning"
+						})
+					}
+			},error	: function(data){
+				console.log(data);	
+			}
+		}) //ajax ends
+	  }
+	 })//swal function block ends
+	}
+</script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+		$('#tblTheme').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-employee-ThroughAjax',
+				'data' : function(d) {
+					d.param1 = $('#param1').val();
+					d.param2 = $('#param2').val();
+				}
+			},
+			'dataSrc' : "",
+			'columns' : [ {
+				'data' : 'employeeNo'
+			}, {
+				'data' : 'employeeFname'
+			},  {
+				'data' : 'employeePersonalEmail'
+			}, {
+				'data' : 'employeeTerminateDate'
+			}, {
+				'data' : 'employeeDepartment'
+			}, {
+				'data' : 'statusName'
+			}, {
+				'data' : 'action'
+			} ]
+		});
+		
+		$("#terminationDate").datetimepicker({
+			format : 'd-m-Y',
+			closeOnDateSelect : true,
+			timepicker : false,
+		})
+		
+		$("#add").click(function (){
+			var date = $("#terminationDate").val();
+			if(date == "" || date == null) {
+				swal({
+		        	title: "Enter Termination Date",
+					type: "warning",
+		        })
+			} else {
+				var id = $("#employeeNo").val();
+	    		
+	    		obj = {};
+	    		obj.key = id;
+	    		obj.name = date;
+	    		console.log(obj)
+	    		$.ajax({
+	    			type : "POST",
+	    			url : "view-employee-add-termination-date",
+	    			dataType : 'json',
+	    			contentType : 'application/json',
+	    			data : JSON.stringify(obj),
+	    			success : function(response) {
+	    				if (response.message == "success") {
+	    					swal({
+								title	: "Termination Date Added Successfully.",
+								type: "success",
+							}).then(function(){
+								window.location.href = "/employee/view-employee";
+							})
+	    				}
+	    			}, error : function(data) {
+	    				console.log(data)
+	    			}
+	    		});
+			}
+		})
+	
+	/*	$('#change').click(function (){
+			alert("hi")
+		/* 	var newP = $('#newP').val();
+			var confirmP = $('#confirmP').val();
+			
+			if(confirmP == "" || confirmP == null) {
+				swal({
+		        	title: "Enter Confirm Password",
+					type: "warning",
+		        })
+			}
+			if(newP == "" || newP == null) {
+				swal({
+		        	title: "Enter New Password",
+					type: "warning",
+		        })
+			}
+			if(newP != "" && confirmP != "") {
+				if (newP != confirmP) {
+		            swal({
+		            	title: "Password Don't Match",
+						type: "warning",
+		            })
+		       		return false;
+		    	} else {
+		    		var id = $("#employeeId").val();
+		    		
+		    		obj = {};
+		    		obj.key = id;
+		    		obj.name = newP;
+		    		console.log(obj)
+		    		$.ajax({
+		    			type : "POST",
+		    			url : "view-employee-change-password",
+		    			dataType : 'json',
+		    			contentType : 'application/json',
+		    			data : JSON.stringify(obj),
+		    			success : function(response) {
+		    				if (response.message == "success") {
+		    					swal({
+									title	: "Password Changed Successfully.",
+									type: "success",
+								}).then(function(){
+									window.location.href = "/employee/view-employee";
+								})
+		    				}
+		    			}, error : function(data) {
+		    				console.log(data)
+		    			}
+		    		});
+		    	}
+			} */
+		//});
+	});
+
+	function searchData() {
+		$('#tblTheme').DataTable().draw();
+	}
+	
+	function change(){
+		//alert($('#newPassword').val())
+		var currPass = $('#currPassword').val();
+		var newP = $('#newPassword').val();
+		var confirmP = $('#confirmPassword').val();
+		
+		if(currPass == "" || currPass == null) {
+			//alert("Enter Confirm Password")
+			 swal({
+	        	title: "Enter Current Password",
+				type: "warning",
+	        }) 
+		}
+		if(confirmP == "" || confirmP == null) {
+			//alert("Enter Confirm Password")
+			 swal({
+	        	title: "Enter Confirm Password",
+				type: "warning",
+	        }) 
+		}
+		if(newP == "" || newP == null) {
+			//alert("Enter New Password")
+			swal({
+	        	title: "Enter New Password",
+				type: "warning",
+	        }) 
+		}
+		if(newP != "" && confirmP != "") {
+			if (newP != confirmP) {
+				
+ 			//alert("Enter New Password")
+	            swal({
+	            	title: "Password Don't Match",
+					type: "warning",
+	            }) 
+	       		return false;
+	    	} else {
+	    		var id = $("#employeeId").val();
+	    		
+	    		obj = {};
+	    		obj.key = id;
+	    		obj.name = newP;
+	    		obj.docName = currPass;
+	    		//console.log(obj)
+	    		$.ajax({
+	    			type : "POST",
+	    			url : "view-employee-change-password",
+	    			dataType : 'json',
+	    			contentType : 'application/json',
+	    			data : JSON.stringify(obj),
+	    			success : function(response) {
+	    				if (response.message == "success") {
+	    					swal({
+								title	: "Password Changed Successfully.",
+								type: "success",
+							}).then(function(){
+								window.location.href ="/login";
+							})
+	    				}
+	    			}, error : function(data) {
+	    				console.log(data)
+	    			}
+	    		});
+	    	}
+		} 
+		
+	}
+	
+	function resetPassword(id) {
+		$('#myModal').modal('show');
+		$("#employeeId").val(id);
+		$("#currentPassword").val("");
+		$('#newP').val("");
+		$('#confirmP').val("");
+	}
+	
+	function terminationDate(id) {
+		$('#myModal1').modal('show');
+		$("#employeeNo").val(id);
+		$("#terminationDate").val("");
+	}
+	function empId(){
+		$("#item2").val('');
+		}
+		function empName(){
+		$("#item").val('');
+		}
+		function itemAutoComplete() {
+		    //alert("tgyuh")
+		    $.ajax({
+		        type: "POST",
+		        url: "view-employee-getEmpNameAutocompleteList",
+		        dataType: 'json',
+		        contentType: 'application/json',
+		        data: $("#item").val(),
+		        success: function(res) {
+		            if (res.message == "success") {
+		                console.log(res);
+		                if (res.body.length != 0) {
+		                    console.log("if: " + res);
+		                    $("#item").css("background", "#FFF");
+		                    var content = '<ul id="autocomplete-list">';
+		                    for (var i = 0; i < res.body.length; i++) {
+		                        content += '<li onClick="selectAutocompleteValue(\'' + res.body[i].key + '\')">' + res.body[i].key + '</li>';
+		                    }
+		                    content += '</ul>';
+		                    $("#suggesstion-box").show();
+		                    $("#suggesstion-box").html(content);
+
+		                } else {
+		                    console.log("else: " + res);
+		                    $("#item").css("background", "#FFF");
+		                    var content = '<ul id="autocomplete-list">';
+		                    content += '<li onClick="selectAutocompleteValue(\'' + '' + '\',\'' + '' + '\')">' + "No Data Found" + '</li>';
+		                    content += '</ul>';
+		                    $("#suggesstion-box").show();
+		                    $("#suggesstion-box").html(content);
+		                }
+		            }
+		        },
+		        error: function(data) {
+		            console.log(data);
+		            $("#item").css("background", "#FFF");
+		            var content = '<ul id="autocomplete-list">';
+		            content += '<li onClick="selectAutocompleteValue(\'' + '' + '\',\'' + '' + '\')">' + "No Data Found" + '</li>';
+		            content += '</ul>';
+		            $("#suggesstion-box").show();
+		            $("#suggesstion-box").html(content);
+		        }
+		    })
+		}
+
+		function selectAutocompleteValue(key) {
+		    if (key) {
+		        $("#param1").val(key);
+		        $("#item").val(key);
+		        $("#param1").attr('data-procat', key);
+		        $("#suggesstion-box").hide();
+		    } else {
+		        $("#param1").val("");
+		        $("#item").val("");
+		        $("#param1").attr('data-procat', "");
+		        $("#suggesstion-box").hide();
+		    }
+		}
+
+			function itemAutoComplete1() {
+			    //alert($("#item2").val())
+			    var name = $("#item2").val();
+			    $.ajax({
+			        type: "POST",
+			        url: "view-employee-name",
+			        dataType: 'json',
+			        contentType: 'application/json',
+			        data: name,
+			        success: function(res) {
+			            //alert("hi");
+			            if (res.message == "success") {
+			                console.log(res);
+			                if (res.body.length != 0) {
+			                    console.log("if: " + res);
+			                    $("#item1").css("background", "#FFF");
+			                    var content = '<ul id="autocomplete-list">';
+			                    for (var i = 0; i < res.body.length; i++) {
+			                        content += '<li onClick="selectAutocompleteValue1(\'' + res.body[i].key + '\',\'' + res.body[i].name + '\')">' + res.body[i].name + '</li>';
+			                    }
+			                    content += '</ul>';
+			                    $("#suggesstion-box1").show();
+			                    $("#suggesstion-box1").html(content);
+
+			                } else {
+			                    console.log("else: " + res);
+			                    $("#item1").css("background", "#FFF");
+			                    var content = '<ul id="autocomplete-list">';
+			                    content += '<li onClick="selectAutocompleteValue1(\'' + '' + '\',\'' + '' + '\')">' + "No Data Found" + '</li>';
+			                    content += '</ul>';
+			                    $("#suggesstion-box1").show();
+			                    $("#suggesstion-box1").html(content);
+			                }
+			            }
+			        },
+			        error: function(data) {
+			            console.log(data);
+			            $("#item1").css("background", "#FFF");
+			            var content = '<ul id="autocomplete-list">';
+			            content += '<li onClick="selectAutocompleteValue1(\'' + '' + '\',\'' + '' + '\')">' + "No Data Found" + '</li>';
+			            content += '</ul>';
+			            $("#suggesstion-box1").show();
+			            $("#suggesstion-box1").html(content);
+			        }
+			    })
+			}
+
+			function selectAutocompleteValue1(key, name) {
+			    if (key) {
+			        $("#param2").val(key);
+			        $("#item2").val(name);
+			        $("#param2").attr('data-procat', key);
+			        $("#suggesstion-box1").hide();
+			    } else {
+			        $("#param2").val("");
+			        $("#item2").val("");
+			        $("#param2").attr('data-procat', "");
+			        $("#suggesstion-box1").hide();
+			    }
+			}
+</script>
+<style>
+.viewRed {
+	color : red;
+}
+</style>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="index.html">Home</a></li>
+					<li><a th:href="@{/employee/add-employee}">Add Employee</a></li>
+					<li class="active"><span>View Employee </span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>View Employee</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+						<div class="search-field">
+						<div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary"
+										href="add-employee">Create</a>
+								</div>
+							</div>
+						</div>
+		<!-- 					<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div> -->
+						<div class="row">
+							<div class="col-md-2">
+								<label>Employee No</label> <input type="hidden" id="param1">
+								<input type="text" class="form-control" id="item"
+									onclick="empId()" onkeyup="itemAutoComplete();" />
+								<div id="suggesstion-box"></div>
+							</div>
+
+							<div class="col-md-2">
+								<label>Employee Name</label> <input type="hidden" id="param2">
+								<input type="text" class="form-control" id="item2"
+									onclick="empName()" onkeyup="itemAutoComplete1();" />
+								<div id="suggesstion-box1"></div>
+							</div>
+							<div class="col-md-2 mrt_10">
+								<div class="form-group filtersearch">
+									<button class="btn btn-info" onclick="searchData()">Search</button>
+								</div>
+							</div>
+						</div>
+					</div>
+						<div class="table-responsive" style="width: 100%;">
+							<table id="tblTheme" class="table table-bordered">
+								<thead>
+									<tr>
+										<th>User No</th>
+										<th>User Name</th>
+										<th>Mobile</th>
+										<th>Designation</th>
+										<th>Department</th>
+										<th>Status</th>
+										<th align="center">Action</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-sm">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Reset Password</h4>
+						<!-- <button type="button" class="close" data-dismiss="modal">&times;</button> -->
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="employeeId">
+						<div class="col-md-12">
+							<label>Current Password</label>
+							<input type="text" class="form-control" id="currPassword" >
+						</div>
+						<div class="col-md-12">
+							<label>New Password</label>
+							<input type="text" class="form-control" id="newPassword" >
+						</div>
+						<div class="col-md-12">
+							<label>Confirm Password</label>
+							<input type="text" class="form-control" id="confirmPassword" >
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-info" onclick="change();" >Submit</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="myModal1" class="modal fade" role="dialog">
+			<div class="modal-dialog modal-sm">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">Assign Termination Date</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="employeeNo">
+						<div class="col-md-12">
+							<label>Termination Date</label>
+							<input type="text" class="form-control" readonly id="terminationDate" required>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-info" id="add">Submit</button>
+						<button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

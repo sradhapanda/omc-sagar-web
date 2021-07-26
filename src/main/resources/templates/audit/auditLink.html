@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"
+	type="text/javascript"></script>
+ <script src="../assets/chart/chart.js"></script> 
+
+<!-- <script src="../assets/highchart/highcharts.js"></script>
+<script src="../assets/highchart/series-label.js"></script>
+<script src="../assets/highchart/export-data.js"></script>
+<script src="../assets/highchart/exporting.js"></script> -->
+<!-- <script src="../assets/chart/chart.js"></script> -->
+<!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script -->
+
+<!-- Chart Section Start -->
+<style>
+.boxheader {
+background: #f7ea90;
+padding:3px 10px;
+font-size: 14px;
+color: #333;
+}
+.newdshbrdbox {
+background: #FFF;
+padding: 7px;
+border-radius: 5px;
+border: 1px solid #ccc;
+}
+ .no
+{
+font-size:24px;
+color:#FFF;
+text-align:left;
+margin-top: -20px;
+padding-bottom: 5px;
+padding-left:10px;
+}
+.small-box:hover{
+	opacity:0.3;
+ /* transform: scale(1.2); */
+}
+.bg-red,.bg-aqua,.bg-green,.bg-deepgreen> 
+{
+padding:10px 7px;
+height:30px;
+}
+.small-box {
+margin-right:10px;
+border-radius: 2px;
+position: relative;
+display: block;
+margin-top:2px;
+margin-bottom: 2px;
+box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+cursor:pointer;
+height:75px;
+}
+
+/* .bg-aqua {
+background-color: #00c0ef !important;
+} */
+.small-box {
+border-radius: 2px;
+width:168px;
+position: relative;
+display: block;
+margin-top: 5px;
+margin-bottom: 1px;
+box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+cursor:pointer;
+}
+.small-box-div{
+	margin-right:10px;
+}
+/* .small-box-div:first-child{
+	margin-left:27px;
+} */
+
+/* .bg-aqua {
+background-color: #00c0ef !important;
+} */
+.bg-aqua {
+background-color:#58cdea !important;
+border-radius:8px;
+text-align: left;
+margin-right:30px;
+opacity:0.8;
+transition:0.3s;
+height:90px;
+}
+
+.bg-green {
+background-color:#3fbf85 !important;
+border-radius:8px;
+text-align: left;
+margin-right:30px;
+opacity:0.8;
+transition:0.3s;
+height:90px;
+}
+
+.bg-yellow {
+background-color:#f1b908  !important;
+border-radius:8px;
+text-align: left;
+margin-right:30px;
+opacity:0.8;
+transition:0.3s;
+height:90px;
+}
+
+.bg-red {
+background-color: #e61037 !important;
+border-radius:8px;
+text-align: left;
+margin-right:30px;
+opacity:0.8;
+transition:0.3s;
+height:90px;
+}
+
+.bg-blue {
+background-color:#688fe4 !important;
+border-radius:8px;
+text-align: left;
+margin-right:30px;
+opacity:0.8;
+transition:0.3s;
+height:90px;
+}
+
+.bg-orange {
+background-color:#dc8002 !important;
+border-radius:8px;
+margin-right:30px;
+text-align: left;
+opacity:0.8;
+transition:0.3s;
+height:90px;
+}
+
+.bg-purple{
+background-color:#a04bbf  !important;
+border-radius:8px;
+text-align: left;
+margin-right:30px;
+opacity:0.8;
+transition:0.3s;
+height:90px;
+}
+
+.bg-pink{
+background-color:#d23ed1 !important;
+border-radius:8px;
+text-align: left;
+margin-right:30px;
+opacity:0.8;
+transition:0.3s;
+height:90px;
+}
+
+.bg-deepgreen {
+background-color:#65ad9f !important;
+border-radius:8px;
+text-align: left;
+margin-right:30px;
+opacity:0.8;
+transition:0.3s;
+height:90px;
+}
+
+.bg-white {
+background-color: #FFFFFF !important;
+border-radius:8px;
+text-align: left;
+opacity:0.8;
+margin-right:30px;
+transition:0.3s;
+height:90px;
+}
+.small-box>.small-box-footer {
+/* position: absolute; */
+text-align: center;
+padding: 3px 0;
+color: #fff;
+color: rgba(255, 255, 255, 0.8);
+display: block;
+z-index: 10;
+text-decoration: none;
+bottom: 15px;
+width: 100px;
+left: 50%;
+margin-left: -50px;
+}
+
+.small-box p {
+    font-size: 14px;
+    color: #fff;
+    height: 14px;
+}
+.small-box>.inner> p {
+/*padding: 70px;*/
+min-height:100%;
+padding: 0;
+}
+
+.small-box>.inner>h3 {
+color: #FFF;
+}
+
+.dashboardbox {
+background: #FFF;
+border-radius: 5px;
+box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
+rgba(0, 0, 0, 0.19);
+}
+
+.dashboardbox h4 {
+padding: 10px 15px;
+font-size: 16px;
+}
+
+.SimpleChart {
+position: relative;
+}
+
+.SimpleChart #tip {
+background-color: #f0f0f0;
+border: 1px solid #d0d0d0;
+position: absolute;
+left: -200px;
+top: 30px;
+}
+
+.down-triangle {
+width: 0;
+height: 0;
+border-top: 10px solid #d0d0d0;
+border-left: 6px solid transparent;
+border-right: 6px solid transparent;
+position: absolute;
+left: -200px;
+}
+
+.SimpleChart #highlighter {
+position: absolute;
+left: -200px;
+}
+
+.-simple-chart-holder {
+/* float: left;*/
+position: relative;
+width: 100%;
+background-color: #fff;
+border: 1px solid #cecece;
+/*padding: 6px;*/
+}
+
+.SimpleChart .legendsli {
+list-style: none;
+}
+.fa {
+color:#fff;
+}
+.SimpleChart .legendsli span {
+float: left;
+vertical-align: middle;
+}
+
+.SimpleChart .legendsli span.legendindicator {
+position: relative;
+top: 5px;
+display: none;
+}
+
+.SimpleChart .legendsli span.legendindicator .line {
+width: 12px;
+/*height: 3px;*/
+display: none;
+}
+
+.SimpleChart .legendsli span.legendindicator .circle {
+width: 12px;
+height: 12px;
+border-radius: 20px;
+position: relative;
+top: 3px;
+right: 0px;
+}
+
+/******Starts::Horizontal Alignment of Legends******/
+.simple-chart-legends {
+/* background: #E7E7E7;*/
+border-bottom: 3px solid #d6d7dd;
+padding: 5px;
+margin: 2px 0px;
+font-weight: bold;
+font-size: 11px;
+display: none;
+}
+
+.simple-chart-legends ul {
+
+}
+
+.simple-chart-legends ul li {
+display: inline;
+border-right: 1px solid #d6d7dd;
+float: left;
+padding: 3px;
+margin-bottom: 3px;
+}
+
+.simple-chart-legends ul li:last-child {
+border-right: 0px;
+}
+
+.simple-chart-legends.vertical {
+margin: 0px 10px;
+}
+
+.simple-chart-legends.vertical ul li {
+display: none;
+border: 0px;
+border-bottom: 1px solid #d6d7dd;
+}
+
+.simple-chart-legends.vertical ul li:last-child {
+border-bottom: 0px;
+}
+
+.simple-chart-legends .legendvalue {
+padding-left: 2px;
+background: #fff;
+}
+
+/******Starts::Horizontal Alignment of Legends******/
+.simple-chart-Header {
+position: absolute;
+font-size: 16px;
+}
+.sidebar.sidebar-shrink~.content-wrap> .small-box> .inner>p
+{
+min-height: 100%;
+padding: 10%;
+}
+.button-back{
+display:none;
+}
+
+canvas{
+	height:300px;
+	width:auto;
+}
+</style>
+
+<script type="text/javascript">
+$(document).ready(function(){
+
+		var id = window.atob($("#ID").val());
+		//console.log(id)
+		$('#tblTheme').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' :'/audit/view-initiated-audit-ThroughAjax',
+				'data' : function(d) {
+					d.param1 = $('#param1').val();
+					d.param2 = id;
+					d.param3 = $('#param2').val();
+				}
+			},
+			'dataSrc' : "",
+			'columns' : [ {
+				'data' : 'auditInitiate'
+			}, {
+				'data' : 'auditType'
+			}, {
+				'data' : 'financialYear'
+			}, {
+				'data' : 'status'
+			}, {
+				'data' : 'initiatedDate'
+			 }]
+		});
+	})
+	
+	function rowClicked(value) {
+		console.log(value);
+	   location.href = value;
+	}
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main">
+			<div class="container-fluid">
+				<div class="row" style="margin-top:10px;">
+					<div class="col-md-12">
+						<input type="hidden" th:value="${auditType}" id="ID"/>
+						<input type="hidden" value="" id="param1" />
+						<input type="hidden" value="" id="param2" />
+						<div class="row">
+						<div 
+								class="small-box-div"  th:if="${ #lists.contains(session.USER_ROLES, 'rol021') }">
+								<div class="small-box bg-purple" th:attr="onclick=|rowClicked('${'/audit/add-meeting-schedule?id='+auditType}')|">
+								 <div class="inner">
+								<i class="fa fa-calendar fa-2x" aria-hidden="true"></i>
+									<p>Schedule Meeting</p>
+									</div>
+									<!-- <a th:href="${'/audit/add-meeting-schedule?id='+auditType}" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+								<div 
+								class="small-box-div"  th:unless="${ #lists.contains(session.USER_ROLES, 'rol021') }">
+								<div class="small-box bg-purple" th:attr="onclick=|rowClicked('${'/audit/add-meeting-schedule?id='+auditType}')|">
+								 <div class="inner">
+								<i class="fa fa-calendar fa-2x" aria-hidden="true"></i>
+									<p> View Schedule Meeting</p>
+									</div>
+									<!-- <a th:href="${'/audit/add-meeting-schedule?id='+auditType}" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+						<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021')   }" class="small-box-div">
+								<!-- small box -->
+								<div class="small-box bg-red" th:attr="onclick=|rowClicked('${'/audit/add-audit-master?id='+ auditType+'&name='+auditTypeName}')|">
+									<div class="inner">
+									<i class="fa fa-graduation-cap fa-2x" aria-hidden="true"></i>
+										
+										<p>Commencement Of Audit</p>
+									</div>
+									<!-- <div class="icon">
+										<i class="ion ion-bag"></i>
+									</div> -->
+									<!-- <a th:href="${'/audit/add-audit-master?id='+ auditType+'&name='+auditTypeName}" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+							<div class="small-box-div">
+								<!-- small box -->
+								<div class="small-box bg-blue" th:attr="onclick=|rowClicked('${'/audit/view-initiated-audit?id='+auditType}')|">
+									<div class="inner">
+										
+										<i class="fa fa-tasks fa-2x" aria-hidden="true"></i>
+										<p>Manage Audit</p>
+									</div>
+									<!-- <div class="icon">
+										<i class="ion ion-person-add"></i>
+									</div> -->
+									<!-- <a th:href="${'/audit/view-initiated-audit?id='+auditType}" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div> 
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021')   }" class="small-box-div">
+								<!-- small box -->
+								<div class="small-box bg-yellow"th:attr="onclick=|rowClicked('${'/audit/view-initiated-audit-upload-documents?id='+auditType}')|"  >
+									<div class="inner">
+										
+										<i class="fa fa-upload fa-2x" aria-hidden="true"></i>
+										<p>Upload Documents</p>
+									</div>
+									<!-- <div class="icon">
+										<i class="ion ion-person-add"></i>
+									</div> -->
+									<!-- <a href="/audit/view-initiated-audit-upload-documents" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>	
+							<div class="small-box-div" th:if="${ #lists.contains(session.USER_ROLES, 'rol021')}">
+								<!-- small box -->
+								<div class="small-box bg-aqua" th:attr="onclick=|rowClicked('${'/audit/view-initiated-audit-document-report?id='+auditType}')|">
+									<div class="inner">
+									<i class="fa fa-file fa-2x" aria-hidden="true"></i>
+										<p>View Documents</p>
+									</div>
+									<!-- <div class="icon">
+										<i class="ion ion-person-add"></i>
+									</div> -->
+									<!-- <a href="/audit/view-initiated-audit-document-report" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>	
+							<!--  <div th:text="${auditTypeId}"></div> -->
+							<div class="small-box-div">
+							   <div class="small-box bg-orange" th:attr="onclick=|rowClicked('${'/audit/view-initiated-audit?id='+auditType}')|">
+							   <div class="inner">
+							 
+							   <i class="fa fa-clock-o fa-2x" aria-hidden="true"></i>
+							       <p>In Progress</p>
+									</div>
+									<!-- <div class="no" th:if="${auditTypeId=='ADTM006' || auditTypeId=='ADTM001'}" >
+										Complied
+									</div> -->
+									<div class="no" th:text="${todaysPendingCase}">
+										5 
+									</div>
+									<div class="no" th:unless="${todaysPendingCase}!=null">
+										0
+									</div> 
+								<!-- 	<a href="/index-dashboard-audit-link" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+							   </div>
+							</div>
+							<!-- </div>
+							
+							<div class="row"> -->
+							<!--div class="col-lg-2 col-xs-4">
+							</div--->
+							<div class="small-box-div">
+							   <div class="small-box bg-pink" >
+							    <div class="inner">
+							  
+							   <i class="fa fa-briefcase fa-2x" aria-hidden="true"></i>
+							       <p>Today case</p>
+									</div>
+									<div class="no" th:if="${todaysCase}!=null"  th:text="${todaysCase}">
+										2 
+									</div>
+									<div class="no" th:unless="${todaysCase}!=null">
+										0
+									</div>
+									<!-- <a href="/index-dashboard-audit-link" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+							   </div>
+							</div>	
+							
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') }"
+								class="small-box-div">
+								<div class="small-box bg-deepgreen" th:attr="onclick=|rowClicked('${'/audit/view-audit-draft-report?id='+auditType}')|">
+								 <div class="inner">
+								<i class="fa fa-save fa-2x" aria-hidden="true"></i>
+									<p>Audit Report</p>
+                                     </div>
+
+									<!-- <a href="/audit/view-audit-draft-report"
+										class="small-box-footer">Click Here <i
+										class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') }"
+								class="small-box-div">
+								<div class="small-box bg-red" th:attr="onclick=|rowClicked('${'/audit/view-initiated-audit-report?id='+auditType}')|">
+								 <div class="inner">
+								<i class="fa fa-bar-chart fa-2x" aria-hidden="true"></i>
+									<p>Audit Document Report</p>
+                                      </div>
+
+									<!-- <a href="/audit/view-initiated-audit-report"
+										class="small-box-footer">Click Here <i
+										class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+							
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') }"
+								class="small-box-div">
+								<div class="small-box bg-green" th:attr="onclick=|rowClicked('${'/audit/view-audit-history?id='+auditType}')|">
+								 <div class="inner">
+								<i class="fa fa-history fa-2x" aria-hidden="true"></i>
+									<p>Audit Trail</p>
+                                   </div>
+
+									<!-- <a href="/audit/view-audit-history" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+							
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') && auditTypeId=='ADTM005' }"
+								class="small-box-div">
+								<div class="small-box bg-yellow" th:attr="onclick=|rowClicked('${'/audit/view-executive-summary?id='+auditType}')|">
+								 <div class="inner">
+								<i class="fa fa-file fa-2x" aria-hidden="true"></i>
+									<p>Executive Summary</p>
+                                   </div>
+
+									<!-- <a href="/audit/view-audit-history" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') && auditTypeId=='ADTM002' }"
+								class="small-box-div">
+								<div class="small-box bg-deepgreen" th:attr="onclick=|rowClicked('/audit/add-outstanding-paras')|">
+								 <div class="inner">
+								<i class="fa fa-file fa-2x" aria-hidden="true"></i>
+									<p>Add Outstanding Paras</p>
+                                   </div>
+
+									<!-- <a href="/audit/view-audit-history" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') && auditTypeId=='ADTM002' }"
+								class="small-box-div">
+								<div class="small-box bg-yellow" th:attr="onclick=|rowClicked('/audit/view-outstanding-paras')|">
+								 <div class="inner">
+								<i class="fa fa-file fa-2x" aria-hidden="true"></i>
+									<p>View Outstanding Paras</p>
+                                   </div>
+
+									<!-- <a href="/audit/view-audit-history" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+							<!--div class="col-lg-2 col-xs-4">
+							</div-->
+
+						</div> 
+					
+						</div> 
+	
+					</div>
+					
+					<div class="row" style="margin-top:40px;">
+						<div class="table" style="width: 100%;">
+							<table id="tblTheme" class="table">
+								<thead>
+									<tr>
+										<th>Audit No</th>
+										<th>Audit Type</th>
+										<th>Financial Year</th>
+										<th>Status</th>
+										<th>Initiated Date</th>
+										<!-- <th>Summary</th> -->
+									<!-- 	<th>Documents</th>
+										<th align="center">Action</th--->
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div style="clear: both;"></div>
+					</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	
+
+</html>

@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script type="text/javascript">
+ $( document ).ready(function() {
+	
+	 $("#userPINno").on("blur", function(){
+	        var pinNum = $(this).val();
+	        var filterpin = /^\d*(?:\.\d{1,2})?$/;
+	          if (filterpin.test(pinNum)) {
+	            if(pinNum.length==4){
+	             } else {
+	            	$('#userPINno').focus();
+	                swal('Please Enter 4  digit pin number');
+	                return false; 
+	              }
+	            }
+	            else {
+	               $('#userPINno').focus();
+	               swal('Not a valid pin number'); 
+	              return false;
+	           }
+	     });
+	  
+	 //Auto Validation for mobile number
+	  $("#userMobile").on("blur", function(){
+	        var mobNum = $(this).val();
+	        var filtermob = /^\d*(?:\.\d{1,2})?$/;
+
+	          if (filtermob.test(mobNum)) {
+	            if(mobNum.length==10){
+	             } else {
+	            	 $('#userMobile').focus();
+	                swal('Please Enter 10  digit mobile number');
+	                return false; 
+	              }
+	            }
+	            else {
+	            	 $('#userMobile').focus();
+	               swal('Not a valid mobile number'); 
+	              return false;
+	           }
+	   });
+	 
+	  //Auto Validation for zip
+		$("#userPin").on("blur", function(){
+	        var zipNum = $(this).val();
+	        var filterzip = /^\d*(?:\.\d{1,2})?$/;
+
+	          if (filterzip.test(zipNum)) {
+	            if(zipNum.length==6){ 
+	             } else {
+	            	$('#userPin').focus();
+	                swal('Please Enter 6  digit zip number');
+	                return false; 
+	              }
+	            }
+	            else {
+	               $('#userPin').focus();
+	               swal('Not a valid zip number'); 
+	              return false;
+	           }		    
+	     });
+});  
+function stateChange() {
+	if($("#userState").val()!=''){
+	$.ajax({
+		type : "POST",
+		url : "add-user-district-list",
+		dataType : 'json',
+		contentType : 'application/json',
+		data : $("#userState").val(),
+		success : function(response) {
+			if (response.message == "success") {
+				console.log(response);
+				$("#userDist").empty();
+				var option = $("<option></option>");
+				$(option).val(null);
+				$(option).html("Select");
+				$("#userDist").append(option);
+				for (var i = 0; i < response.body.length; i++) {
+					var option = $("<option></option>");
+					$(option).val(response.body[i].key);
+					$(option).html(response.body[i].name);
+					$("#userDist").append(option);
+				}
+			}
+		},
+		error : function(data) {
+			console.log(data);
+		}
+	})
+	}else{
+		$("#userDist").empty();
+		var option = $("<option></option>");
+		$(option).val(null);
+		$(option).html("Select");
+		$("#userDist").append(option);
+	}
+}
+ 
+function cntryChange() {
+	if($("#userCountry").val()!=''){
+	$.ajax({
+		type : "POST",
+		url : "add-user-state-list",
+		dataType : 'json',
+		contentType : 'application/json',
+		data : $("#userCountry").val(),
+		success : function(response) {
+			if (response.message == "success") {
+				console.log(response);
+				$("#userState").empty();
+				$("#userDist").empty();
+				var option = $("<option></option>");
+				$(option).val(null);
+				$(option).html("Select");
+				var option1 = $("<option></option>");
+				$(option1).val(null);
+				$(option1).html("Select");
+				$("#userState").append(option); 
+				$("#userDist").append(option1); 
+				for (var i = 0; i < response.body.length; i++) {
+					var option = $("<option></option>");
+					$(option).val(response.body[i].key);
+					$(option).html(response.body[i].name);
+					$("#userState").append(option);
+				}
+			}
+		},
+		error : function(data) {
+			console.log(data);
+		}
+	})
+	}else{
+		$("#userState").empty(); 
+		var option = $("<option></option>");
+		$(option).val(null);
+		$(option).html("Select");
+		$("#userState").append(option);
+	}
+} 
+
+
+function validateFormUser() {
+	if (!blankValidation("userName", "TextField","First Name Required"))
+		return false;
+	
+	if (!checkSpecialCharacter("userName","Special character is not allowed!!!"))
+        return false;
+	
+	if (!blankValidation("userLname", "TextField","Last Name Required"))
+		return false;
+	
+	if (!checkSpecialCharacter("userLname","Special character is not allowed!!!"))
+        return false; 
+	
+	if (!blankValidation("userIMEI", "TextField","IMEI Number Required"))
+		return false;
+	
+	if (!blankValidation("userMobile", "TextField","Mobile Required"))
+		return false;
+	
+	if (!blankValidation("userRoles","SelectBox", "Please Select User Role"))
+	       return false;
+	
+	if (!blankValidation("userPassword", "TextField","User Password Required"))
+		return false;
+	
+	if (!blankValidation("userPINno", "TextField","User PIN Required"))
+		return false;
+	
+	if (!blankValidation("userEmail", "TextField","Email Required"))
+		return false;
+	
+	//email id validation after click on add button
+	 var email_id_m=$("#userEmail").val();
+	 var filter = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+	 if (filter.test(email_id_m)) {
+	 }
+		 else {
+			$('#userEmail').focus();
+			 swal("Email is not valid"); 
+	 		 return false;
+	 	 }
+	 
+	 if (!blankValidation("userPin", "TextField","PIN Required"))
+			return false;
+
+	if (!checkSpecialCharacter("userPin","Special character is not allowed!!!"))
+        return false;
+	
+	if (!blankValidation("userCountry","SelectBox", "Please Select Country"))
+	    return false;
+	
+	if (!blankValidation("userState","SelectBox", "Please Select State"))
+	    return false;
+	
+	if (!blankValidation("userDist","SelectBox", "Please Select District"))
+	    return false;
+	
+	if (!blankValidation("userAddress", "TextArea","Address Required"))
+		return false;
+	
+    if (!blankValidation("userStatus","SelectBox", "Please Select Status"))
+    	    return false;
+
+}
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="main mrt_20">
+		<div class="col-md-12">
+			<div class="alert alert-danger alert-dismissible"
+				th:if="${message != null}">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<span th:text="${message}"></span>
+			</div>
+			<ol class="breadcrumb breadcrumb-arrow">
+				<li><a href="/index-dashboard">Home</a></li>
+				<li class="active"><span>Add User Management</span></li>
+			</ol>
+		</div>
+		<div class="card-title">
+			<h4>Add User Management</h4>
+		</div>
+		<div class="container-fluid">
+
+			<div class="card">
+
+				<div class="card-body">
+					<div class="basic-elements">
+						<form th:action="@{/user/add-user}" th:object="${adduser}" method="POST" onsubmit="return validateFormUser();">
+								<input type="hidden" th:field="*{user}" /> 
+							<div class="row">
+							  <div class="col-lg-6">
+										<div class="form-group">
+											<label>First Name</label> 
+											<input type="text" class="form-control" th:field="*{userName}" />
+										</div>
+									</div>
+									
+									<div class="col-lg-6">
+									    <div class="form-group">
+											<label>Last Name</label> 
+											<input type="text" class="form-control" th:field="*{userLname}" /> 
+										</div>
+									</div>
+							
+							           <div class="col-lg-6"> 
+							              <div class="form-group">
+							           		<label>IMEI Number</label> 
+										    <input type="text" class="form-control" th:field="*{userIMEI}" />
+									      </div>
+										</div>
+										
+										 <div class="col-lg-6" id="usertypediv"> 
+										 	<div class="form-group">
+								           		<label>User Type</label> 
+											    <select class="form-control" th:field="*{userType}">
+													<option th:each="c:${userList}" th:value='${c.key}' th:text="${c.name}" th:selected="${c.key==userType}"></option>
+												</select>
+											</div>	
+										</div>
+										
+										<div class="col-lg-6"> 
+											<div class="form-group">
+							           			<label>Mobile No.</label> 
+										    	<input type="text" class="form-control" th:field="*{userMobile}" />
+										    </div>
+										</div>
+										
+										
+										
+										<div class="col-lg-6"> 
+							           		<div class="form-group">
+												<label>UserRole</label> 
+												<!-- <input type="text" class="form-control" th:field="*{userRole}" / > -->
+												<select class="multiselect" th:field="*{userRoles}" multiple="multiple">
+													<option th:value="NULL">Select</option>
+													<option th:each="c:${roleList}" th:value='${c.key}' th:text="${c.name}" th:selected="${c.key==userRoles}"></option>
+												</select>
+											</div>
+										</div>
+										
+										<div class="col-lg-6"> 
+							           		<div class="form-group" th:style="*{userPassword} == null ? 'display:block' : 'display:none' ">
+											    <label>User Password</label> 
+											    <input type="text" class="form-control" th:field="*{userPassword}" />
+									        </div>
+										</div>
+										
+										
+										
+										<div class="col-lg-6"> 
+							           		<div class="form-group" th:style="*{userPINno} == null ? 'display:block' : 'display:none' ">
+												<label>PIN</label> 
+												<input type="text" class="form-control"  th:field="*{userPINno}" onblur="valforpin(this.id)" />
+											</div>
+										</div>
+										
+									
+										
+										<div class="col-lg-6"> 
+							           		<div class="form-group">
+												<label>Email</label> 
+													<input type="text" class="form-control" th:field="*{userEmail}" />
+											</div>
+										</div>
+										
+										<div class="col-lg-6"> 
+							           		<div class="form-group">
+												<label>ZipCode</label> 
+												<input type="text" class="form-control" th:field="*{userPin}" />
+											</div>
+										</div>
+										
+										<div class="col-lg-6"> 
+							           		<div class="form-group">
+												<label>Country</label> 
+												<select class="form-control" th:field="*{userCountry}" onchange="cntryChange()">
+						                            <option th:value="NULL">Select</option>
+												    <option th:each="c:${countrydata}" th:value='${c.key}'
+													 th:text="${c.name}"></option>
+						                          </select>
+											</div>
+										</div>
+										
+											<div class="col-lg-6"> 
+							           			<div class="form-group" >
+													<label>State</label> 
+														<select class="form-control"  th:if="*{user}" th:field="*{userState}" onchange="stateChange()">
+															 <option th:value="NULL">Select</option>
+															 
+														     <option th:each="c:${statedata1}" th:value='${c.key}' th:text="${c.name}" th:selected="${c.key==userState}"></option>  
+											 			</select>
+											 			
+											 			<select class="form-control" th:unless="*{user}" th:field="*{userState}" onchange="stateChange()">
+															 <option th:value="NULL">Select</option>
+															<!-- <option th:value="NULL">Select</option>
+															<option th:each="c:${stateList}" th:value='${c.key}' th:text="${c.name}" th:selected="${c.key==userState}"></option> -->	
+													    </select>
+												</div>
+											 	 
+											</div>
+										
+										<div class="col-lg-6"> 
+							           		<div class="form-group">
+												<label>District</label> 
+												<select class="form-control" th:if="*{user}" th:field="*{userDist}">
+												 <option th:value="NULL">Select</option>
+											 	 
+													<option th:each="c:${distdata1}" th:value='${c.key}' th:text="${c.name}" th:selected="${c.key==userDist}"></option>
+												</select>
+												 
+												 <select class="form-control" th:unless="*{user}" th:field="*{userDist}">
+												 <option th:value="NULL">Select</option>
+												</select>
+											</div>
+										</div>
+										
+										<div class="col-lg-6"> 
+							           		<div class="form-group">
+												<label>Address</label>
+												<textarea class="form-control textarea" placeholder="Address" th:field="*{userAddress}" /></textarea>
+									        </div>
+										</div>
+																				
+										<div class="col-lg-6"> 
+							           		<div class="form-group">
+												<label>Status</label> 
+													<select class="form-control" th:field="*{userStatus}">
+														<option th:value="NULL">Select</option>
+														<option th:value="true">Active</option>
+														<option th:value="false">Inactive</option>
+													</select>
+											</div>
+										</div> 
+								 </div>
+							<div class="row">
+								<div class="col-md-12">
+
+								<input type="submit" id="sbmtdata" value="Submit"
+									class="btn btn-success" />&nbsp; <input type="reset"
+									value="Cancel" class="btn btn-warning"
+									onclick="window.location.reload();" />
+							</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

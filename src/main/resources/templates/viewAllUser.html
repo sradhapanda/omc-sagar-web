@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Handling Form Submission</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<!-- Styles -->
+<!-- font css -->
+<link href="assets/css/lib/font-awesome.min.css" rel="stylesheet">
+<link href="assets/css/lib/themify-icons.css" rel="stylesheet">
+<!-- for sidebar css -->
+<link href="assets/css/lib/menubar/sidebar.css" rel="stylesheet">
+<!-- bootstrap css -->
+<link href="assets/css/lib/bootstrap.min.css" rel="stylesheet">
+<link href="assets/css/style.css" rel="stylesheet">
+<!-- bootstrap datatable  -->
+<link href="datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+</head>
+<body>
+	<h1 >View User with Ajax</h1>
+	<div>
+		<label>Username</label><input type="text" id="param1" value="" />
+		<label>Email</label><input type="text" id="param2" value="" />
+		<input  type="button" class="btn btn-info" value="Search" onclick="searchData()" />
+	</div>
+	<table class="table table-bordered" id="example">
+		<thead>
+			<tr>
+				<th >Username</th>
+				<th >Password</th>
+				<th >Email</th>
+				<th >Address</th>
+				<th >Phone</th>
+				<th >Action</th>
+				<th >Delete</th>
+			</tr>
+			<!-- 
+			<tr>
+				<th th:text="${constants[0]}">1</th>
+				<th th:text="${constants[1]}">2</th>
+				<th th:text="${constants[2]}">3</th>
+				<th th:text="${constants[3]}">4</th>
+				<th th:text="${constants[4]}">5</th>
+				<th th:text="${constants[5]}">5</th>
+				<th th:text="${constants[6]}">5</th>
+			</tr>
+			 -->
+			<!-- <tr th:each="cons : ${constants}">
+    			<th >S No.</th>
+    			<th:block th:text="${cons}">1</th:block>
+    			<th th:text="${cons}">2</th>
+    			<th th:text="${cons}">3</th>
+    			<th th:text="${constants[3]}">4</th>
+    			<th th:text="${constants[4]}">5</th>
+    			
+    		</tr> -->
+		</thead>
+		<tbody>
+			<!-- <tr th:each="c:${user.body}">
+				<td th:text="${c.username}"></td>
+				<td th:text="${c.password}"></td>
+				<td th:text="${c.email}"></td>
+				<td th:text="${c.address}"></td>
+				<td th:text="${c.phone}"></td>
+				<td><a th:href="@{editUser(id=${c.userId})}"
+					th:text="${c.userId}"></a></td>
+				<td><a th:href="@{deleteUser(id=${c.userId})}"
+					th:text="${c.userId}"></a></td>
+			</tr> -->
+		</tbody>
+	</table>
+
+
+	<script src="assets/js/lib/jquery.min.js"></script>
+	<script src="assets/js/lib/jquery.nanoscroller.min.js"></script>
+	<!-- Data Tables-->
+	<!-- nano scroller -->
+	<script src="assets/js/lib/menubar/sidebar.js"></script>
+	<!-- sidebar -->
+	<script src="assets/js/lib/bootstrap.min.js"></script>
+	<script src="assets/js/scripts.js"></script>
+
+	<!-- Page level plugins -->
+	<script src="datatables/jquery.dataTables.min.js"></script>
+	<script src="datatables/dataTables.bootstrap4.min.js"></script>
+	<script type="text/javascript">
+		
+			$('#example').DataTable({
+				'processing' : true,
+				'serverSide' : true,
+				'searching' : false,
+				'ordering' : false,
+				"ajax" : {
+					'url' : 'viewUserThroughAjax',
+					'data' : function(d) {
+						d.param1 = $('#param1').val();
+						d.param2 = $('#param2').val();
+					
+					}
+				},
+				'dataSrc' : "",
+				'columns' : [
+					{'data' : 'username'},
+					{'data' : 'password'},
+					{'data' : 'email'},
+					{'data' : 'address'},
+					{'data' : 'phone'},
+					{'data' : 'action'},
+					{'data' : 'delete'}
+				]
+			});
+		
+		function searchData() {
+			$('#example').DataTable().draw();
+		}	
+	</script>
+	<!-- Page level custom scripts -->
+	<script src="assets/js/datatables-demo.js"></script>
+
+</body>
+</html>

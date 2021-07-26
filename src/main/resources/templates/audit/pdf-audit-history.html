@@ -1,0 +1,203 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Audit Trail</title>
+<link href="https://fonts.googleapis.com/css?family=Montserrat"
+	rel="stylesheet" />
+<style type="text/css">
+			body {
+				font-family: 'Montserrat', sans-serif;
+				margin: 0;
+				padding: 0;
+				font-size: 14px;
+				
+			}
+			.logotext {
+				font-size: 20px;
+				color: #2952a4;
+				padding: 5px;
+			}
+			.heading {
+				font-size: 20px;
+				color: #2952a4;
+				padding: 5px;
+				text-align: center;
+				font-weight: bold;
+			}
+			.slogan {
+				font-size: 14px;
+				color: #f26304;
+				padding: 5px;
+			}
+			.containersec {
+				width: 800px;
+				margin: 0 auto;
+				
+			}
+			.address {
+				font-size: 14px;
+				text-align:left;
+				padding-right: 120px;
+				line-height:20px;
+			}
+			div {
+				padding: 4px 0px;
+			}
+			.maintbl tr td {
+				border-collapse: collapse;
+				padding: 12px 5px;
+			}
+			.tableheader {
+				padding: 5px;
+				background:#95BFE3;
+			}
+			.td-border {
+				border-bottom: 1px solid #BABABA;
+			}
+			.td-border-right {
+				height: 1px;
+				border-left: 1px solid #BABABA;
+				text-align: center;
+				width: 126px;
+				font-size: 12px;
+			}
+			.description {
+				padding: 20px 0px;
+				line-height: 20px;
+			}
+			.declair {
+				padding: 20px 0px;
+				line-height: 20px;
+			}
+			.declair span {
+				background: #b3caf7;
+				text-transform: uppercase;
+				color: #000;
+			}
+			.points {
+				padding: 20px 0px;
+				line-height: 26px;
+			}
+			.points span {
+				background: #b3caf7;
+				text-transform: uppercase;
+				color: #000;
+				padding: 5px 10px;
+				border-radius: 12px;
+				margin: 3px;
+			}
+			.bill{
+				color: #000;
+				text-align: right;
+				font-size:18px;
+				font-weight:bold;
+				width:690px;
+			}
+			.strip2 {
+				margin-top: 60px;
+				width: 800px;
+				height: 20px;
+				padding: 2px;
+				line-height: 20px;
+				font-weight: bold;
+				text-align: center;
+				background-color: #d0e6f8;
+				margin-bottom: 12px;
+			}
+			.lefttag {width:100px; float:left;}
+			.note {
+				font-size: 12px;
+				color: #333;
+				height: 80px;
+				width: 300px;
+				border: 1px solid #333;
+			}
+			.clearfix { clear:both;}			
+			</style>
+</head>
+
+<body th:attr="style='background: #fff url(\''+${image}+'\') no-repeat'">
+	<div class="containersec">
+		<table width="800" height="100%">
+			<tr>
+				<td colspan="3">
+					<div class="bill">Audit History Details</div>
+				</td>
+			</tr>
+			<tr>
+				<td><img th:src="${logoImage}" /> <b><div></div></b></td>
+				<td align="left" class="address" width="200">
+					<div class="lefttag">Printed By:</div>
+					<div th:text="${printedBy}"></div>
+					<div class="clearfix"></div>
+					<div class="lefttag">Printed Date :</div>
+					<div th:text="${currdate}"></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" bgcolor="88BBD7">
+					<table width="680">
+						<tr></tr>
+					</table>
+				</td>
+			</tr>
+			
+			<tr th:if="${not #lists.isEmpty(dateTo)}">
+				<td colspan="2" bgcolor="88BBD7">
+					<table width="680">
+						<tr></tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<table width="680" class="maintbl">
+						<thead>
+							<tr>
+								<th class="tableheader" align="center">Sl. No.</th>
+								<th class="tableheader" align="center">#Audit Id</th>
+								<th class="tableheader" align="center">Action Performed By</th>
+								<th class="tableheader" align="center">Action Date</th>
+								<th class="tableheader" align="center">Action Time</th>
+								
+								<th class="tableheader" align="center">Action</th>
+								<!-- <th class="tableheader" align="center">Forwarded To</th> -->
+								<!-- <th class="tableheader" align="center">TAT</th> -->
+							</tr>
+						</thead>
+
+						<tbody th:if="${not #lists.isEmpty(hist)}">
+							<tr th:each="other,iter : ${hist}">
+								<td class="td-border td-border-right" th:text="${iter.index+1}"></td>
+								<td class="td-border td-border-right" th:text="${other.auditId}"></td>
+								<td class="td-border td-border-right" th:text="${other.createdBy}"></td>
+								<td class="td-border td-border-right" th:text="${other.createdOn}"></td>
+								<td class="td-border td-border-right" th:text="${other.time}"></td>
+								
+								<!-- <td class="td-border td-border-right" th:text="${other.role}"></td> -->
+								<td class="td-border td-border-right" th:text="${other.action}"></td>
+							<!-- 	<td class="td-border td-border-right" th:text="${other.forwardedTo}"></td> -->
+								<!-- <td class="td-border td-border-right" th:text="${other.tat}"></td> -->
+							</tr>
+						</tbody>
+						<tbody th:unless="${not #lists.isEmpty(hist)}">
+							<tr>
+								<td colspan="8" align="center" bgcolor="#F5F5F5">No Record
+									Found</td>
+							</tr>
+						</tbody>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<table width="800" class="innertable" id="onePdf">
+					</table>
+				</td>
+			</tr>
+		</table>
+		<div class="strip2">Thank You</div>
+	</div>
+</body>
+
+</html>

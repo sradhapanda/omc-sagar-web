@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('#tblProcess').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-process-master-throughAjax',
+				'data' : function(d) {
+					d.param1 = $('#param1').val();
+				}
+			},
+			'dataSrc' : "",
+			'columns' : [
+
+			{
+				'data' : 'tProcessName'
+			}, {
+				'data' : 'tProcessDescription'
+			}, {
+				'data' : 'status'
+			}, {
+				'data' : 'action'
+			} ]
+		});
+	});
+	
+	 function searchData() {
+		$('#tblProcess').DataTable().draw();
+	}
+	function viewInModel(index) {
+
+		var taskName = '';
+		var taskDesc = '';
+		var taskStatus = '';
+		$("#processTable").find('tbody > tr').each(function() {
+			$(this).find("td").eq(1).remove();
+		})
+		$.ajax({
+			type : "POST",
+			url : "view-process-master-model",
+			dataType : 'json',
+			contentType : 'application/json',
+			data : index,
+			success : function(response) {
+				if (response.message == "success") {
+					console.log(response.body.tProcessStatus);
+
+					var tProcessStatus = "";
+					if (response.body.tProcessStatus) {
+						tProcessStatus = "Active";
+					} else {
+						tProcessStatus = "InActive";
+					}
+					processName = '<td>' + response.body.tProcessName + '</td>'
+					processStatus = '<td>' + tProcessStatus + '</td>'
+					processDesc = '<td>' + response.body.tProcessDescription
+							+ '</td>'
+
+					$(".processName").append(processName);
+
+					$(".processStatus").append(processStatus);
+					$(".processDesc").append(processDesc);
+				}
+			},
+			error : function(data) {
+				console.log(data);
+			}
+		})
+
+	}
+
+	
+	//Deleting the Process
+	
+function deleteItem(id){
+		swal.fire({
+			  title: "Are you sure want to Delete?",
+			  text: "Once Deleted,Can't revert back !",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonColor: '#d33',
+			  cancelButtonColor: '#e7b63a',
+			  confirmButtonText: 'Delete',
+			  reverseButtons : true
+			  
+			}).then((result) => {
+				if(result.value){
+				 $.ajax({
+					    type: "GET",
+					   	url : "/user/delete-Process?id=" + id,
+					    success: function(response) {
+					        if (response.message == "success") {
+					        	swal({
+					        		title: "Record Deleted Successfully.",
+					        		type: "success"
+					        	}).then(function(){
+					        		 location.reload();
+					        	})
+					        
+					        	
+					        } else {
+					            swal({
+					                title: 'Unsuccess',
+					                text: response.code
+					            })
+					        }
+					    },
+					    error: function(data) {
+				       
+					    }
+					})
+				}
+			  
+			});
+		
+
+	}
+	
+
+</script>
+
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<ol class="breadcrumb breadcrumb-arrow">
+				<li><a href="index.html">Home</a></li>
+				<li><a href="add-process-master">Add Process</a></li>
+				<li class="active"><span>View Process</span></li>
+			</ol>
+		</div>
+		<div class="card-title">
+			<h4>View Process</h4>
+		</div>
+		<div class="container-fluid">
+
+			<div class="card">
+					<div class="search-field">
+					<div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary"
+										href="add-process-master">Create</a>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div>
+						<div class="row">
+							<div class="col-md-2">
+								<label>Process Name</label>
+							
+								<select class="form-control" id="param1">
+									<option th:value="null">---Select---</option>
+									<option th:each="c:${processList}" th:value='${c.key}'
+										th:text="${c.name}"></option>
+								</select>
+							</div>
+
+							<div class="col-md-2 mrt_10">
+								<div class="form-group filtersearch">
+									<button class="btn btn-info" onclick="searchData()">Search</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="table-responsive" style="width: 100%;">
+						<table id="tblProcess" class="table  table-bordered">
+							<thead>
+								<tr>
+									<th>Process Name</th>
+									<th>Description</th>
+									<th>Status</th>
+									<th>Action</th>
+
+								</tr>
+							</thead>
+
+							</tbody>
+						</table>
+					</div>
+					<div style="clear: both;"></div>
+			</div>
+		</div>
+
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content" style="width: 750px;">
+					<div class="modal-header">
+						<h4 class="modal-title">View Details of User Process</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<table width="100%" border="0" id="processTable">
+							<tbody>
+
+								<tr class="processName">
+									<td><b>Process Name :</b></td>
+								</tr>
+								<tr class="processDesc">
+									<td><b>Description :</b></td>
+								</tr>
+								<tr class="processStatus">
+									<td><b>Status :</b></td>
+								</tr>
+							</tbody>
+							<tbody id="tModelBody"></tbody>
+						</table>
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+		<!-- /# row -->
+
+	</div>
+</div>
+</html>

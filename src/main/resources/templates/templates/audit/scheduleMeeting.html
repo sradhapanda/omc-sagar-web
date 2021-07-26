@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<style type="text/css">
+label {
+	font-weight: 500;
+	margin-bottom: 0px;
+	color: #19559e;
+	font-size: 13px;
+	min-width: 100%;
+}
+
+.example-image-link {
+	position: relative;
+	bottom: -5px;
+	right: -100px;
+}
+
+.upload-btn-wrapper {
+	position: relative;
+	overflow: hidden;
+	display: inline-block;
+	right: -88px;
+}
+
+.select-pure__select {
+	align-items: center;
+	border-radius: 4px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+	box-sizing: border-box;
+	color: #363b3e;
+	cursor: pointer;
+	display: flex;
+	font-size: 9px;
+	font-weight: 500;
+	justify-content: left;
+	min-height: 44px;
+	padding: 5px 10px;
+	position: relative;
+	transition: 0.2s;
+	width: 100%;
+	background: #FFF;
+}
+
+.select-pure__options {
+	border-radius: 4px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+	box-sizing: border-box;
+	color: #363b3e;
+	display: none;
+	left: 0;
+	max-height: 221px;
+	overflow-y: scroll;
+	position: absolute;
+	top: 50px;
+	width: 100%;
+	z-index: 5;
+}
+
+.select-pure__select--opened .select-pure__options {
+	display: block;
+}
+
+.select-pure__option {
+	background: #fff;
+	border-bottom: 1px solid #e4e4e4;
+	box-sizing: border-box;
+	height: 44px;
+	line-height: 25px;
+	padding: 10px;
+}
+
+.select-pure__option--disabled {
+	color: #e4e4e4;
+}
+
+.select-pure__option--selected {
+	color: #e4e4e4;
+	cursor: initial;
+	pointer-events: none;
+}
+
+.select-pure__option--hidden {
+	display: none;
+}
+
+.select-pure__selected-label {
+	align-items: 'center';
+	background: #931b1e;
+	border-radius: 4px;
+	color: #fff;
+	cursor: initial;
+	display: inline-flex;
+	justify-content: 'center';
+	margin: 5px 10px 5px 0;
+	padding: 3px 7px;
+}
+
+.select-pure__selected-label:last-of-type {
+	margin-right: 0;
+}
+
+.select-pure__selected-label i {
+	cursor: pointer;
+	display: inline-block;
+	margin-left: 7px;
+}
+
+.select-pure__selected-label img {
+	cursor: pointer;
+	display: inline-block;
+	height: 18px;
+	margin-left: 7px;
+	width: 14px;
+}
+
+.select-pure__selected-label i:hover {
+	color: #e4e4e4;
+}
+
+.select-pure__autocomplete {
+	background: #f9f9f8;
+	border-bottom: 1px solid #e4e4e4;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	box-sizing: border-box;
+	font-size: 16px;
+	outline: none;
+	padding: 10px;
+	width: 100%;
+}
+
+.select-pure__placeholder--hidden {
+	display: none;
+}
+</style>
+
+<link rel="stylesheet" type="text/css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.26.0/slimselect.min.css"></link>
+<script
+	src="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<!-- <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.26.0/slimselect.min.js"></script>
+ -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/slim-select/1.26.1/slimselect.js"></script> -->
+
+<script type="text/javascript">
+
+
+</script>
+<style>
+.ui-autocomplete-loading {
+	background: white url("/static/images/ui-anim_basic_16x16.gif") right
+		center no-repeat;
+}
+</style>
+
+<script>
+//Meeting Details
+function MeetingDetails(){	
+	 var datasetReq = [];
+	 var personTo = "";
+		var personCC ="";
+		
+		$("#toHiddenId").val('');
+		
+		 var id1=$("#multiple8").chosen().val();
+			$("#toHiddenId").val(id1);
+			$("#toHiddenId").each(function () {
+				personTo=$(this).val();
+			});
+		
+		/* const iterator = datamultiple8.values();
+
+		for (const value of iterator) {
+		  console.log(value);
+		  personTo=$(this).val();
+		}
+		alert(personTo); */
+		/* personTo(datamultiple8);
+		alert(personTo); */
+		
+	 $("#tbodyDataMeeting > tr").each(function(i) {
+		 	    var uFile = $(this).find(".mulDocMett")[0].files[0];
+
+	    	   var fileName = $(this).find(".mulDocMett").val();
+
+	        if (fileName != '' && fileName != 'undefined' && fileName != null) {
+	            var lastIndex = fileName.lastIndexOf("\\");
+	            if (lastIndex >= 0) {
+	                fileName = fileName.substring(lastIndex + 1);
+	            }
+	            var data = '';
+	            var x = [];
+
+	            var reader = new FileReader();
+	            reader.readAsDataURL(uFile);
+
+	            reader.onload = function() {
+
+	                data = reader.result.split(",");
+
+	                x.push(data[1]);
+	            };
+	        } else {
+	            var x = [];
+	            x.push('empty');
+	        }
+	        audit = {};   
+	        audit['personTo'] 	= personTo;
+	        audit['document'] 	= fileName;
+	        audit['initiate'] 	= $("#id").val();
+	        audit['audit'] 		= $("#audit").val();
+	        audit['date'] 		= $("#date").val();
+	        audit['fromTime'] 	= $("#fromTime").val();
+	        audit['toTime'] 	= $("#toTime").val();
+	        audit['section'] 	= $("#section").val();
+	        audit['meetingType'] 		= $("#meetingType").val();
+	        audit['subject'] 		= $("#meetingSubject").val();
+	        audit['file'] 		= x;
+	        audit['documentName'] = $(this).find(".mettDocNameCls").val();
+	        audit['comment'] 	= $(this).find(".mettCommentCls").val();
+	        audit['auditType'] 	=$("#auditType").val();
+	        audit['comments'] 	=CKEDITOR.instances.entryMeeting.getData();
+
+
+	        datasetReq.push(audit);
+	        
+	        console.log(datasetReq);
+	    });
+	 /* if (!blankValidation("date", "TextField", "Please Select Date"))
+			return false; */
+		
+		/* if (!blankValidation("fromTime", "TextField","Please Select  From Time"))
+			return false;
+		
+		if (!blankValidation("toTime", "TextField","Please Select To Time"))
+			return false; */
+	
+		if (!blankValidation("section", "SelectBox","Please Select  Department"))
+				return false;
+		
+		/* if (!blankValidation("toHiddenId", "TextField","Please Select  Participants"))
+			return false; */
+	
+		
+	swal.fire({
+		  title: "Are you sure want to Send?",
+		  text: "Once send, can't revert back !",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: '#d33',
+		  cancelButtonColor: '#e7b63a',
+		  confirmButtonText: 'Yes',
+		  showLoaderOnConfirm		: false,
+		  //closeOnConfirm: false,
+		  reverseButtons : true,
+		 /*  preConfirm: () => {
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						console.log("Doing async operation");
+						resolve()
+					}, 3000)
+				})
+			} */
+		}).then((result) => {
+			if(result.value){
+				document.getElementById("loader").style.display = "block";
+			 $.ajax({
+				 	type		:	"POST",
+				 	url			:	"view-initiated-audit-meeting",
+					dataType	:	"json",
+					contentType: 'application/json; charset=utf-8',
+					data : JSON.stringify(datasetReq),				    
+				    success: function(response) {
+				    	
+				    	
+				        if (response.message == "success") {
+				        	document.getElementById("loader").style.display = "none";
+				        	swal({
+				        		title: "Sent Successfully.",
+				        		type: "success"
+				        	}).then(function(){
+				        		 location.reload();
+				        	})
+				        
+				        } else {
+				            swal({
+				                title: 'Unsuccess',
+				                text: response.code
+				                
+				            })
+				            document.getElementById("loader").style.display = "none";
+				        }
+				    },
+				    error: function(data) {
+			       
+				    }
+				})
+			}
+		  
+		});
+	
+}
+function saveFileAssign(event) {
+
+	var AssignItemQty = event.currentTarget.value;
+	var currentFldId = event.currentTarget.getAttribute('id');
+	var l = currentFldId.split("_");
+	var counter = l[1];
+	var currentFldId = "#" + currentFldId;
+	//console.log(counter + currentFldId);
+	var uFile = $(currentFldId)[0].files[0];
+	var fileName = event.currentTarget.value;
+	var lastIndex = fileName.lastIndexOf("\\");
+	if (lastIndex >= 0) {
+	fileName = fileName.substring(lastIndex + 1);
+	}
+	var extension = fileName.substr((fileName.lastIndexOf('.') + 1));
+	var iURL = URL.createObjectURL(uFile);		
+	
+	$("#meetFile_" + counter).html("");
+	
+	var LightImg = "";
+	if(extension =='png' || extension =='jpg' || extension =='jpeg'||  extension =='PNG'){
+		LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-picture-o fa-2x excel pdf\"></i></a>";
+	
+	}else if(extension == 'xls' || extension =='xlsx'){
+		LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-file-excel-o fa-2x\"></i></a>";
+	
+	}else if(extension == 'pdf' ){
+		LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-file-pdf-o fa-2x \"></i></a>";
+	
+	}else if(extension == 'doc' || extension =='dox' || extension =='docx'){
+		LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-file-word-o fa-2x\"></i></a>";
+	
+	}
+		
+	$("#meetFile_" + counter).html(LightImg);
+
+	}
+function checkMeeting(){
+	var documentName =true;
+	
+	$('.mettDocNameCls').each(function(){
+		if (!blankValidation($(this).attr('id'),"TextField" ,"Please Select Document Name ")){
+			
+			documentName =false;
+	        return false;
+		}
+			
+	});
+	var document =true;
+	if(documentName){
+		$('.mulDocMett').each(function(){
+			if (!blankValidation($(this).attr('id'),"TextField" ,"Please Select Document  ")){
+				
+				document =false;
+		        return false;
+			}
+				
+		});	
+	}
+	if(documentName && document){
+		MeetingMore();
+	}
+}
+/* replay to requisition  add more */
+function MeetingMore(){
+	var lengthOfTableRowReq = $("#tbodyDataMeeting").children('tr').length;
+	var cloneHtml = $("#myTableMeeting tbody tr:first").clone();
+	
+	$("#myTableMeeting tbody tr:last").find('td:last').html('');
+	$("#myTableMeeting tbody").append($("#myTableMeeting tbody tr:first").clone());
+	
+	$("#myTableMeeting tbody tr td:last").html("");
+	var addMore='<button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="checkMeeting();"><span class="ti-plus"></span></button>&nbsp;'
+	var removeMore = '<button type="button" class="btn btn-warning rmv" name="RemoveMeeting"><span class="ti-minus"></span></button>';
+	
+	$("#myTableMeeting tbody tr:last").find('td:last').append(addMore);
+	$("#myTableMeeting tbody tr:last").find('td:last').append(removeMore);
+	$("#myTableMeeting tbody tr:last").find(".mulDocMett").val("");
+	$("#myTableMeeting tbody tr:last").find(".mettDocNameCls").val("");
+	$("#myTableMeeting tbody tr:last").find(".meetIcon").empty();
+	$("#myTableMeeting tbody tr:last").find(".mettCommentCls").val("");
+	
+	
+	var editTrReq = 0;
+	
+	if(lengthOfTableRowReq>editTrReq){
+		$("#myTableMeeting tbody tr").eq(lengthOfTableRowReq-1).find('td:last').append(removeMore);
+	}
+	
+	$("#myTableMeeting > tbody > tr").each(function(i){
+		var textInput = $(this).find('input');
+		var divInput = $(this).find('div');
+		var areaInput = $(this).find('textarea');
+		textInput.eq(0).attr('id',"mettDocName_"+i);
+		textInput.eq(1).attr('id',"docMett_"+i);
+		divInput.eq(1).attr('id', "row2_" + i);
+		divInput.eq(2).attr('id', "meetFile_" + i)
+		areaInput.eq(0).attr('id', "mettComment_" + i)
+		
+	})
+	
+}
+	$(document).ready(function() {
+		
+		 CKEDITOR.replace('entryMeeting', {
+		      height: 250,
+		      removePlugins: 'wsc',
+		      scayt_autoStartup: true,		     
+		      scayt_maxSuggestions: 3
+		    });
+		/* SEND REPONSE to Requisition */
+		var lengthOfTableRowReq = $("#tbodyDataMeeting").children('tr').length;
+		$('.tbllMeeting').on('click', '.rmv', function () {
+			$(this).closest('tr').remove();
+			$("#myTableMeeting tbody tr:last").find('td:last').html('');
+			var add='<button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="checkMeeting();"><span class="ti-plus"></span></button>&nbsp;'
+			var remove = '<button type="button" class="btn btn-warning rmv" name="RemoveMeeting"><span class="ti-minus"></span></button>';
+
+			if($("#tbodyDataMeeting").children('tr').length > 1){
+			$("#myTableMeeting tbody tr:last").find('td:last').append(add);
+			$("#myTableMeeting tbody tr:last").find('td:last').append(remove);
+			}else{
+			$("#myTableMeeting tbody tr:last").find('td:last').append(add);
+			}
+			
+			});
+		$(".MeetingDate").datetimepicker({
+			format : 'd-m-Y',
+			minDate:new Date(),
+			closeOnDateSelect : true,
+			timepicker : false,
+			scrollInput : false
+		})
+		$(".MeetingTime").datetimepicker({
+			datepicker:false,
+			format: 'A g:i',
+	        formatTime: 'A g:i',
+	        step:10,
+	        scrollInput : false
+				
+		})
+		
+		
+	});
+	
+	 $(function () { 
+		 $('#multiple8').chosen(); 
+	 });
+	</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<!-- <li><a th:href="@{/audit/view-initiated-audit-report-update-date-view}">Schedule Meeting</a></li> -->
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Schedule Meeting</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+					<div class="card-body">
+						<div class="basic-elements">
+
+							<input type="hidden" id="auditInitiate" th:value="${edit}">
+							<div class="row">
+								<span style="color: red;" id="errorMsg"></span>
+								<div th:if="${message != null}">
+									<span th:text="${message}" style="color: red;"></span>
+								</div>
+							</div>
+							<div class="row">
+								<input type="hidden" id="jsonValue" th:value="${empList}" /> <input
+									type="hidden" id="personList" th:value="${empList}" />
+								<!-- First Collapse -->
+
+								<table class="table">
+									<thead th:if="${#lists.size(meetingDtl)>0}">
+										<tr>
+											<th>Meeting Date</th>
+											<th>Start Time</th>
+											<th>End Time</th>
+											<th>Department</th>
+											<th>Scheduled By</th>
+											<th width="20%">Participant</th>
+											<th width="10%">Documents</th>
+											<!--   <th width="20%">Comments</th> -->
+										</tr>
+									</thead>
+									<tbody>
+										<span th:if="${#lists.size(meetingDtl)>0}"
+											th:each="doc,iter: ${meetingDtl}">
+											<tr>
+												<td th:text="${doc.date}">Meeting Date</td>
+												<td th:utext="${doc.fromTime}">Start Time</td>
+												<td th:text="${doc.toTime}">End Time</td>
+												<td th:text="${doc.section}">Section</td>
+												<td th:text="${doc.createdBy}">Scheduled By</td>
+												<td th:text="${doc.personTo}">To</td>
+												<td><span th:if="${#lists.size(doc.documents)>0}"
+													th:each="c:${doc.documents}" class="" th:utext="${c.key}"></span></td>
+
+											</tr>
+											<tr>
+												<td colspan="7">
+													<div>
+														<strong>Comment</strong>
+													</div>
+													<div th:utext="${doc.comment}"
+														style="border-bottom: 3px solid #ccc;"></div>
+												</td>
+											</tr>
+										</span>
+
+									</tbody>
+								</table>
+								<div
+									th:if="${ #lists.contains(session.USER_ROLES, 'rol021')   }">
+									<div class="modal-content">
+										<input type="hidden" id="id" /> <input type="hidden"
+											id="auditType" th:value="${auditTypeId}" /> <input
+											type="hidden" id="audit" />
+
+										<div class="row">
+											<div class="col-md-3">
+												<div class="form-group" id="fld2">
+													<label>Date</label><input type="text"
+														class="form-control MeetingDate" id="date"
+														placeholder="Enter From Date" readonly>
+												</div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group" id="fld2">
+													<label>Start Time</label><input type="text"
+														class="form-control MeetingTime" id="fromTime"
+														placeholder="Select Start Time" readonly>
+												</div>
+											</div>
+											<div class="col-md-3">
+												<div class="form-group" id="fld2">
+													<label>End Time</label><input type="text"
+														class="form-control MeetingTime" id="toTime"
+														placeholder="Select End Time" readonly>
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-12">
+												<div class="form-group">
+													<label>Subject</label> <input type="text"
+														id="meetingSubject" class="form-control"
+														placeholder="Write Your Subject Here....."
+														style="width: 100%; height: 40px">
+												</div>
+											</div>
+										</div>
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group" id="fld2">
+													<label>Department</label> <select
+														class="form-control departmentCls" id="section">
+
+														<option th:each="c,iter:${listDept}" th:value='${c.key}'
+															th:text="${c.name}"></option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-md-6">
+												<div>Participant:</div>
+
+												<select id="multiple8" multiple>
+													<option th:each="c,iter:${empList}" th:value='${c.key}'
+														th:text="${c.name}"></option>
+
+												</select> <input type="hidden" id="toHiddenId">
+
+											</div>
+
+
+										</div>
+										<div>
+											<table class="tbllMeeting tblls" id="myTableMeeting"
+												width="100%" border="0" cellspacing="0" cellpadding="0">
+												<thead>
+													<tr>
+														<th width="120" align="center">Document Name</th>
+														<th width="520" align="center">Upload</th>
+														<th width="520" align="center">Comment</th>
+														<th align="right">Action</th>
+													</tr>
+												</thead>
+												<tbody id="tbodyDataMeeting">
+													<tr class="tr_clone" id="row">
+														<td width="300"><input type="text"
+															class="form-control mettDocNameCls" id="mettDocName_0">
+														</td>
+														<td width="320" align="center">
+															<div class="row" id="rowId_0">
+																<div id="row2_0"
+																	style="text-align: right; padding-right: 50px;">
+																	<div class="text meetIcon" id="meetFile_0"></div>
+																</div>
+																<div class="upload-btn-wrapper">
+																	<label class="custom-file-upload" for="mulDocAtta"><i
+																		class="fa fa-cloud-upload"></i>Document</label> <input
+																		type="file" class="mulDocMett" id="docMett_0"
+																		style="display: block;"
+																		onchange="saveFileAssign(event);checkImageFormat(this);">
+																</div>
+															</div>
+														</td>
+														<td width="300"><textarea
+																class="form-control mettCommentCls" id="mettComment_0"></textarea>
+														</td>
+														<td align="Right" width="200">
+															<button type="button"
+																class="btn btn-primary tr_clone_add" name="add"
+																onclick="checkMeeting();">
+																<span class="ti-plus"></span>
+															</button>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</div>
+
+										<div class="form-group">
+											<div>
+												<strong>Comment :</strong>
+											</div>
+											<div>
+												<textarea id="entryMeeting" name="editor1" rows="10"
+													cols="80">
+                                          
+                                             </textarea>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<button type="button" id="submit" class="btn btn-primary"
+												onclick="MeetingDetails();">Send</button>
+											<button type="button" class="btn btn-warning" id="btnCancel"
+												onclick="funcLoad();">Cancel</button>
+										</div>
+									</div>
+								</div>
+
+
+
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+</html>

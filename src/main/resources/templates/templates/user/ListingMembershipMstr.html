@@ -1,0 +1,262 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script>
+
+//viewing in model
+function viewInModel(index){
+	$('#table1').empty();
+		$.ajax({
+			type 		:	"POST",
+			url 		:	"view-membership-type-master-details",
+			dataType 	:	'json',
+			contentType :	'application/json',
+			data 		:	index,
+			success 	: 	function(response) {
+				if(response.message=="success"){
+					console.log(response.body.stateStatus);
+					var memStatus = "";
+					if(response.body.memStatus){
+						memStatus = "Active";	
+					}else{
+						memStatus = "Inactive";	
+					}
+				    table = '<tr><td>Membership Name :</td>'+'<td align="left">'
+				    +response.body.memName+'</td>'+'</tr><tr><td>Monthly Fee :</td>'+'<td align="left">'
+				    +response.body.memMonthlyFee+'</td>'+'</tr><tr><td>registration Fee :</td>'+'<td align="left">'
+				    +response.body.memRegistrationFee+'</td>'+'</tr><tr><td>validity Fee :</td>'+'<td align="left">'
+				    +response.body.memValidity+'</td>'+'</tr><tr><td>Dependents Limit :</td>'+'<td align="left">'
+				    +response.body.tDependentsLimit+'</td>'+'</tr><tr><td>Child Age Limit :</td>'+'<td align="left">'
+				    +response.body.tChildrenAgeLimit+'</td>'+'</tr><tr><td>Effective From Date :</td>'+'<td align="left">'
+				    +response.body.tEffectiveFromDate+'</td>'+'</tr><tr><td>Description :</td>'+'<td align="left">'
+				    +response.body.memDescription+'</td>'+'</tr><tr><td>Status:</td><td align="left">'
+					+memStatus+'</td></tr>';
+					$('#myModal').modal('show');
+					$('#table1').append(table);
+				}				
+			},
+			error : function(data) {
+				console.log(data);
+			}
+		})
+	} 
+	
+//data table call through ajax
+
+ 	$(document).ready(function() {	
+ 		
+ 	
+ 		$('#table').DataTable({
+				'processing' : true,
+				'serverSide' : true,
+				'searching' : false,
+				'ordering' : false,
+				"ajax" : {
+					'url' : 'view-membership-type-master-through-ajax',
+					'data' : function(d) {
+						d.param1 = $('#param1').val();
+						 
+					}
+				},
+				'dataSrc' : "",
+			'columns' : [
+				{'data' : 'memName'},
+				{'data' : 'memMonthlyFee'},
+				{'data' : 'memRegistrationFee'},
+				{'data' : 'memValidity'},
+				{'data' : 'tDependentsLimit'},
+				{'data' : 'tChildrenAgeLimit'},
+				{'data' : 'tEffectiveFromDate'},
+				{'data' : 'membershipShowActive'},
+				{'data' : 'action'}
+					]	
+			});
+		  });
+	
+	function searchData() {
+		$('#table').DataTable().draw();
+	}	
+	
+	
+	//delete records 
+	  const ipAPI = 'https://api.ipify.org?format=json';
+	  function DeleteItem(index){
+	  swal({
+			title				: "Are you sure want to Delete Membership Mstr?",
+			text				: "Once Deleted,Can't revert back !",
+			type 				: "warning",
+			showCancelButton	: true,
+			confirmButtonColor	: "#DD6BB5",
+			confirmButtonText	:"Submit",
+			showLoaderOnConfirm	: true,
+			reverseButtons : true,
+			confirmButtonAriaLabel : 'Thumbs up, great!',
+			cancelButtonText : '<i class="fa fa-thumbs-down">cancel</i>',
+			cancelButtonAriaLabel : 'Thumbs down',
+			preConfirm: () => {
+			    return fetch(ipAPI)
+			      .then(response => response.json())
+			      .then(data => Swal.insertQueueStep(data.ip))
+			      .catch(() => {
+			        Swal.insertQueueStep({
+			          type: 'error',
+			          title: 'Unable to get your public IP'
+			        })
+			      })
+			 }  
+		}).then((result) => {
+			if(result.value){
+			$.ajax({
+			type		: "POST",
+			url 		: "delete-membership-type-master",
+			dataType	: "json",
+			contentType	: "application/json",
+			data		: JSON.stringify(index),
+			success		: function(response){
+				console.log(response);
+				if(response.message=="Success"){
+					swal({
+							title:"Data Saved Successfully.",
+							type: "success",
+					}).then(function(){
+							location.reload(); 
+					})
+				}else{
+					console.log('i m in unsuccess');
+					swal({
+						title:response.code,
+						text: response.message,
+						type:"warning"
+					})
+				}
+			},error		: function(response){
+				swal(response.code);	
+			}
+		}) //ajax ends
+			}
+		})//swal function block ends
+		
+		
+	  }
+	  
+
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="index.html">Home</a></li>
+					<li><a th:href="@{/user/add-membership-type-master}">Add Membership Type</a></li>
+					<li class="active"><span>View Membership Type Master</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Listing of Membership Type Master</h4>
+			</div>
+			<div class="container-fluid">
+
+		
+
+				<div class="card">
+						<div class="search-field">
+						<div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary"
+										href="add-membership-type-master">Create</a>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div>
+							<div class="row">
+								<div class="col-md-2">
+									<label>Membership Type Name</label>
+								
+								<select class="form-control" id="param1">
+									<option th:value="null">---Select---</option>
+									<option th:each="c:${memberList}" th:value='${c.key}'
+										th:text="${c.name}"></option>
+								</select>
+							</div>
+
+								<div class="col-md-2 mrt_10">
+									<div class="form-group filtersearch">
+										<button class="btn btn-info" onclick="searchData()">Search</button>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="table-responsive" style="width: 100%;">
+							<table id="table" class="table table-bordered">
+								<thead>
+									<tr>
+										<th>Membership Type Name</th>
+										<th>Registration Fee</th>
+										<th>Membership Fee</th>
+										<th>Validity</th>
+										<th>Dependent Limits</th>
+										<th>Child Age Limit</th>
+										<th>Effective From Date</th>
+										<th>Status</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+
+							</table>
+
+						</div>
+						<div style="clear: both;"></div>
+
+				</div>
+			</div>
+		</div>
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">View Details of Membership Type
+							Master</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<table width="100%" border="0" id="table1">
+
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<!-- Modal End-->
+		<!-- /# row -->
+
+
+	</div>
+</div>
+</html>

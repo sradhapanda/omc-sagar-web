@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+
+<head>
+<style type="text/css">
+#autocomplete-list {
+	float: left;
+	list-style: none;
+	margin-top: -3px;
+	padding: 0; /
+	width: 570px; /
+	position: absolute;
+	z-index: 9999;
+}
+
+#autocomplete-list li {
+	padding: 10px;
+	background: #f2f2f2;
+	border-bottom: 1px solid #373757;
+	color: #373757;
+	font-weight: 500;
+}
+
+#autocomplete-list li:hover {
+	background: #373757;
+	color: #f2f2f2;
+	cursor: pointer;
+}
+
+.overSelect {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.selectBox {
+	position: relative;
+}
+
+.selectBox select {
+	width: 100%; /
+	font-weight: bold; /
+	font-size: 14px;
+}
+
+.checkClass {
+	display: none;
+	border: 1px #dadada solid;
+}
+.checkClass label
+{
+text-align:left;
+margin-right:5px;
+padding:5px;
+}
+.checkClass input
+{
+margin-right:5px;
+}
+
+.checkClass1 {
+	display: none;
+	border: 1px #dadada solid;
+}
+
+.checkClass label {
+	display: block;
+}
+
+.checkClass1 label {
+	display: block;
+}
+</style>
+<script>
+/* Function for blank validation */
+
+function checkEmpty(){
+	var userRoleValid =true;
+	$('.userRoleNameCls').each(function(){
+			if (!blankValidation($(this).attr('id'),"SelectBox" ,"Please Select User Role Name")){
+				userRoleValid =false;
+				return false;
+		 		}
+			});
+
+	var userValid = true;
+	if(userRoleValid){
+		$("#myTable > tbody > tr").each(function(i){			
+		$(".userNameCls").each(function(){
+		var current_id =  $(this).attr("name");
+		if (!blankValidation(current_id,"CheckBox" ,"Please Choose user")){
+			userValid = false;
+			return false;			
+			}		
+		});
+	 });
+	}
+	var tatValid =true;
+	if(userRoleValid && userValid){
+		$('.tatClass').each(function(){
+			var current_id = $(this).attr("id");
+			if (!blankValidation($(this).attr('id'),"SelectBox" ,"Please Enter TAT Value")){
+				tatValid =false;
+				return false;
+				}
+			});
+		}	
+	if(userRoleValid && userValid && tatValid){
+		addMore();
+	}
+}
+/* Function for adding more Table row */
+
+function addMore(){
+	var lengthOfTableRow = $("#tbodyData").children('tr').length;
+	var lengthOfTableCol = $("#tbodyData").children('colspan').length;
+	var cloneHtml = $("#myTable tbody tr:first").clone();
+	$("#myTable tbody tr:last").find('td:last').html('');
+	$("#myTable tbody").append($("#myTable tbody tr:first").clone());
+	$("#myTable tbody tr td:last").html("");
+	var addMore='<button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="checkEmpty();"><span class="ti-plus"></span></button>&nbsp;'
+	var removeMore = '<button type="button" class="btn btn-warning rmv" name="Remove"><span class="ti-minus"></span></button>';
+
+	$("#myTable tbody tr:last").find('td:last').append(addMore);
+	$("#myTable tbody tr:last").find('td:last').append(removeMore);
+	$("#myTable tbody tr:last").find('.userRoleNameCls').val("");
+	$("#myTable tbody tr:last").find('.userNameCls').attr('checked',false);
+	$("#myTable tbody tr:last").find('.tatClass').val("");
+
+	var editTr = 0;
+
+	if(lengthOfTableRow>editTr){
+		$("#myTable tbody tr").eq(lengthOfTableRow-1).find('td:last').append(removeMore);
+	}
+
+ /* BLANK FIELD START */
+	$("#myTable tbody tr:last").find(".userRoleNameCls").val("");
+	$("#myTable tbody tr:last").find(".checkClass").hide();
+	$("#myTable tbody tr:last").find(".checkClass1").hide();
+	
+	if($("#myTable tbody tr:last").find(".userRoleNameCls").val("")){
+		$("#myTable tbody tr:last").find(".checkClass").empty();
+	} 
+
+	$("#myTable > tbody > tr").each(function(i){
+		var selectInput = $(this).find('select');
+		var textInput = $(this).find('input') ;
+		var divInput = $(this).find('div') ;
+		var checkBox = $(this).find('input:checkbox:first').attr('checked', 'checked');
+		var buttonInput = $(this).find('button') ;
+		
+		selectInput.eq(0).attr('id',"userRole_"+i);
+		textInput.eq(0).attr('id',"selectUser_"+i);		
+		textInput.eq(textInput.length-1).attr('id',"TAT_"+i);
+		divInput.eq(0).attr('id',"mselct_"+i);
+		divInput.eq(4).attr('id',"mselct1_"+i);
+		divInput.eq(3).attr('id',"checkboxes_"+i);
+		divInput.eq(7).attr('id',"checkboxes1_"+i);
+		buttonInput.eq(0).attr('id',"selectDiv_"+i);
+		buttonInput.eq(1).attr('id',"selectDiv1_"+i);
+
+	})
+}
+$(document).ready(function(){
+	var lengthOfTableRow = $("#tbodyData").children('tr').length;
+	var lengthOfTableCol = $("#tbodyData").children('colspan').length;
+	$('.tbll').on('click', '.rmv', function () {
+		$(this).closest('tr').remove();
+		$("#myTable tbody tr:last").find('td:last').html('');
+		var add='<button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="checkEmpty();"><span class="ti-plus"></span></button>&nbsp;'
+		var remove = '<button type="button" class="btn btn-warning rmv" name="Remove"><span class="ti-minus"></span></button>';
+		if($("#tbodyData").children('tr').length > 1){
+			$("#myTable tbody tr:last").find('td:last').append(add);
+			$("#myTable tbody tr:last").find('td:last').append(remove);
+		}else{
+			$("#myTable tbody tr:last").find('td:last').append(add);
+		}
+		displayTable();
+	});
+	
+/* Function for saving data */
+
+	$("#submitItems").click(function(){			
+		var dataset = [];
+		var stageNo = 1;
+		$("#tbodyData > tr").each(function(i){
+			$(this).find("input:checkbox[name=user_]:checked").each(function(j){
+				
+			item = {};	
+			item['process']			=	$("#processName").val();	
+			item['userRole']		=	$(this).closest("tr").find(".userRoleNameCls").val();
+			item['user']		 	=	$(this).val();	
+			item['stageNo'] 		=	stageNo;
+			item['tat'] 			=	$(this).closest("tr").find(".tatClass").val();
+			item['createdBy'] 		=   'u0001';
+			item['isEdit'] 			=   $("#isEdit").val();					
+			dataset.push(item);			
+			});		
+			stageNo++;
+		});
+		console.log(dataset)	
+		/* table tbody tr loop ends */
+		submitSetAutority(dataset);
+
+	/* Blank Validations */
+
+		if (!blankValidation("processName","SelectBox" ,"Please Select Process  Name"))
+		return false;
+
+		var userRoleValid =true;
+		$('.userRoleNameCls').each(function(){
+				if (!blankValidation($(this).attr('id'),"SelectBox" ,"Please Select UserRole Name")){		
+					userRoleValid =false;
+					return false;
+				}
+		});
+
+		var userValid =true;
+		if(userRoleValid){
+			$('.userNameCls').each(function(){
+				var current_id = $(this).attr("name");
+				if (!blankValidation(current_id,"CheckBox" ,"Please Choose user")){
+					userValid = false;
+					return false;
+					
+				}
+
+			});
+		}
+		var tatValid =true;
+		if(userRoleValid && userValid){
+			$('.tatClass').each(function(){
+				if (!blankValidation($(this).attr('id'),"SelectBox" ,"Please Enter TAT Value ")){
+					tatValid =false;
+					return false;
+				}
+			});
+		}
+
+		if(userRoleValid && userValid && tatValid){
+			submitSetAutority(dataset);
+		}
+
+	});
+});
+
+//get user name from user role
+function getUserRoleName(event){
+	var cId = event.currentTarget.id;
+	var userRole = event.currentTarget.value;
+	var l = cId.split("_");
+	var counter = l[1];
+	var count = 0;
+	var i = 1;
+	$(".userRoleNameCls").each(function() {		
+		if (userRole == $(this).val()) {
+			count++;	
+		}			
+	})
+	if (count>=2 ){
+	
+	}
+	else{
+		$("#checkboxes_"+counter).hide();			
+		if (userRole !="") {
+			 $("#checkboxes_"+counter).show();
+			 $.ajax({
+				type : 'POST',
+				url : 'add-set-authority-get-username-throughAjax',
+				contentType : false,
+				data : userRole,				
+				success : function(response) {				
+					$("#checkboxes_"+counter).empty();
+				    for (var i = 0; i < response.body.length; i++) {
+						var divContent ="<label ><input type='checkbox' name='user_'   class='userNameCls' value='"+response.body[i].key+"'/>"+response.body[i].name+" </label>";
+						$("#checkboxes_"+counter).append(divContent);
+					}  				 
+				},
+				error : function(e) {
+					console.log("error",e);
+				}
+			});
+		}
+		else {
+			$("#checkboxes_"+counter).empty();
+		}
+	}
+}
+
+/* Function for Submit PupUp */
+
+function submitSetAutority(dataset){
+	const ipAPI = 'https://api.ipify.org?format=json'
+	swal.fire({
+		title	: "Are you sure want to Submit?",
+		text	: "Once Submited,Can't revert back !",
+		type : "warning",
+		showCancelButton	: true,
+		confirmButtonColor	: "#DD6BB5",
+		confirmButtonText	:"Submit",
+		showLoaderOnConfirm	: true,
+		reverseButtons : true,
+		confirmButtonAriaLabel : 'Thumbs up, great!',
+		cancelButtonText : 'Cancel',
+		cancelButtonAriaLabel : 'Thumbs down',
+		preConfirm: () => {
+			return fetch(ipAPI)
+			.then(response => response.json())
+			.then(data => Swal.insertQueueStep(data.ip))
+			.catch(() => {
+				Swal.insertQueueStep({
+				type: 'error',
+				title: 'Unable to get your public IP'
+				, })
+			})
+		} 
+	}).then((result) => {
+		if(result.value){
+			$.ajax({
+				type	: "POST",
+				url : "add-set-authority",
+				dataType	: "json",
+				contentType	: "application/json",
+				data	: JSON.stringify(dataset),
+				success	: function(response){
+					if(response.message=="Success"){
+						swal({
+							title:"Data Saved Successfully.",
+							type: "success",
+						}).then(function(){
+						window.location.href = "/user/view-set-authority" ;
+					})
+					}else{
+						swal({
+							title:response.code,
+							text: response.message,
+							type:"warning"
+						})
+					}
+				},error	: function(data){
+					console.log(data);	
+				}
+		}) //ajax ends
+	}
+	})//swal function block ends
+}//submit function ends
+
+//Function for cancel button
+
+function funcLoad(){
+	location.reload();
+} 
+ function returnToAddPage(){
+	var item = $("#reqstnIssueNote").val();
+	if((item == null)||(item == "")){
+		funcLoad();
+	}
+	else{
+		window.location.href = "/user/add-set-authority" ;
+	}
+} 
+
+//function to check duplicate entry of user role   in edit time
+	function checkForDuplicateEntryForuserRoleTable(event) {
+		var userRoleTable = event.currentTarget.value;
+		var count = 0;
+		var userRoleTableId = event.currentTarget.id;	
+		var i = 1;
+		var l = userRoleTableId.split("_");
+		var counter = l[1];	
+		
+		$(".userRoleNameCls").each(function() {		
+			if (userRoleTable == $(this).val()) {
+				count++;	
+				//alert(counter)
+			}			
+		})
+		if (count >= 2) {			
+			swal('This Use Role name is already selected');
+			$("#" + userRoleTableId).val("");
+			$("#checkboxes_"+counter).empty();			
+		}
+		
+	}
+//function to check duplicate entry of user role name in add time
+	function disableTableOption(){
+
+		$("#myTable > tbody > tr").each(function(i){
+			$(".userRoleNameCls option").prop("disabled", false); //enable everything
+	
+			var arr = $.map(
+			$(".userRoleNameCls option:selected"), function (n) {
+				return n.value;
+			});
+	
+			$(".userRoleNameCls option").filter(function () {
+				return $.inArray($(this).val(), arr) > -1; //if value is in the array of selected values
+			}).hide();
+	
+	
+			$(".userRoleNameCls option").filter(function () {
+				return $.inArray($(this).val(), arr) == -1; //if value is not in the array of selected values
+			}).show();
+		})
+		}	
+		function displayTable(){
+			$("#myTable > tbody > tr").each(function(i){
+				var arr = $.map(
+				$(".userRoleNameCls option:selected"), function (n) {
+					return n.value;
+				});
+				$(".userRoleNameCls option").filter(function () {
+					return $.inArray($(this).val(), arr) == -1; //if value is not in the array of selected values
+				}).show();
+			})
+		}
+
+//function for show and hide checkbox 
+	 function showCheckboxes(event) {
+		
+		  var cId = event.currentTarget.id;
+			var l = cId.split("_");
+			var counter = l[1];		
+				$("#checkboxes_"+counter).toggle(); 
+
+	 } 
+</script>
+<style>
+.ui-autocomplete-loading {
+	background: white url("/static/images/ui-anim_basic_16x16.gif") right
+		center no-repeat;
+}
+</style>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="">Home</a></li>
+					<li class="active"><span>Add Set Authority</span></li>
+				</ol>
+			</div>
+			<div class="col-md-12"></div>
+			<div class="card-title">
+				<h4>Add Set Authority</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+					<div class="card-body">
+						<div class="basic-elements">
+
+							<form th:object="${setAuthority}" autocomplete="off">
+
+								<input type="hidden" id="isEdit" th:value="${id}" />
+								<div class="row">
+									<span style="color: red;" id="errorMsg"></span>
+									<div th:if="${message != null}">
+										<span th:text="${message}" style="color: red;"></span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Process Name</label> <select class="form-control"
+												id="processName" th:disabled="${id}">
+												<option th:value="null">--Select--</option>
+												<option th:if="${id}" th:each="c:${processList}"
+													th:value='${c.key}' th:text="${c.name}"
+													th:selected="${c.key==userSetAuthority[0].process}"></option>
+												<option th:unless="${id}" th:each="c:${processList}"
+													th:value='${c.key}' th:text="${c.name}"></option>
+
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-12">
+										<!-- id="table-data" -->
+										<table class="tbll" id="myTable" width="100%" border="0"
+											cellspacing="2" cellpadding="5">
+											<thead>
+												<tr>
+													<th>User Role</th>
+													<th>User Name</th>
+													<th>TAT</th>
+													<th>Action</th>
+												</tr>
+											</thead>
+											<!-- for edit -->
+											<tbody id="tbodyData">
+												<tr class="tr_clone" th:if="${id}"
+													th:each="a,iter:${userSetAuthority}">
+													<td valign="top"><select
+														th:id="'userRole_'+${iter.index}"
+														class="form-control userRoleNameCls"
+														onchange="getUserRoleName(event);checkForDuplicateEntryForuserRoleTable(event);">
+															<option value="">--Select--</option>
+															<option th:each="c:${userRoleList}" th:value='${c.key}'
+																th:text="${c.name}" th:selected="${c.key ==a.userRole}"></option>
+													</select></td>
+
+													<td valign="top"><div id="mselct_">
+															<div class="input-group md-form form-sm form-2 pl-0">
+																<input type="text" class="form-control"
+																	value="Select User" th:id="'selectUser_'+${iter.index}"
+																	readonly>
+																<div style="float: right;">
+																	<button type="button" class="fa fa-caret-down"
+																		style="font-size: 28px" name="add"
+																		th:id="'selectDiv_'+${iter.index}"
+																		onclick="showCheckboxes(event);"></button>
+																</div>
+															</div>
+															<div th:id="'checkboxes_'+${iter.index}"
+																class="checkClass">
+																<div th:each="c:${userList[iter.index]}">
+																	<input type="checkbox" class="userNameCls" name="user_"
+																		th:text="${c.name}"
+																		th:checked="${#lists.contains(activity2, c.key)}"
+																		th:value='${c.key}'>
+																</div>
+															</div>
+														</div></td>
+													<td valign="top"><input type="text"
+														th:id="'TAT_'+${iter.index}" class="form-control tatClass"
+														th:value="${a.tat}"></td>
+
+													<td valign="top">
+														<button th:if="${iter.size == iter.index+1}" type="button"
+															class="btn btn-primary tr_clone_add" name="add"
+															onclick="checkEmpty();">
+															<span class="ti-plus"></span>
+														</button>&nbsp;
+														<button th:if="${iter.size != 1}" type="button"
+															class="btn btn-warning rmv" name="Remove">
+															<span class="ti-minus"></span>
+														</button>
+													</td>
+												</tr>
+												<!-- for add  -->
+												<tr class="tr_clone" th:unless="${id}">
+
+													<td valign="top"><select id="userRole_0"
+														class="form-control userRoleNameCls"
+														onchange="getUserRoleName(event);disableTableOption();">
+															<option value="">--Select--</option>
+															<option th:each="c:${userRoleList}" th:value='${c.key}'
+																th:text="${c.name}"></option>
+													</select></td>
+
+													<td valign="top"><div id="mselct_">
+															<div class="input-group md-form form-sm form-2 pl-0">
+																<input type="text" class="form-control"
+																	value="Select User" id="selectUser_" readonly>
+																<div style="float: right;">
+																	<button type="button" class="fa fa-caret-down"
+																		style="font-size: 28px" name="add" id="selectDiv_0"
+																		onclick="showCheckboxes(event);"></button>
+																</div>
+															</div>
+															<div id="checkboxes_0" class="checkClass">
+																<input type="checkbox" class="userNameCls" name="user_">
+															</div>
+														</div></td>
+													<td valign="top"><input type="text" id="TAT_0"
+														class="form-control tatClass"></td>
+
+													<td valign="top">
+														<button type="button" class="btn btn-primary tr_clone_add"
+															name="add" onclick="checkEmpty();">
+															<span class="ti-plus"></span>
+														</button>&nbsp;
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+
+							</form>
+						</div>
+
+					
+					<div class="col-md-12">
+						<div class="form-group">
+							<button type="button" id="submitItems" class="btn btn-success">Submit</button>
+							<button type="button" class="btn btn-warning"
+								onclick="returnToAddPage();">Cancel</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div style="clear: both;"></div>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script type="text/javascript">
+/* MODAL LAUNDRY ITEM */
+function viewInModel(index) {
+	$('#table1').empty();
+	
+	$.ajax({
+		type : "POST",
+		url : "modal-view-user-prefix",
+		dataType : 'json',
+		contentType : 'application/json',
+		data : index,
+		success : function(response) {
+			if (response.message == "success") {
+				var financialyear = ""
+				var status = "";
+				if (response.body.prfxActive) {
+					status = "Active";
+				} else {
+					status = "InActive";
+				}
+				
+				if (response.body.prfxFinYearStatus) {
+					financialyear = "Yes";
+				} else {
+					financialyear = "No";
+				}
+				table = '<tr><td>Type Name :</td>'
+						+ '<td align="left">'
+						+ response.body.prfxTypeName
+						+ '</td>'
+						+ '</tr><tr><td>Start Number :</td><td align="left">'
+						+ response.body.prfxStartNo
+						+ '</td></tr><tr><td>Prefix Code :</td><td align="left">'
+						+ response.body.prfxCode
+						+ '</td></tr><tr><td>Number Length :</td><td align="left">'
+						+ response.body.prfxNumberLength
+						+ '</td></tr><tr><td>Financial Year :</td><td align="left">'
+						+ financialyear
+						+ '</td></tr><tr><td>Stauts :</td><td align="left">'
+						+ status + '</td></tr>';
+						
+				$('#table1').append(table);
+				$('#myModal').modal('show');
+				
+			}
+		},
+		error : function(data) {
+			console.log(data);
+		}
+	})
+
+}
+/* AJAX CODE FOR DATA TABLE */
+$(function() {
+	$('#prefi').DataTable({
+		'processing' : true,
+		'serverSide' : true,
+		'searching' : false,
+		'ordering' : false,
+		'paging' : true,
+		"ajax" : {
+			'url' : 'view-prefix-management-through-ajax',
+			'data' : function(d) {
+				d.param1 = $('#param1').val();
+				d.param2 = $('#param2').val();
+			}
+		},
+		'dataSrc' : "",
+		'columns' : [ {
+			'data' : 'prfxTypeName'
+		}, {
+			'data' : 'prfxStartNo'
+		}, {
+			'data' : 'prfxCode'
+		}, {
+			'data' : 'prfxNumberLength'
+		}, {
+			'data' : 'finYearStatusName'
+		}, {
+			'data' : 'statusName'
+		}, {
+			'data' : 'action'
+		} ]
+	});
+});
+function searchData() {
+	$('#prefi').DataTable().draw();
+}
+</script>
+
+</head>
+<div layout:fragment="content">
+	   <!-- nav tabs section starts -->
+      <div class="content-wrap">
+         <div class="main mrt_20">
+            <div class="col-md-12">
+               <ol class="breadcrumb breadcrumb-arrow">
+                  <li><a href="#">Home</a></li>
+                  
+                  
+                  <li class="active"><span>View Prefix Management</span></li>
+               </ol>
+            </div>
+            <div class="card-title">
+               <h4>View Prefix Management</h4>
+            </div>
+            <div class="container-fluid">
+               
+               
+               <div class="card">
+                  <div id="demo" class="collapse">
+                     <div class="search-field">
+                        <div class="row">
+                           <div class="col-md-2">
+                              <div class="org-name"> Type Name</div>
+                           </div>
+                           <div class="col-md-3">
+                              <input type="text" class="form-control" id="param1">
+                           </div>
+                            <div class="col-md-2">
+                              <div class="org-name">Prefix Code</div>
+                           </div>
+                           <div class="col-md-3">
+                              <input type="text" class="form-control" id="param2">
+                           </div> 
+                           
+                           <div class="col-md-2">
+                              <div class="form-group">
+                                 <button class="btn btn-primary" onClick="searchData()">Search</button>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+                  <a data-toggle="collapse" data-target="#demo" class="showhideangelbg"><i class="fa fa-angle-double-down"></i> </a>
+                  
+                  <div class="row">
+                     
+                     <div class="table-responsive" style="width:100%;">
+                        <table id="prefi" class="table table-bordered">
+                           <thead>
+                              <tr>
+                                 <th>Type Name</th>
+                                 <th>Start Number</th>
+                                 <th>Prefix Code</th>
+                                 <th>Number Length</th>
+                                 <th>Financial Year</th>
+                                 <th>Status</th>
+                                 <th>Action</th>
+                              </tr>
+                           </thead>
+                           <tbody>
+                             
+                           </tbody>
+                        </table>
+                        
+                     </div>
+                     <div style="clear:both;"></div>
+                  </div>
+                  
+               </div>
+            </div>
+         </div>
+         <!-- Modal Start-->
+         <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+               
+               <!-- Modal content-->
+               <div class="modal-content">
+                  <div class="modal-header">
+                     <h4 class="modal-title">View Details of Prefix</h4>
+                     <button type="button" class="close" data-dismiss="modal"><i class="fa fa-close fa-2x"></i></button>
+                  </div>
+                  <div class="modal-body">
+                     <table width="100%" border="0" id="table1">
+                       
+                     </table>
+                  </div>
+                  <div class="modal-footer">
+                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+               </div>
+               
+            </div>
+         </div>
+         <!-- Modal End-->
+         <!-- /# row -->
+         
+      </div>
+</div>
+</html>

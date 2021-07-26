@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>Add User without Ajax</h1>
+   
+        <p>username: <input type="text" th:value="${user.username}" /></p>
+        <p>password: <input type="text" th:value="${user.password}" /></p>
+        <p>email   : <input type="text" th:value="${user.email}" /></p>
+        <p>address : <input type="text" th:value="${user.address}" /></p>
+        <p>phone   : <input type="text" th:value="${user.phone}" /></p>
+    
+</body>
+</html>

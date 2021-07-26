@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script>
+	//Deleting the department
+	
+	const ipAPI = 'https://api.ipify.org?format=json'
+	function deleteOrganizationAuditors(id){
+	 //var data = id.split(",");
+			swal.fire({
+			title	: "Are you sure want to Delete?",
+			text	: "Once Deleted,Can't revert back !",
+			type : "warning",
+	
+			showCancelButton	: true,
+			confirmButtonColor	: "#ef5920",
+			confirmButtonText	:"Yes",
+			showLoaderOnConfirm	: true,
+			reverseButtons : true,
+			preConfirm: () => {
+				return fetch(ipAPI)
+				.then(response => response.json())
+				.then(data => Swal.insertQueueStep(data.ip))
+				.catch(() => {
+				Swal.insertQueueStep({
+					type: 'error',
+					title: 'Unable to get your public IP'
+			, })
+			})
+		  } 
+		}).then((result) => {
+		if(result.value){
+			$.ajax({
+				type	: "GET",
+				url : "/audit/view-organization-auditor-delete?id=" +id,
+				dataType	: "json",
+				contentType	: "application/json",
+				data	: JSON.stringify(id),
+				success	: function(response){
+					console.log(response);
+					if(response.message=="success"){
+						
+						swal({
+							title	: "Data Deleted Successfully.",
+							type: "success",
+					}).then(function(){
+						location.reload(); 
+					})
+					}else{
+						swal({
+							title:response.code,
+							text: response.message,
+							type:"warning"
+						})
+					}
+			},error	: function(data){
+				console.log(data);	
+			}
+		}) //ajax ends
+	  }
+	 })//swal function block ends
+	}
+	
+
+	
+	function viewInModel(index) {
+		//alert("hi");
+		$('#table1').empty();
+		$.ajax({
+					type : "POST",
+					url : "view-organization-auditor-modalView",
+					dataType : 'json',
+					contentType : 'application/json',
+					data : index,
+					success : function(response) {
+						if (response.message == "success") {
+							var orgStatus = "";
+							if (response.body.tStatus) {
+								orgStatus = "Active";
+							} else {
+								orgStatus = "InActive";
+							}
+							table = '<tr><td>Organization Name :</td>'
+								+ '<td align="left">'
+								+ response.body.tOrgName
+								+ '</td>'
+								+ '</tr><tr><td>Mobile no :</td><td align="left">'
+								+ response.body.tOrgMobile
+								+ '</tr><tr><td>Pin No :</td><td align="left">'
+								+ response.body.tOrgPINno
+								+ '</tr><tr><td>Address:</td><td align="left">'
+								+ response.body.tOrgAddress
+								+ '</tr><tr><td>Country :</td><td align="left">'
+								+ response.body.tOrgCountry
+								+ '</tr><tr><td>State :</td><td align="left">'
+								+ response.body.tOrgState
+								+ '</tr><tr><td>District :</td><td align="left">'
+								+ response.body.tOrgDist
+								+ '</td></tr><tr><td>Designation :</td><td align="left">'
+								+ response.body.designation
+								+ '</td></tr><tr><td>Status :</td><td align="left">'
+								+ orgStatus + '</td></tr>';
+							$('#myModal').modal('show');
+							$('#table1').append(table);
+						}
+					},
+					error : function(data) {
+						console.log(data);
+					}
+				})
+
+	}
+</script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#tblTheme').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-organization-auditor-ThroughAjax',
+				'data' : function(d) {
+					d.param1 = $('#param1').val();
+				}
+			},
+			'dataSrc' : "",
+			'columns' : [ {
+				'data' : 'tOrgName'
+			}, {
+				'data' : 'tOrgFName'
+			},{
+				'data' : 'tOrgMobile'
+			},{
+				'data' : 'tOrgPINno'
+			},{
+				'data' : 'tOrgAddress'
+			},{
+				'data' : 'tOrgCountry'
+			},{
+				'data' : 'tOrgState'
+			},{
+				'data' : 'tOrgDist'
+			/* },{
+				'data' : 'tDesc' */
+			}, {
+				'data' : 'statusName'
+			}, {
+				'data' : 'action'
+			} ]
+		});
+	});
+
+	function searchData() {
+		$('#tblTheme').DataTable().draw();
+	}
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li><a th:href="@{/audit/add-organization-auditor}">Add Organization Auditors</a></li>
+					<li class="active"><span>View Organization Auditors </span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>View Organization Auditors</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+					<div class="search-field">
+						<div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary" href="add-organization-auditor">Create</a>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div>
+						<div class="row">
+							<div class="col-md-2">
+								<label>Mobile No</label> <input id="param1"
+									class="form-control" type="text"
+									onkeyup="searchData()">
+							</div>
+
+						</div>
+					</div>
+					<div class="table-responsive" style="width: 100%;">
+						<table id="tblTheme" class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Organization Name</th>
+									<th>Name</th>
+									<th>Mobile No</th>
+									<th>Pin No</th>
+									<th>Address</th>
+									<th>Country</th>
+									<th>State</th>
+									<th>District</th>
+									<!-- <th>Description</th> -->
+									<th>Status</th>
+									<th align="center">Action</th>
+								</tr>
+							</thead>
+						</table>
+					</div>
+					<div style="clear: both;"></div>
+
+				</div>
+			</div>
+		</div>
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content" style="width: 750px;">
+					<div class="modal-header">
+						<h4 class="modal-title">View Details of Organization Auditor</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<table style="width: 100%; border: 0;" id="table1">
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+	</div>
+</div>
+</html>

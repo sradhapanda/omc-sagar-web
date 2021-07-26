@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script src="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<style type="text/css">
+.example-image-link{
+ position: relative;
+    bottom: 9px;
+}
+
+.upload-btn-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    right: -50px;
+}
+
+textarea {
+    overflow: auto;
+    resize: vertical;
+    width: 350px;
+}
+
+.zoombox3 {
+    position: relative;
+    background: #f00;
+    height: 28px;
+    width: 18px;
+    color: #fff;
+    padding: 5px;
+    top: -35px;
+    right: -331px;
+    border-radius: 2px;
+}
+
+</style>
+
+<script type="text/javascript">
+//Meeting Details
+function MeetingDetails(){
+	if (!blankValidation("financialYear", "SelectBox",
+	"financial Year can not be left blank"))
+return false;
+if (!blankValidation("folder", "SelectBox",
+	"folder can not be left blank"))
+return false;
+	
+	 var certifValid = true;
+     $('.mettDocNameCls').each(function() {
+    	
+         var current_id = $(this).attr("id");
+         if (!blankValidation(current_id, "TextField", "Please Enter Document Name")) {
+        	
+             certifValid = false;
+             return false;
+         }
+     });
+         var document = true;
+         $('.mulDocMett').each(function(){
+        	
+ 			if (!blankValidation($(this).attr("id"),"TextField" ,"Please Select Document  ")){
+ 				
+ 				document =false;
+ 		        return false;
+ 			}
+ 				
+ 		});	
+
+    
+	 var datasetReq = [];
+	 var auditType=$("#auditType").val();
+	 $("#tbodyDataMeeting > tr").each(function(i) {
+		 	    var uFile = $(this).find(".mulDocMett")[0].files[0];
+
+	    	   var fileName = $(this).find(".mulDocMett").val();
+
+	        if (fileName != '' && fileName != 'undefined' && fileName != null) {
+	            var lastIndex = fileName.lastIndexOf("\\");
+	            if (lastIndex >= 0) {
+	                fileName = fileName.substring(lastIndex + 1);
+	            }
+	            var data = '';
+	            var x = [];
+
+	            var reader = new FileReader();
+	            reader.readAsDataURL(uFile);
+
+	            reader.onload = function() {
+
+	                data = reader.result.split(",");
+
+	                x.push(data[1]);
+	            };
+	        } else {
+	            var x = [];
+	            x.push('empty');
+	        }
+	        audit = {};   	      
+	        audit['document'] 		= 	fileName;	     
+	        audit['roleName'] 			= 	$("#auditType").val();
+	        audit['personTo'] 		= 	$("#financialYear").val();
+	        audit['personCc'] 		= 	$("#quarter").val();
+	        audit['folder'] 		= 	$("#folder").val(); 
+	        audit['file'] 			= 	x;
+	        audit['documentName'] 	= 	$(this).find(".mettDocNameCls").val();
+	        audit['documentComment'] 		= 	$(this).find(".mettCommentCls").val();
+	        
+	        datasetReq.push(audit);
+	        
+	        console.log(datasetReq);
+	    });
+	 if (certifValid && document) {
+		 swal.fire({
+		  title: "Are you sure want to Save?",
+		  text: "Once Saved, can't revert back !",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: '#d33',
+		  cancelButtonColor: '#e7b63a',
+		  confirmButtonText: 'Save',
+		  showLoaderOnConfirm		: false,
+		  //closeOnConfirm: false,
+		  reverseButtons : true,
+		
+		 preConfirm: () => {
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						console.log("Doing async operation");
+						resolve()
+					}, 3000)
+				})
+			}  
+		}).then((result) => {			
+			if(result.value){
+				/* document.getElementById("loader").style.display = "block"; */
+				//console.log("bikash 123");
+			 $.ajax({
+				 	type		:	"POST",
+				 	url			:	"view-initiated-audit-upload-document",
+					dataType	:	"json",
+					contentType: 'application/json; charset=utf-8',
+					data : JSON.stringify(datasetReq),				    
+				    success: function(response) {
+				    	console.log(response);
+				        if (response.message == "success") {
+				        	/* document.getElementById("loader").style.display = "none"; */
+				        	swal({
+				        		title: "Save Successfully.",
+				        		type: "success"
+				        	}).then(function(){
+				        		 //location.reload();
+				        		 window.location.href = "/audit/view-initiated-audit-document-report?id="+window.btoa(auditType) ;
+				        	})
+				        
+				        } else {
+				        	//document.getElementById("loader").style.display = "none";
+				            swal({
+				                title: 'Unsuccess',
+				                text: response.code
+				            })
+				        }
+				    },
+				    error: function(data) {
+			       
+				    }
+				})
+			}
+		
+		});
+}
+	
+}
+function saveFileAssign(event) {
+
+	var AssignItemQty = event.currentTarget.value;
+	var currentFldId = event.currentTarget.getAttribute('id');
+	var l = currentFldId.split("_");
+	var counter = l[1];
+	var currentFldId = "#" + currentFldId;
+	//console.log(counter + currentFldId);
+	var uFile = $(currentFldId)[0].files[0];
+	var fileName = event.currentTarget.value;
+	var lastIndex = fileName.lastIndexOf("\\");
+	if (lastIndex >= 0) {
+	fileName = fileName.substring(lastIndex + 1);
+	}
+	//var extension = fileName.split(".");
+	var extension = fileName.substr((fileName.lastIndexOf('.') + 1));
+	var iURL = URL.createObjectURL(uFile);
+
+	$("#meetFile_" + counter).html("");
+
+	var LightImg = "";
+	if(extension =='png' || extension =='jpg' || extension =='jpeg'|| extension =='PNG'){
+	LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-picture-o fa-2x excel pdf\"></i></a>";
+
+	}else if(extension == 'xls' || extension =='xlsx'){
+	LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-file-excel-o fa-2x\"></i></a>";
+
+	}else if(extension == 'pdf' ){
+	LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-file-pdf-o fa-2x \"></i></a>";
+
+	}else if(extension == 'doc' || extension =='dox' || extension =='docx'){
+	LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-file-word-o fa-2x\"></i></a>";
+
+	}
+
+	$("#meetFile_" + counter).html(LightImg);
+
+	}
+function checkMeeting(){
+	var documentName =true;
+	
+	$('.mettDocNameCls').each(function(){
+		if (!blankValidation($(this).attr('id'),"TextField" ,"Please Select Document Name ")){
+			
+			documentName =false;
+	        return false;
+		}
+			
+	});
+	var document =true;
+	if(documentName){
+		$('.mulDocMett').each(function(){
+			if (!blankValidation($(this).attr('id'),"TextField" ,"Please Select Document  ")){
+				
+				document =false;
+		        return false;
+			}
+				
+		});	
+	}
+	if(documentName && document){
+		MeetingMore();
+	}
+}
+/* replay to requisition  add more */
+function MeetingMore(){
+	var lengthOfTableRowReq = $("#tbodyDataMeeting").children('tr').length;
+	var cloneHtml = $("#myTableMeeting tbody tr:first").clone();
+	
+	$("#myTableMeeting tbody tr:last").find('td:last').html('');
+	$("#myTableMeeting tbody").append($("#myTableMeeting tbody tr:first").clone());
+	
+	$("#myTableMeeting tbody tr td:last").html("");
+	var addMore='<button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="checkMeeting();"><span class="ti-plus"></span></button>&nbsp;'
+	var removeMore = '<button type="button" class="btn btn-warning rmv" name="RemoveMeeting"><span class="ti-minus"></span></button>';
+	
+	$("#myTableMeeting tbody tr:last").find('td:last').append(addMore);
+	$("#myTableMeeting tbody tr:last").find('td:last').append(removeMore);
+	$("#myTableMeeting tbody tr:last").find(".mulDocMett").val("");
+	$("#myTableMeeting tbody tr:last").find(".mettDocNameCls").val("");
+	$("#myTableMeeting tbody tr:last").find(".meetIcon").empty();
+	$("#myTableMeeting tbody tr:last").find(".mettCommentCls").val("");
+	
+	
+	var editTrReq = 0;
+	
+	if(lengthOfTableRowReq>editTrReq){
+		$("#myTableMeeting tbody tr").eq(lengthOfTableRowReq-1).find('td:last').append(removeMore);
+	}
+	
+	$("#myTableMeeting > tbody > tr").each(function(i){
+		var textInput = $(this).find('input');
+		var divInput = $(this).find('div');
+		var areaInput = $(this).find('textarea');
+		textInput.eq(0).attr('id',"mettDocName_"+i);
+		textInput.eq(1).attr('id',"docMett_"+i);
+		divInput.eq(1).attr('id', "row2_" + i);
+		divInput.eq(2).attr('id', "meetFile_" + i)
+		areaInput.eq(0).attr('id', "mettComment_" + i)
+		
+	})
+	
+}
+	$(document).ready(function() {
+		
+		if($("#auditType").val()=='ADTM005'){
+			$("#quarterHide").show();
+		}
+		
+		/* SEND REPONSE to Requisition */
+		var lengthOfTableRowReq = $("#tbodyDataMeeting").children('tr').length;
+		$('.tbllMeeting').on('click', '.rmv', function () {
+			$(this).closest('tr').remove();
+			$("#myTableMeeting tbody tr:last").find('td:last').html('');
+			var add='<button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="checkMeeting();"><span class="ti-plus"></span></button>&nbsp;'
+			var remove = '<button type="button" class="btn btn-warning rmv" name="RemoveMeeting"><span class="ti-minus"></span></button>';
+
+			if($("#tbodyDataMeeting").children('tr').length > 1){
+			$("#myTableMeeting tbody tr:last").find('td:last').append(add);
+			$("#myTableMeeting tbody tr:last").find('td:last').append(remove);
+			}else{
+			$("#myTableMeeting tbody tr:last").find('td:last').append(add);
+			}
+			
+			});
+		
+		
+		
+	});
+	$(document).ready(function() {
+		 $('#auditType').attr('disabled',true);
+	});
+</script>
+<style>
+.ui-autocomplete-loading {
+	background: white url("/static/images/ui-anim_basic_16x16.gif") right
+		center no-repeat;
+}
+</style>
+
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+		<div class="col-md-12">
+			<ol class="breadcrumb breadcrumb-arrow">
+				<li><a href="/index-dashboard">Home</a></li>
+				<!-- <li><a href="add-section-master">Upload Documents</a></li> -->
+			</ol>
+		</div>
+		</div>
+		<div class="card-title">
+			<h4>Upload Documents</h4>
+		</div>
+		<div class="container-fluid">
+
+			<div class="card">
+				
+			<div class="row">
+							<div class="col-lg-4">
+								<label>Audit Type</label> <select  class="form-control"
+												id="auditType"  onchange="getAuditNo();">
+												<option value="">Select</option>
+												<option th:each="c,iter:${auditTypeList}"
+													th:value="${c.key}" th:text="${c.name}" th:selected="${c.key==auditType}"></option>
+											</select>
+							</div>
+						
+							<div class="col-lg-4">
+								<label>Financial Year</label> <select  class="form-control"
+												id="financialYear">
+												<option value="">Select</option>
+												<option th:each="c,iter:${financialYearList}"
+													th:value="${c.key}" th:text="${c.name}" ></option>											</select>
+							</div>
+						
+							<div class="col-lg-4" id="quarterHide" style="display:none;" >
+							
+								<label>Quarter</label>  <select  class="form-control"
+												id="quarter">
+												<option value="">Select</option>
+									<option th:each="c,iter:${getQuarterList}" th:value="${c.key}"
+													th:text="${c.name}" ></option></select>
+						
+							</div>
+								<div class="col-lg-4"  >
+							
+								<label>Folder</label>  <select  class="form-control"
+												id="folder">
+												<option value="">Select</option>
+									<option th:each="c,iter:${folderName}" th:value="${c.key}"
+													th:text="${c.name}" ></option></select>
+						
+							</div>
+							        <table class="tbllMeeting tblls" id="myTableMeeting" width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <thead>
+                                                   <tr>
+                                                      <th width="120" align="center">Document Name</th>
+                                                      <th width="520" align="center">Upload</th>
+                                                      <th width="520" align="center">Comment</th>
+                                                      <th  align="right">Action</th>
+                                                   </tr>
+                                                </thead>
+                                                <tbody id="tbodyDataMeeting">
+                                                   <tr class="tr_clone" id="row">
+                                                      <td width="300">
+                                                         <input type="text" class="form-control mettDocNameCls" id="mettDocName_0" >
+                                                      </td>
+                                                      <td width="320" align="center">
+                                                            <div class="row" id="rowId_0">
+															<div id="row2_0" style="text-align:right;padding-top:10px; padding-left:120px;">
+																 <div class="text meetIcon" id="meetFile_0"></div> 
+															</div>
+																<div class="upload-btn-wrapper">
+																	<label class="custom-file-upload" for="mulDocAtta"><i
+																		class="fa fa-cloud-upload"></i>Document</label>
+														<input type="file" class="mulDocMett" id="docMett_0" style="display: block;"
+														 onchange="saveFileAssign(event);checkImageFormat(this);">																						
+															</div>
+														</div>
+                                                      </td>
+                                                      <td width="300" style="text-align:right;padding-top:5px;">
+                                                         <textarea  class="form-control mettCommentCls" id="mettComment_0" ></textarea>
+                                                      </td>
+                                                      <td align="Right" width="200">
+                                                         <button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="checkMeeting();">
+                                                         <span class="ti-plus"></span>
+                                                         </button>
+                                                      </td>
+                                                   </tr>
+                                                </tbody>
+                                             </table>
+						</div>
+						<div class="col-md-12">
+						<div class="form-group">
+							<button type="button" id="submit" class="btn btn-primary" onclick="MeetingDetails();">Save</button>
+							<button type="button" class="btn btn-warning" id="btnCancel"
+								onclick="funcLoad();">Cancel</button>
+						</div>
+					</div>
+			</div>
+			
+		</div>
+
+	
+		<!-- Modal End-->
+		<!-- /# row -->
+	</div>
+</div>
+</html>

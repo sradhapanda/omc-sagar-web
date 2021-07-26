@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script>
+	 
+	$(document).ready(function() {
+/* 		$('#tblTheme').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-audit-draft-report-ThroughAjax',
+				'data' : function(d) {
+					d.param1 = $('#param1').val(); 
+					d.param2 = $('#param2').val(); 
+					 
+				}
+			},
+			'dataSrc' : "",
+			'columns' : [ {
+				'data' : 'draftId'
+			},{
+				'data' : 'draftNo'
+			}, {
+				'data' : 'auditType'
+			}, {
+				'data' : 'initiateId'
+			}, {
+				'data' : 'date'
+			}, {
+				'data' : 'action'
+			} ]
+		}); */
+		
+		
+		var currentVal = $("#param2").val();
+		if(currentVal==='ADTM005'){
+			$("#quarter").show();
+		}
+		if (currentVal) {
+			$.ajax({
+				type : 'POST',
+				url : 'view-initiated-audit-document-report',
+				contentType : false,
+				data : currentVal,
+				success : function(response) {
+					console.log(response.body);
+				},
+				error : function(data) {
+					console.log(data)
+				}
+			});
+		} else {
+			$("#param2").empty();
+			$("#param2").append(
+			"<option value>Select</option>");
+		}
+		
+	});
+
+	function searchData() {
+		$('#tblTheme').DataTable().draw();
+	}
+	
+	function detailsView(index) {
+			window.open("/audit/view-audit-draft-report-details?id="
+					+ index);
+
+		}
+		
+	
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li><a th:if="${#lists.contains(session.USER_ROLES, 'rol024')}"th:href="@{/audit/audit-draft-report}">Add Audit
+							Draft/Final Report</a></li>
+					<li class="active"><span>View Audit Draft/Final Report</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>View Audit  Report</h4>
+			</div>
+			<div class="container-fluid">
+			<div class="row">
+			<div class="col-md-12">
+				<div class="card">
+					<div id="demo" >
+						<!-- <div class="search-field">
+							<div class="row">
+								<div class="col-md-2">
+									<div class="org-name">Draft No</div>
+								</div>
+								<div class="col-md-3">
+									<input id="param1" class="form-control" type="text"
+										placeholder="" name="">
+										<input id="param2" class="form-control" type="hidden"
+										placeholder="" name="" th:value="${auditType}">
+								</div>
+							
+					
+							
+								<div class="col-md-2">
+									<div class="form-group">
+										<button class="btn btn-primary" onclick="searchData()">Search</button>
+									</div>
+								</div>
+								
+
+							</div>
+
+
+						</div> -->
+					</div>
+					<!-- <a data-toggle="collapse" data-target="#demo"
+						class="showhideangelbg"><i class="fa fa-angle-double-down"></i>
+					</a> -->
+			<div class="row"  >
+			
+						<div class="col-md-2"  th:each="c,iter:${auditNoList}" >
+						<div class="basic-elements align-c" >
+						
+								<a  th:href="${'view-initiated-audit-internal-audit-report-download-staReport?auditNo='+c.name+'&auditType='+auditType}"><img src="../assets/images/report1.png"></img></a>
+								<div>
+									<div th:text="${c.key}">(BARBIL)</div>
+								</div>
+							</div>
+						</div>
+			
+						
+						</div>
+				</div>
+			</div>
+		</div>
+		
+			</div>
+		</div>
+		<!-- Modal End-->
+	</div>
+</div>
+</html>

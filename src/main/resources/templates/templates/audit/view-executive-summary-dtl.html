@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:th="http://www.thymeleaf.org"
+   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+   layout:decorate="~{layout/master}">
+   <head>
+   </head>
+   <div layout:fragment="content">
+      <div class="content-wrap">
+         <div class="main mrt_20">
+            <div class="col-md-12">
+               <ol class="breadcrumb breadcrumb-arrow">
+                  <li><a href="/index-dashboard">Home</a></li>
+                  <li><a th:href="@{/audit/add-executive-summary}">Add
+                     Executive Summary</a>
+                  </li>
+                  <li class="active"><span>View Executive Summary</span></li>
+               </ol>
+            </div>
+            <div class="pdf_button">  
+            </div>
+            <div class="container-fluid">
+               <div class="card">
+                  <div class="card-title" style="padding-left: 16px;">
+                     <img src="../assets/images/logo_heading.png" alt="" class="img-fluid">  	
+                     <a href="javascript:void(0)"   data-toggle='tooltip' title='Download Pdf' data-placement='bootom' onclick="createPdfDwn();" >
+                     <i class='fa fa-download' style='font-size:40px;color: #eac304;'></i></a>
+                  </div>
+                  <!-- <div th:each="c,iter:${executiveDtlList}" th:text="${c.observation}"> -->
+                  <h4  align="center">	ODISHA MINING CORPORATION LIMITED</h4>
+                  <h4  align="center">	INTERNAL AUDIT REPORT FOR THE QUARTER ENDING 30 JUNE, 2020</h4>
+                  <div th:if="${#lists.size(executiveDtlList)>0}">
+                  <h5   >A. Auditors Observation</h5>
+                  <table id="table" class="table table-bordered" th:if="${executiveDtlList[0].checkListRefNo =='1'}" >
+                     <thead>
+                        <tr>
+                           <th>Sl No</th>
+                           <th>Region</th>
+                           <th>Internal Auditor Observation</th>
+                           <th>Replies Of Management</th>
+                           <th>Internal Auditor's Final Observation</th>
+                           <th>Risk Rating</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr th:each="c,iter:${executiveDtlList}" >
+                           <td th:text="${c.sNo}"></td>
+                           <td th:text="${c.department}"></td>
+                           <td th:text="${c.observation}"></td>
+                           <td th:text="${c.resolved}"></td>
+                           <td th:text="${c.notResolved}"></td>
+                           <td th:text="${c.pending}"></td>
+                        </tr>
+                     </tbody>
+                  </table>
+                  </div>
+                  <br>
+                  <br>
+                  <br>
+                  <div th:if="${#lists.size(executiveDtlCheckLists)>0 }" >
+                  <h5 >B. Deviation points of Check List</h5>
+                  <br>
+                  <table id="table" class="table table-bordered" th:if="${executiveDtlCheckLists[0].checkListRefNo !='1'}">
+                     <thead>
+                        <tr>
+                           <th>Sl No</th>
+                           <th width="100">Check List Ref No</th>
+                           <th>Region</th>
+                           <th>Internal Auditor Observation</th>
+                           <th>Replies Of Management</th>
+                           <th>Internal Auditor's Final Observation</th>
+                           <th>Risk Rating</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        <tr th:each="c,iter:${executiveDtlCheckLists}" >
+                           <td th:text="${c.sNo}"></td>
+                           <td th:text="${c.checkListRefNo}"></td>
+                           <td th:text="${c.department}"></td>
+                           <td th:text="${c.observation}"></td>
+                           <td th:text="${c.resolved}"></td>
+                           <td th:text="${c.notResolved}"></td>
+                           <td th:text="${c.pending}"></td>
+                        </tr>
+                     </tbody>
+                  </table>
+                  </div>
+                  <div style="clear: both;"></div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</html>

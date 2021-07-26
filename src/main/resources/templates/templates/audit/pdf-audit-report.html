@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<!DOCTYPE some_name [
+<!ENTITY nbsp "&#160;">
+]>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+
+
+<title>Audit Question List</title>
+<link href="https://fonts.googleapis.com/css?family=Montserrat"
+	rel="stylesheet" />
+<style type="text/css">
+
+@media print {
+
+body {
+margin: 0;
+color: #000;
+background-color: #fff;
+}
+
+table
+{
+border:1px solid #ccc;
+}
+th,td
+{
+padding:10px;
+}
+
+.report_p
+{
+/* border-bottom:1px solid #333; */
+padding:10px 0px;
+}
+
+}	
+</style>
+</head>
+<body>
+	<div class="containersec">
+		<div th:if="${auditType1 !='ADTM005' && auditType1 !='ADTM006'}">
+		<div style="display: inline-block;"><img th:src="@{classpath:static/assets/images/logo_heading.png}"></img></div>
+					<div style="display: inline-block;"><div style="text-align:center;width:100%;"><h5>ODISHA MINING CORPORATION LIMITED</h5></div>
+					<div style="text-align:center;width:100%;">
+					<h6>Replies of the Management on the Comments of the Comptroller and  Auditors General  of 
+					 India Under Section 143(6)(b) of the Companies Act,2013 on the Financial Statement of The Odisha Mining Corporation Limited for the year 2016-17</h6></div></div>
+					
+		<table class="table table-bordered" th:if="${#lists.size(questions)>0}" border="1" cellpadding="0" cellspacing="0" width="680">
+			<thead>
+				<tr >
+					<th width="340" bgcolor="#f5f5f5" >Comments of the C and A.G</th>
+					<th width="340" bgcolor="#f5f5f5">Replies of the Management.</th>
+				</tr>
+				
+			</thead>
+			<tbody >
+				<tr >
+						
+					<td valign="top">
+						<div th:each="q,iter:${questions}" th:utext="${q.name}"
+							class="report_p"></div>
+					</td>
+					<td valign="top">
+					 <div th:each="q,iter:${replies}" th:utext="${q.name}" class="report_p"></div>		
+					</td>
+					
+					</tr>
+			</tbody>				
+		</table>
+		</div>
+		<div th:if="${auditType1 =='ADTM006'}">
+			<div style="display: inline-block;"><img th:src="@{classpath:static/assets/images/logo_heading.png}"></img></div>
+					<div style="display: inline-block;"><div style="text-align:center;width:100%;"><h5>ODISHA MINING CORPORATION LIMITED</h5></div>
+					<div style="text-align:center;width:100%;">
+					<h6>Replies of the Management on the Comments of the Statutory Auditors on the Annual Accounts of 
+					the Odisha Mining Corporation Limited for the Financial Year  FY 2016-17</h6></div></div>
+					
+		<table class="table table-bordered" th:if="${#lists.size(questions)>0}" border="1" cellpadding="0" cellspacing="0" width="680">
+			<thead>
+				<tr >
+					<th width="340" bgcolor="#f5f5f5" >Observation</th>
+					<th width="340" bgcolor="#f5f5f5">Replies of the Management</th>
+				</tr>
+				
+			</thead>
+			<tbody >
+				<tr >
+						
+					<td valign="top">
+						<div th:each="q,iter:${questions}" th:utext="${q.name}"
+							class="report_p"></div>
+					</td>
+					<td valign="top">
+					 <div th:each="q,iter:${replies}" th:utext="${q.name}" class="report_p"></div>		
+					</td>
+					
+					</tr>
+			</tbody>				
+		</table>
+		</div>
+			<div th:if="${auditType1 =='ADTM005'}">
+		<div style="display: inline-block;"><img  th:src="@{classpath:static/assets/images/logo_heading.png}"></img></div>
+					<div style="display: inline-block;"><div style="text-align:center;width:100%;"><h5>ODISHA MINING CORPORATION LIMITED</h5></div>
+					<div style="text-align:center;width:100%;">
+					<h6> AUDIT REPORT FOR THE QUARTER ENDING 30th JUNE,2020</h6></div></div>
+					
+		<table class="table table-bordered" th:if="${#lists.size(questions)>0}" border="1" cellpadding="0" cellspacing="0" width="680">
+			<thead>
+				<tr >
+                                  <!-- <th width="50" >Sl No.</th> -->
+                                 <!-- <th th:if="${questions[0].checklistRef != null }" width="425">Check List Ref No
+                                    </th> -->
+                                 <th width="425">Auditor's Observation</th>
+                                 <th width="425">Replies Of Management</th>
+                                 <th  width="425">Internal auditor's Final Observation</th>
+                                 <th width="100">Risk Rating</th>
+                              </tr>
+				
+			</thead>
+			<tbody >
+				<tr >
+						
+					<td valign="top">
+						<div th:each="q,iter:${questions}" th:utext="${q.name}"
+							class="report_p"></div>
+					</td>
+					<td valign="top">
+					 <div th:each="q,iter:${replies}" th:utext="${q.name}" class="report_p"></div>		
+					</td>
+					<th:block th:each="q,iter:${finObs}" >
+                                 <td valign="top" th:utext="${q.name}">
+                                    <div   class="report_p"></div>
+                                 </td>
+                                 <td valign="top" th:text="${q.docName}">
+                                 
+                                 </td>	
+                                 </th:block>	
+					
+					</tr>
+			</tbody>				
+		</table>
+		</div>
+	</div>
+</body>
+</html>

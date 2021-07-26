@@ -1,0 +1,470 @@
+ <html xmlns:th="http://www.thymeleaf.org" th:fragment="header">
+<style>
+/* Center the loader */
+#loader {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 120px;
+  height: 120px;
+  margin: -76px 0 0 -76px;
+  
+  
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+  display: none;
+  text-align: center;
+}
+
+.desig-size{
+	font-size: 16px;
+    color: #106436;
+}
+</style>
+<script src="../assets/js/lib/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+function closeChngPass()
+{
+	$("#myModalPassword").hide();
+	}
+
+</script>
+
+<div id="loader" style="display:none"><img src="../assets/images/ajax-loader1.gif" alt="" class="img-fluid" style="-webkit-filter: grayscale(100%); filter: grayscale(100%);" /></div>
+
+
+ 	<div class="header" onload="myFunction()">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-12">
+				<div class="logo">
+					<a th:href="${session.DASHBOARD}"><img src="../assets/images/logo_heading.png" alt="" class="img-fluid" /><!--  <img src="../assets/images/logo1nerp.png" alt="" class="img-fluid" /> -->
+					</a>
+				</div>
+				
+					<div class="float-left">
+						<div class="hamburger sidebar-toggle">
+							<span class="line"></span> <span class="line"></span> <span
+								class="line"></span>
+						</div>
+					</div>
+					
+					<div class="float-right">
+					
+						<ul>
+
+				<!-- 			<li class="header-icon dib"><i class="ti-bell"></i>
+								<div class="drop-down">
+									<div class="dropdown-content-heading">
+										<span class="text-left">Recent Notifications</span>
+									</div>
+									<div class="dropdown-content-body">
+										<ul>
+											<li><a href="#"> <img
+													class="pull-left m-r-10 avatar-img"
+													src="../assets/images/avatar/3.jpg" alt="" />
+													<div class="notification-content">
+														<small class="notification-timestamp pull-right">02:34
+															PM</small>
+														<div class="notification-heading">Admin</div>
+														<div class="notification-text">5 members joined
+															today</div>
+													</div>
+											</a></li>
+											<li><a href="#"> <img
+													class="pull-left m-r-10 avatar-img"
+													src="../assets/images/avatar/3.jpg" alt="" />
+													<div class="notification-content">
+														<small class="notification-timestamp pull-right">02:34
+															PM</small>
+														<div class="notification-heading">Mariam</div>
+														<div class="notification-text">likes a photo of you</div>
+													</div>
+											</a></li>
+											<li><a href="#"> <img
+													class="pull-left m-r-10 avatar-img"
+													src="../assets/images/avatar/3.jpg" alt="" />
+													<div class="notification-content">
+														<small class="notification-timestamp pull-right">02:34
+															PM</small>
+														<div class="notification-heading">Tasnim</div>
+														<div class="notification-text">Hi Teddy, Just wanted
+															to let you ...</div>
+													</div>
+											</a></li>
+											<li><a href="#"> <img
+													class="pull-left m-r-10 avatar-img"
+													src="../assets/images/avatar/3.jpg" alt="" />
+													<div class="notification-content">
+														<small class="notification-timestamp pull-right">02:34
+															PM</small>
+														<div class="notification-heading">Mr. John</div>
+														<div class="notification-text">Hi Teddy, Just wanted
+															to let you ...</div>
+													</div>
+											</a></li>
+											<li class="text-center"><a href="#" class="more-link">See
+													All</a></li>
+										</ul>
+									</div>
+								</div></li> -->
+				<!-- 			<li class="header-icon dib"><i class="ti-email"></i>
+								<div class="drop-down">
+									<div class="dropdown-content-heading">
+										<span class="text-left">2 New Messages</span> <a
+											href="email.html"><i class="ti-pencil-alt pull-right"></i></a>
+									</div>
+									<div class="dropdown-content-body">
+										<ul>
+											<li class="notification-unread"><a href="#"> <img
+													class="pull-left m-r-10 avatar-img"
+													src="../assets/images/avatar/1.jpg" alt="" />
+													<div class="notification-content">
+														<small class="notification-timestamp pull-right">02:34
+															PM</small>
+														<div class="notification-heading">Michael Qin</div>
+														<div class="notification-text">Hi Teddy, Just wanted
+															to let you ...</div>
+													</div>
+											</a></li>
+											<li class="notification-unread"><a href="#"> <img
+													class="pull-left m-r-10 avatar-img"
+													src="../assets/images/avatar/2.jpg" alt="" />
+													<div class="notification-content">
+														<small class="notification-timestamp pull-right">02:34
+															PM</small>
+														<div class="notification-heading">Mr. John</div>
+														<div class="notification-text">Hi Teddy, Just wanted
+															to let you ...</div>
+													</div>
+											</a></li>
+											<li><a href="#"> <img
+													class="pull-left m-r-10 avatar-img"
+													src="../assets/images/avatar/3.jpg" alt="" />
+													<div class="notification-content">
+														<small class="notification-timestamp pull-right">02:34
+															PM</small>
+														<div class="notification-heading">Michael Qin</div>
+														<div class="notification-text">Hi Teddy, Just wanted
+															to let you ...</div>
+													</div>
+											</a></li>
+											<li><a href="#"> <img
+													class="pull-left m-r-10 avatar-img"
+													src="../assets/images/avatar/2.jpg" alt="" />
+													<div class="notification-content">
+														<small class="notification-timestamp pull-right">02:34
+															PM</small>
+														<div class="notification-heading">Mr. John</div>
+														<div class="notification-text">Hi Teddy, Just wanted
+															to let you ...</div>
+													</div>
+											</a></li>
+											<li class="text-center"><a href="#" class="more-link">See
+													All</a></li>
+										</ul>
+									</div>
+								</div></li> -->
+								<li class="header-icon dib"><!-- <span th:text="${session.USER_NAME}"></span> --><span class="user-avatar">
+							<i class="ti-bell f-s-10"></i>
+							<span class="badge navbar-badge header_notification" id="notificationCout"></span>
+							</span>
+			
+								<div class="drop-down dropdown-profile" style="height: 200px;
+    overflow-y: scroll;">
+									<!-- <div class="dropdown-content-heading">
+										<span class="text-left">Upgrade Now</span>
+										<p class="trial-day">30 Days Trail</p>
+									</div> -->
+									<div class="dropdown-content-body"> <input type="hidden" id="userRoleIdNotification" th:value="${session.USER_ID}">
+										<ul id="notificationUl">
+										
+											 <li><a href="javascript:void(0)"><span >No Notification to show</span></a></li> 
+											
+										</ul>
+									</div>
+								</div></li>
+							<li class="header-icon dib"><!-- <span th:text="${session.USER_NAME}"></span> --><span class="user-avatar">
+							<i class="ti-angle-down f-s-10"></i>
+							</span>
+			
+								<div class="drop-down dropdown-profile">
+									<!-- <div class="dropdown-content-heading">
+										<span class="text-left">Upgrade Now</span>
+										<p class="trial-day">30 Days Trail</p>
+									</div> -->
+									<div class="dropdown-content-body">
+										<ul>
+										 <!-- <li><a href="#" id="myBtn2"><i class="ti-email"></i> <span >Email Configuration</span></a></li> 
+										 -->
+											 <li><a href="#" id="myBtn1"><i class="ti-key"></i> <span >Change Password</span></a></li> 
+											 
+											<!-- <li><a href="#"><i class="ti-email"></i> <span>Inbox</span></a></li>
+											<li><a href="#"><i class="ti-settings"></i> <span>Setting</span></a></li>
+
+											<li><a href="#"><i class="ti-lock"></i> <span>Lock
+														Screen</span></a></li> -->
+											<li><a href="/logout"><i class="ti-power-off"></i> <span>Logout</span></a></li>
+										</ul>
+									</div>
+								</div></li>
+						</ul>
+					</div>
+
+					<!-- <div class="grandcourtyard_logo"><img src="../assets/images/logo_heading.png" alt="" class="img-fluid" /></div> -->
+					<div class="usrinfo pull-right">
+
+					    <div class="userinfoheaading">
+					    	<span th:text="${session.USER_NAME}"></span><span  class="desig-size"> (</span>
+					    	<span class="desig-size" th:text="${session.JOB_TITLE}"></span><span class="desig-size">, </span>
+					    	<span class="desig-size" th:text="${session.DEPARTMENT}"></span><span  class="desig-size">,</span>
+					    	<span class="desig-size" th:text="${session.LOCATION}"></span><span  class="desig-size">)</span>
+					  	</div>
+					    <div class="userinfosubhead" th:text="${session.USER_LOGINTIME}">Last Logged On 27-MAY-2019 02.54 PM</div>
+					</div>
+					<div class="button-back">
+						<button class="btn btn-back" onclick="window.history.back()"><span><i class="fa fa-arrow-left" aria-hidden="true"></i></span>Back</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- The Modal -->
+
+<div id="myModalPassword" class="modal">
+	<div class="modal-dialog modal-sm">
+		<!-- Modal content-->
+		<div class="modal-content" >
+			<div class="modal-header" >
+				<h4 class="modal-title">Change Password</h4>
+				<i class="fa fa-close fa-1.5x" onclick="closeChngPass()"
+					style="color: #FFF; cursor: pointer;"></i>
+			</div>
+			<div class="modal-body" style="overflow: hidden;">
+				<input type="hidden" id="employeeId" th:value="${session.USER_ID}">
+
+
+				<div class="col-md-12">
+					<label>Current Password</label> <input type="password"
+						class="form-control" id="currentPassword" required>
+				</div>
+				<div class="col-md-12">
+					<label>New Password</label> <input type="password"
+						class="form-control" id="newP" required>
+				</div>
+				<div class="col-md-12">
+					<label>Confirm Password</label> <input type="password"
+						class="form-control" id="confirmP" required>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button class="btn btn-info" id="changeId">Save</button>
+				<button type="button" class="btn btn-danger"
+					onclick="closeChngPass();">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	// Get the modal
+	var modal2 = document.getElementById("myModalPassword");
+
+	// Get the button that opens the modal
+	var btn1 = document.getElementById("myBtn1");
+
+	// Get the <span> element that closes the modal
+	var span = document.getElementsByClassName("close")[0];
+
+	// When the user clicks the button, open the modal 
+
+	btn1.onclick = function() {
+		modal2.style.display = "block";
+	}
+
+	// email password save
+	changeId.onclick = function() {
+		var currentP = $('#currentPassword').val();
+		//alert("currentP  "+currentP);
+		var newP = $('#newP').val();
+		var confirmP = $('#confirmP').val();
+
+		if (currentP == "" || currentP == null) {
+			swal({
+				title : "Enter CurrentP Password",
+				type : "warning",
+			})
+		}
+		if (confirmP == "" || confirmP == null) {
+			swal({
+				title : "Enter Confirm Password",
+				type : "warning",
+			})
+		}
+		if (newP == "" || newP == null) {
+			swal({
+				title : "Enter New Password",
+				type : "warning",
+			})
+		}
+		if (newP != "" && confirmP != "") {
+			if (newP != confirmP) {
+				swal({
+					title : "Password Don't Match",
+					type : "warning",
+				})
+				return false;
+			} else {
+
+				var id = window.btoa($("#employeeId").val());
+
+				obj = {};
+				obj.key = id;
+				obj.name = newP;
+				obj.docName = currentP;
+
+				$.ajax({
+					type : "POST",
+					url : "/employee/view-employee-change-password",
+					dataType : 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(obj),
+					success : function(response) {
+						if (response.message == "success") {
+							swal({
+								title : "Password Changed Successfully.",
+								type : "success",
+							}).then(function() {
+								window.location.href = "/login";
+							})
+						} else {
+
+							swal({
+								title : "Enter the correct Current Password",
+								type : "warning",
+							})
+
+						}
+					},
+					error : function(data) {
+						console.log(data)
+					}
+				});
+
+			}
+		}
+	}
+	
+	function callingnotify(){
+		
+		var role = $("#userRoleIdNotification").val();
+
+		$
+				.ajax({
+					type : 'GET',
+					url : '/notification-details?roleId='
+							+ role,
+					contentType : 'application/json',
+					async : false,
+					success : function(response) {
+						//console.log(response)
+
+						var len = response.body.length;
+
+						$("#notificationCout").text(len)
+						//alert(len);
+						$("#notificationUl").empty();
+						if (len > 0) {
+							for (var i = 0; i < len; i++) {
+
+								var auditInitId = window
+										.btoa(response.body[i].auditInitiate);
+								var auditType = window
+										.btoa(response.body[i].auditType)
+
+								var div = "<li><a href='/audit/view-initiated-audit-dtl?id="
+										+ auditInitId
+										+ "&auditType="
+										+ auditType
+										+ "' target='_blank'><span >Mail from "
+										+ response.body[i].auditCreated
+										+ "</span></a></li>";
+
+								$("#notificationUl")
+										.append(div);
+							}
+						} else {
+							$("#notificationUl")
+									.append(
+											'<li><a href="javascript:void(0)"><span >No Notification to show</span></a></li>');
+						}
+
+					},
+					error : function(err) {
+						console.log(err)
+					}
+				});
+	}
+
+	/* $( document ).ready(function() {
+		
+		callingnotify();
+	});
+	 */
+	 $( window ).on( "load", function() {
+		 callingnotify();
+	    });
+	
+	// When the user clicks anywhere outside of the modal, close it
+	window.onclick = function(event) {
+
+		if (event.target == modal2) {
+			modal2.style.display = "none";
+		}
+	}
+
+    var intervalId = window
+			.setInterval(
+					function() {
+						/// call your function here
+
+						//NOTIFICATION DETAILS START
+						callingnotify();
+
+						// NOTIFICATION ENDS
+
+					}, 60000);  
+</script>
+ </html>   

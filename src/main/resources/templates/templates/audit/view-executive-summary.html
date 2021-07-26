@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#table').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-executive-summary-ThroughAjax',
+				/* 'data' : function(d) {
+					d.param1 = "";
+				} */
+				'data' : function(d) {
+					d.param1 = $('#param1').val();
+					d.param2 = $('#param2').val(); 
+					d.param3 = $('#param3').val(); 
+				}
+
+			},
+			'dataSrc' : "",
+			'columns' : [
+			{
+				'data' : 'sNo'
+			},
+			{
+				'data' : 'financialYear'
+			}, {
+				'data' : 'auditType'
+			}, {
+				'data' : 'checkListRefNo'
+			/* },  {
+				'data' : 'observation'
+			}, {
+				'data' : 'resolved'
+			}, {
+				'data' : 'notResolved' */
+			} , {
+				'data' : 'action'
+			}]
+		});
+	});
+
+	function searchData() {
+		$('#table').DataTable().draw();
+	}	
+
+</script>
+</head>
+
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li><a th:href="@{/audit/add-executive-summary}">Add
+							Executive Summary</a></li>
+					<li class="active"><span>View Executive Summary</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Manage Executive summary</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+					<div class="search-field">
+						<div class="row">
+								<div class="row">
+								<div class="col-md-4">
+									<label>Finance Year</label>
+                             		<select class="org-name form-control" id="param1">
+                            			<option th:value="NULL">Select</option>
+						    			<option th:each="c:${auditFinanceYearList}" th:value='${c.key}'
+							 			th:text="${c.name}"></option>
+                            		</select>
+                           		</div>
+								<div class="col-md-4">
+									<label>Department</label>
+                             		<select class="org-name form-control" id="param2">
+                            			<option th:value="NULL">Select</option>
+						    			<option th:each="c:${departmentList}" th:value='${c.key}'
+							 			th:text="${c.name}"></option>
+                            		</select>
+                           		</div>
+                           		
+                           		<div class="col-md-4">
+									<label>Audit Type</label>
+                             		<select class="org-name form-control" id="param3" disabled="disabled">
+                            			<option th:value="NULL">Select</option>
+						    			<option th:each="c:${auditTypeList}" th:value='${c.key}'
+							 			th:text="${c.name}" th:selected="${c.key==auditType}" ></option>
+                            		</select>
+                           		</div>
+								
+								<div class="col-md-2 mrt_10">
+	                              <div class="form-group filtersearch">
+	                                 <input type="button" class="btn btn-info" value="Search"
+											onclick="searchData()" />
+	                                 
+	                              </div>
+	                           </div> 
+							</div>
+
+						
+						</div>
+						
+					</div>
+
+
+					<div class="table-responsive" style="width: 100%;">
+						<table id="table" class="table table-bordered">
+							<thead>
+								<tr>
+									<th>Slno</th>
+									<th>Financial Year</th>
+									<th>Audit No</th>
+									<th>Check List Ref. No</th>
+									<th>Action</th>
+									<!-- <th>Observation</th>
+									<th>Resolved</th>
+									<th>Not Resolved</th>
+									<th>Pending</th> -->
+								
+								</tr>
+							</thead>
+							<tbody></tbody>
+							
+
+						</table>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+
+
+
+
+	</div>
+</div>
+</html>

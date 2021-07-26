@@ -1,0 +1,221 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script type="text/javascript">
+
+	$(document).ready(function() {		
+/*  function for view set authority */
+		$('#authntbl').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-set-authority-throughajax',
+				'data' : function(d) {
+					d.param1 = $('#param1').val();
+					d.param2 = $('#param2').val();
+					d.param3 = $('#param3').val();
+				}
+			},
+			'dataSrc' : "",
+		'columns' : [
+			{'data' : 'process'},
+			{'data' : 'action'}
+				]	
+		});
+	  });
+
+function searchData() {
+	$('#authntbl').DataTable().draw();
+}
+/*  function for model  view set authority */
+function viewInModelData(index) {
+	$('#table2').empty();
+	$.ajax({
+				type : "POST",
+				url : "view-set-authority-model?index="+index,
+				dataType : 'json',
+				contentType : 'application/json',
+				success : function(response) {
+					if (response.message == "success") {
+						span = '<tr><td>Process Name :</td>'
+							+ '<td align="left">'
+							+ response.body[0].process
+							+ '</td></tr>'
+							+ '<th>Details of Users:</th>';
+					$('#myModal').modal('show');
+					$('#table2').append(span);
+				    table2 = '<tr><th><b>UserRole Name</b></th><th><b>User Name</b></th><th><b>TAT</b></th><th><b>Stage No</b></th>' ;
+						$('#myModal').modal('show');
+						$('#table2').append(table2);
+						console.log(response);
+						for(var i=0;i<response.body.length;i++){
+							table2 = '<tr><td>'
+								+ response.body[i].userRole
+								+ '</td><td>'
+								+ response.body[i].user
+								+ '</td><td>'
+								+ response.body[i].tat
+								+ '</td><td>'
+								+ response.body[i].stageNo
+								+ '</td></tr>';
+								$('#table2').append(table2);
+								$('#myModal').modal('show');
+								
+					  }
+					}
+				},
+				error : function(data) {
+					console.log(data);
+				}
+			})
+}
+ </script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="index.html">Home</a></li>
+					<li><a th:href="@{/user/add-set-authority}">Add Set
+							Authority</a></li>
+					<li class="active"><span>View Set Authority </span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>View Set Authority</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+					<!-- <div id="demo" class="collapse"> -->
+
+
+						<div class="search-field">
+						<div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary"
+										href="add-set-authority">Create</a>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div>
+							<!-- <div class="row">
+								<div class="col-lg-6"> -->
+
+									<div class="row">
+										<div class="col-md-2">
+											<label>process</label>
+										<!-- </div>
+										<div class="col-md-8"> -->
+											<select class="form-control" id="param1">
+
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${processList}" th:value='${c.key}'
+													th:text="${c.name}" th:selected="${c.key==process}"></option>
+											</select>
+										</div>
+									<!--</div>
+
+								 </div>
+								<div class="col-lg-6">
+									<div class="row"> -->
+										<div class="col-md-2">
+											<label>User</label>
+										<!-- </div>
+										<div class="col-md-8"> -->
+											<select class="form-control" id="param2">
+
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${userdataList}" th:value='${c.key}'
+													th:text="${c.name}" th:selected="${c.key==user}"></option>
+											</select>
+										</div>
+									<!-- </div>
+								</div>
+								<div class="col-lg-6">
+									<div class="row"> -->
+										<div class="col-md-2">
+											<label>User role</label>
+										<!-- </div>
+										<div class="col-md-8"> -->
+											<select class="form-control" id="param3">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${userRoleList}" th:value='${c.key}'
+													th:text="${c.name}" th:selected="${c.key==userRole}"></option>
+											</select>
+										</div>
+									<!-- </div>
+								</div> -->
+								<div class="col-md-2 mrt_10">
+									<div class="form-group filtersearch">
+										<!-- <button type="search" class="btn btn-primary" value="Search" onclick="searchData()" >Search</button> -->
+										<input type="button" class="btn btn-info" value="Search"
+											onclick="searchData()" />
+									</div>
+								</div>
+							</div>
+						</div>
+
+					<!-- </div>
+					<a data-toggle="collapse" data-target="#demo"
+						class="showhideangelbg"><i class="fa fa-angle-double-down"></i>
+					</a> -->
+					<div>
+						<div class="table-responsive" style="width: 100%;">
+							<table id="authntbl" class="table  table-bordered">
+								<thead>
+									<tr>
+										<th>Process</th>
+										<th align="center">Action</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div style="clear: both;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content" style="width: 750px;">
+					<div class="modal-header">
+						<h4 class="modal-title">View Details of User Set Authority</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<table width="100%" border="0" id="table2">
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+
+	</div>
+</div>
+</html>

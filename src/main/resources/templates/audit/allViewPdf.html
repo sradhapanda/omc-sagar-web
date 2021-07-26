@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8"></meta>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+        <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+        <title>OMC</title>
+        <style type="text/css">
+body
+{
+  margin: 0;
+  font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+  font-size:13px;
+} 
+
+
+</style> 
+
+    </head>
+    <body>
+        <div class="main">
+        	<div th:each="a,iter:${alldata}">
+        	
+        	<span>From:<h3 class="col-md-6" th:text="${a.createdby}"></h3></span><br></br>
+        	<span>To:<h3 class="col-md-6" th:text="${a.personTo}"></h3></span><br></br>
+        	<span> Cc:<h3 class="col-md-6" th:text="${apersonCc}"></h3></span><br></br>
+        	
+        	<span> Subject:<h3 class="col-md-6" th:text="${a.subject}"></h3> </span>
+        	
+        	<div style="margin-top:20px;">
+              	comment:
+              	<p class="col-md-12" th:utext="${a.comment}"></p>
+              </div>
+        	
+        	</div>
+        	<div>
+        	<span></span>
+        	<br></br>
+        	<br></br>
+        	<br></br>
+        	<br></br>
+        	<br></br>
+        	<br></br>
+        	<span></span>
+        	</div>
+             <!-- <table width="700" cellspacing="2" cellpading="0">
+                <tr>
+                    <th class="col-md-6" >Date</th>
+                    <th class="col-md-6">Time</th>
+                </tr>
+                <tr>
+                	<td><div th:text="${date}"></div></td>
+                	<td><div th:text="${time}"></div></td>
+                </tr>
+              </table>
+              
+              <div style="margin-top:20px;">
+              	comment:
+              	<p class="col-md-12" th:utext="${comment}"></p>
+              </div> -->
+              
+        </div>
+    </body>
+
+    <script type="text/javascript">
+    window.print();
+</script>
+</html>

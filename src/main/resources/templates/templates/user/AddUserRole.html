@@ -1,0 +1,407 @@
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script>
+         function validateForm(){
+         	 
+        	 
+         
+         	    if (!blankValidation("userRoleName","TextField", "User Role Name can not be left blank"))
+                 return false;
+         	    
+         	    if (!blankValidation("userParentUserRole","SelectBox", "Please Select Parent Role"))
+                     return false;
+                 
+                if (!blankValidation("userCostCenter","SelectBox", "Please Select Cost Center"))
+                     return false;
+           
+                 
+             	if (!blankValidation("userRoleStatus","SelectBox", "Please Select Status"))
+                     return false;
+                 
+                if (!blankValidation("userDescription","TextField", "Discription Can Not be blank!."))
+                     return false;
+             
+             
+            	var checkedActivity = false;
+                $(".activityCls:checkbox:checked").each(function () {
+             	checkedActivity = true;
+             	return false;
+             	});
+                 
+             	if(!checkedActivity){
+             	swal("Please check atleast one activity of a module");
+             	return false;
+             	}
+              
+             //alert(checkedActivity);
+         }
+      </script>
+<script type="text/javascript">
+         $(function() {
+         	//For tree structure of Module,Function and Activity Tree structure
+         $.fn.extend({
+                treed: function(o) {
+         
+                    var openedClass = 'fa-minus-circle';
+                    var closedClass = 'fa-plus-circle';
+         
+                    if (typeof o != 'undefined') {
+                        if (typeof o.openedClass != 'undefined') {
+                            openedClass = o.openedClass;
+                        }
+                        if (typeof o.closedClass != 'undefined') {
+                            closedClass = o.closedClass;
+                        }
+                    };
+         
+                    //initialize each of the top levels
+                    var tree = $(this);
+                    tree.addClass("tree");
+                    tree.find('li').has("ul").each(function() {
+                        var branch = $(this); //li with children ul
+                        branch.prepend("<i class='indicator fa " + closedClass + "'></i>");
+                        branch.addClass('branch');
+                        branch.on('click', function(e) {
+                            if (this == e.target) {
+                                var icon = $(this).children('i:first');
+                                icon.toggleClass(openedClass + " " + closedClass);
+                                $(this).children().children().toggle();
+                            }
+                        })
+                        branch.children().children().toggle();
+                    });
+                    //fire event from the dynamically added icon
+                    tree.find('.branch .indicator').each(function() {
+                        $(this).on('click', function() {
+                            $(this).closest('li').click();
+                        });
+                    });
+                    //fire event to open branch if the li contains an anchor instead of text
+                    tree.find('.branch>a').each(function() {
+                        $(this).on('click', function(e) {
+                            $(this).closest('li').click();
+                            e.preventDefault();
+                        });
+                    });
+                    //fire event to open branch if the li contains a button instead of text
+                    tree.find('.branch>button').each(function() {
+                        $(this).on('click', function(e) {
+                            $(this).closest('li').click();
+                            e.preventDefault();
+                        });
+                    });
+                }
+            });
+         
+            //Initialization of treeviews
+         
+            $('#tree1').treed();
+            $('#tree2').treed();
+            //$('#tree2').treed({openedClass:'glyphicon-folder-open', closedClass:'glyphicon-folder-close'});
+         
+            $('#tree3').treed({ openedClass: 'glyphicon-chevron-right', closedClass: 'glyphicon-chevron-down' });
+         
+            //End of Tree structure
+         })    
+         
+            
+             $(document).ready(function() {        
+                $(".pc-box").click(function() {
+                    if (this.checked) {
+                    	$(this).closest("li").find(".pc-box").prop("checked", true);
+                    	$(this).closest("li").find(".pc1-box").prop("checked", true);
+                        $(this).closest("li").find(".activityCls").prop("checked", true);
+                        $(this).parent();
+                    }  
+                });
+                $(".pc-box").click(function() {
+                    if (!this.checked) {
+                    	$(this).closest("li").find(".pc1-box").prop("checked", false);
+                        $(this).closest("li").find(".activityCls").prop("checked", false);
+                        $(this).parent();
+                    }  
+                });
+                $(".pc1-box").click(function() {
+                    if (this.checked) {
+                    	$(this).closest("li").find(".pc1-box").prop("checked", true);
+                        $(this).closest("li").find(".activityCls").prop("checked", true);
+                        $(this).parent();
+                    }  
+                });
+                $(".pc1-box").click(function() {
+                    if (!this.checked) {
+                        $(this).closest("li").find(".activityCls").prop("checked", false);
+                        $(this).parent();
+                    }  
+                });
+                
+                $(".activityCls").click(function() {
+                    if (!this.checked)
+                        $(this).closest("ul").prev().find(".pc-box").prop("checked", false);
+                });
+            });
+         	
+         	
+         	$(function () {
+         		 var hiddendata=$("#userRoleId").val();
+         		 if(hiddendata != ""){
+         			  if(!window.location.hash) {
+         			        //setting window location
+         			        window.location = window.location + '#valid';
+         			        //using reload() method to reload web page
+         			        window.location.reload();
+         			        
+         			    }     
+         		   }	 
+         	 });
+         	 
+         
+         		 
+         	 $(function () {	
+         	//submit button function
+         		const ipAPI = 'https://api.ipify.org?format=json';
+         		$("#sbmtdata").click(function(){
+         			var dataset = [];
+         			$(".activityCls:checkbox:checked").each(function () {
+    
+         				item = {};
+         				item['userRoleId']= $("#userRoleId").val();
+         				item['userRoleName']= $("#userRoleName").val();
+         				item['userRoleStatus']= $("#userRoleStatus").val();
+         				item['userDescription']= $("#userDescription").val();
+         				item['userParentUserRole']= $("#userParentUserRole").val();
+         				item['userCostCenter']= $("#userCostCenter").val();
+         				 
+         				
+         				item['moduleId']	=	$(this).attr("data-moduleId");
+         				item['functionId']		=	$(this).attr("data-functionId");
+         				item['activityId']				=	$(this).attr("data-activityId");
+         				
+         				
+         				dataset.push(item);
+         			});//table tbody tr loop ends
+         			//console.log(dataset);
+         			submitUserRole(dataset);	
+         			
+         			 
+         		})
+         		function submitUserRole(dataset){
+         		//	alert(dataset);
+         			swal.fire({
+         				title				: "Are you sure want to Submit?",
+         				text				: "Once Submited,Can't revert back !",
+         				type 				: "warning",
+         				
+         				showCancelButton	: true,
+         				confirmButtonColor	: "#DD6BB5",
+         				confirmButtonText	:"Yes",
+         				showLoaderOnConfirm	: true,
+         				preConfirm: () => {
+							return new Promise((resolve) => {
+								setTimeout(() => {
+									console.log("Doing async operation");
+									resolve()
+								}, 3000)
+							})
+						},
+         				reverseButtons : true,
+         				confirmButtonAriaLabel : 'Thumbs up, great!',
+         				cancelButtonText : 'No',
+         				cancelButtonAriaLabel : 'Thumbs down',
+         				
+         				 preConfirm: () => {
+         				    return fetch(ipAPI)
+         				      .then(response => response.json())
+         				      .then(data => Swal.insertQueueStep(data.ip))
+         				      .catch(() => {
+         				        Swal.insertQueueStep({
+         				          type: 'error',
+         				          title: 'Unable to get your public IP'
+         				,        })
+         				      })
+         				 }   
+         			}).then((result) => {
+         				if(result.value){
+         					$.ajax({
+         					type		: "POST",
+         					url 		: "add-user-role",
+         					dataType	: "json",
+         					contentType	: "application/json",
+         					data		: JSON.stringify(dataset),
+         					success		: function(response){
+         						console.log(response);
+         						if(response.message=="Success"){
+         							swal({
+         									title:"Data Saved Successfully.",
+         									type: "success",
+         							}).then(function(){
+         								window.location.href="view-user-role";
+         							})
+         						}else{
+         							//$("#errorMsg").html(response.message);
+         							swal({
+         								title:response.code,
+         								text: response.message,
+         								type:"warning"
+         							})
+         						}
+         					},error		: function(response){
+         						swal(response.code);	
+         					}
+         				}) //ajax ends
+         			}
+         			})//swal function block ends
+         		}//submit function ends
+         	});
+         
+      </script>
+</head>
+<div layout:fragment="content">
+	<div class="main mrt_20">
+		<div class="col-md-12">
+			<!--Alert Box-->
+			<div class="alert alert-success alert-dismissible"
+				style="display: none;">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>Success!</strong> Indicates a successful or positive action.
+			</div>
+			<div class="alert alert-danger alert-dismissible"
+				style="display: none;">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>Success!</strong> Indicates a successful or positive action.
+			</div>
+			<div class="alert alert-warning alert-dismissible"
+				style="display: none;">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>Success!</strong> Indicates a successful or positive action.
+			</div>
+			<!--Alert Box-->
+			<ol class="breadcrumb breadcrumb-arrow">
+				<li><a href="/index-dashboard">Home</a></li>
+				<li class="active"><a th:href="@{/user/add-user-role}">Add
+						User Role</a></li>
+
+			</ol>
+		</div>
+		<div class="card-title">
+			<h4>Add User Role</h4>
+		</div>
+		<div class="container-fluid">
+
+			<div class="card">
+				<div class="card-body">
+					<div class="basic-elements">
+						<form action="javascript:void(0)" th:object="${urole}"
+							onsubmit="return validateForm();">
+							<div class="row">
+								<div th:if="${message != null}">
+									<span th:text="${message}" style="color: red;"></span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-lg-6">
+									<input type="hidden" th:field="*{userRoleId}" />
+									<div class="form-group">
+										<label>User Role Name</label> <input type="text"
+											class="form-control" th:field="*{userRoleName}">
+									</div>
+									<div class="form-group">
+										<label>Parent User Role</label> <select class="form-control"
+											th:field="*{userParentUserRole}">
+											<option th:value="NULL">Select</option>
+											<option th:each="c:${parentRoledata}" th:value='${c.key}'
+												th:text="${c.name}"></option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label>Cost Center</label> <select class="form-control"
+											th:field="*{userCostCenter}">
+											<option th:value="cc001">Finance</option>
+											<!-- <option th:each="c:${costCenterdata}" th:value='${c.key}'
+th:text="${c.name}"></option> -->
+										</select>
+									</div>
+									<div class="form-group">
+										<label>Status</label> <select class="form-control"
+											th:field="*{userRoleStatus}">
+											<option th:value="NULL">Select</option>
+											<option th:value="true">Active</option>
+											<option th:value="false">Inactive</option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label>Description</label>
+										<textarea class="form-control textarea"
+											th:field="*{userDescription}"> </textarea>
+									</div>
+									<input type="submit" id="sbmtdata" value="Submit"
+										class="btn btn-success" /> <input type="reset" value="Cancel"
+										class="btn btn-warning" onclick="window.location.reload();" />
+								</div>
+								<div class="col-lg-6">
+									<div class="form-group">
+										<label>Module</label>
+										<div class="col-md-12">
+											<ul id="tree1">
+												<li th:each="module,iter : ${moduleData}"><input
+													type="checkbox" class="pc-box"
+													th:if="${#lists.contains(selectedModule, module.key)}"
+													th:checked="${#lists.contains(selectedModule, module.key)}"
+													style="width: 16px;"> <input type="checkbox"
+													class="pc-box" style="width: 16px;"
+													th:unless="${#lists.contains(selectedModule, module.key)}">
+													<a th:id="${module.key}"
+													th:attr="a='\''+${iter.index}+ '\''"
+													th:text="${module.name}"></a>
+													<ul>
+														<li th:each="function,iter : ${functionData}"
+															th:if="${function.parentFunctionId == module.key}">
+															<input type="checkbox" class="pc1-box"
+															th:if="${#lists.contains(selectedFunction, function.functionId)}"
+															th:checked="${#lists.contains(selectedFunction, function.functionId)}"
+															style="width: 16px;"> <input type="checkbox"
+															class="pc1-box" style="width: 16px;"
+															th:unless="${#lists.contains(selectedFunction, function.functionId)}">
+															<a th:attr="b='\''+${iter.index}+ '\''"
+															th:id="${function.functionId}"
+															th:text="${function.functionName}"></a>
+															<ul class="treeActivity">
+																<li th:each="activity,iter : ${activityData}"
+																	th:if="${activity.parentActivityId == function.functionId}">
+																	<input type="checkbox" class="activityCls"
+																	th:if="${#lists.contains(selectedActivity, activity.activityId)}"
+																	th:checked="${#lists.contains(selectedActivity, activity.activityId)}"
+																	th:attr="data-functionId=${function.functionId},data-moduleId=${module.key},data-activityId=${activity.activityId}"
+																	th:value="${activity.activityId}" style="width: 16px;">
+																	<input type="checkbox" class="activityCls"
+																	th:unless="${#lists.contains(selectedActivity, activity.activityId)}"
+																	th:attr="data-functionId=${function.functionId},data-moduleId=${module.key},data-activityId=${activity.activityId}"
+																	th:value="${activity.activityId}" style="width: 16px;">
+																	<a th:attr="c='\''+${iter.index}+ '\''"
+																	th:id="${activity.activityId}"
+																	th:text="${activity.activityName}"></a>
+																</li>
+															</ul>
+														</li>
+													</ul></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>
+

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script type="text/javascript">
+/* FORM VALIDATION */
+
+function validateFormPrefix() {
+	if (!blankValidation("prfxTypeName", "TextField","Prefix Type Name Required"))
+		return false;
+	if (!checkSpecialCharacter("prfxTypeName","Special character is not allowed!!!"))
+        return false;
+	if (!blankValidation("prfxCode", "TextField","Prefix Code Required"))
+		return false;
+	if (!checkSpecialCharacter("prfxCode","Special character is not allowed!!!"))
+        return false;
+	if (!blankValidation("prfxNumberLength", "TextField","Number Length Required"))
+		return false;
+	if (!checkSpecialCharacter("prfxNumberLength","Special character is not allowed!!!"))
+        return false;
+	if (!blankValidation("prfxStartNo", "TextField","Start Number Required"))
+		return false;
+	if (!checkSpecialCharacter("prfxStartNo","Special character is not allowed!!!"))
+        return false;
+	
+	 if (!blankValidation("prfxActive","SelectBox", "Please Select Status"))
+       return false; 
+
+}
+</script>
+
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="content-wrap">
+			<div class="main mrt_20">
+				<div class="col-md-12">
+				<div class="alert alert-danger alert-dismissible"
+					th:if="${message != null}">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<span th:text="${message}"></span>
+				</div>
+					<ol class="breadcrumb breadcrumb-arrow">
+						<li><a href="#">Home</a></li>
+						<li class="active"><span>Add Prefix Management</span></li>
+					</ol>
+				</div>
+				<div class="card-title">
+					<h4>Add Prefix Management</h4>
+				</div>
+				<div class="container-fluid">
+					
+					<div class="card">
+						<div class="card-body">
+							<div class="basic-elements">
+								<form th:action="@{/user/add-prefix-management}" th:object="${addprefix}" method="POST" onsubmit="return validateFormPrefix();">
+								<input type="hidden" th:field="*{prefix}" />
+									<div class="row">
+										<div class="col-lg-6">
+											<div class="form-group" th:style="*{prfxTypeName} == null ? 'display:block' : 'display:none' ">
+												<label>Type Name</label> 
+												<input type="text"
+												class="form-control" th:field="*{prfxTypeName}" />
+											</div>
+
+											<div class="form-group">
+												<label>Prefix Code</label> 
+												<input type="text"
+												class="form-control" th:field="*{prfxCode}" />
+											</div>
+											<div class="form-group">
+												<label>Number Length</label> 
+												<input type="text"
+												class="form-control" th:field="*{prfxNumberLength}" />
+											</div>
+										</div>
+										<div class="col-lg-6">
+											<div class="form-group">
+												<label>Start Number</label> 
+												<input type="text"
+												class="form-control" th:field="*{prfxStartNo}" />
+											</div>
+											<div class="form-group">
+												<label>Add Financial Year</label><br> 
+												<input type="radio" th:field="*{prfxFinYearStatus}" th:value="1" checked> Yes<br>
+												<input type="radio" th:field="*{prfxFinYearStatus}" th:value="0"> No<br>
+
+											</div>
+
+											<div class="form-group">
+												<label>Status</label> 
+												<select class="form-control" th:field="*{prfxActive}">
+												<option th:value="NULL">Select</option>
+												<option th:value="true">Active</option>
+												<option th:value="false">Inactive</option>
+												</select>
+											</div>
+										</div>
+
+										<div class="form-group">
+											<button class="btn btn-success">Submit</button>
+											<button class="btn btn-warning" onclick="window.location.href='view-prefix-management'" />Cancel</button>
+										</div>
+									</div>
+
+								</form>
+							</div>
+						</div>
+						<div style="clear: both;"></div>
+					</div>
+
+
+
+				</div>
+			</div>
+		</div>
+		<!-- /# row -->
+
+	</div>
+</div>
+</html>

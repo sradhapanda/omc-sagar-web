@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script>
+
+ 
+ 
+ function viewInModel(index) {
+	 
+	 //alert(index);
+		var id = index;
+		
+	$('#table1').empty();
+	$('#table2').empty();
+		$.ajax({
+				type : "POST",
+				url : "view-membership-registration-list-model",
+				dataType : 'json',
+				contentType : 'application/json',
+				data : id,
+				success : function(response) {
+					if (response.message == "success") {
+						console.log(response);
+						// console.log(response.body.status_m);
+						console.log(response.body);
+						
+						 var status_m = "";
+						if (response.body[0].status_m) {
+							status_m = "Active";
+						} else {
+							status_m = "Inactive";
+						}
+						   
+					
+						span = '<tr><td>First Name  :</td>' + '<td>'
+						+response.body[0].first_name_m + '</td>'
+						+ '</tr><tr><td>Last Name:</td>' + '<td>'
+						+response.body[0].last_name_m
+						+ '</tr><tr><td>Mobile No.:</td>' + '<td>'
+						+response.body[0].mobile_no_m
+						+ '</td></tr><tr><td>Status:</td>' + '<td>'
+						+ status_m + '</td></tr><tr><th><b>Details Of Dependents :<b></th></tr>';  
+						$('#myModal').modal('show');
+						$('#table1').append(span);
+							
+						table2 = '<tr><th><b>First Name</b></th><th><b>Last Name</b></th><th><b>Mobile No.</b></th><th><b>Relationship</b></th>'+
+										'<th><b>Status</b></th>' ;
+						$('#myModal').modal('show');
+						$('#table2').append(table2);
+					 
+						for (var i=0; i<response.body.length; i++) {
+							
+							var status = "";
+							if (response.body[i].status_m) {
+								status = "Active";
+							} else {
+								status = "Inactive";
+							}
+							
+						 
+							table =  '<tr><td>'
+								+ response.body[i].first_name_m
+								+ '</td><td>'
+								+ response.body[i].last_name_m
+								+ '</td><td>'
+								+ response.body[i].mobile_no_m
+								+ '</td><td>'
+								+ response.body[i].relation_m
+								+ '</td><td>'
+								+ status
+								+ '</td></tr>';
+							$('#myModal').modal('show');
+							$('#table2').append(table);
+						} 
+								
+					}
+				},
+				error : function(data) {
+					console.log(data);
+				}
+		})
+}
+
+ 	$(document).ready(function() {	
+ 		  
+ 		$('#table').DataTable({
+				'processing' : true,
+				'serverSide' : true,
+				'searching' : false,
+				'ordering' : false,
+				"ajax" : {
+					'url' : 'view-membership-registration-list-through-ajax',
+					'data' : function(d) {
+						d.param1 = $('#param1').val();
+						d.param2 = $('#param2').val();
+						d.param3 = $('#param3').val();
+					}
+				},
+				'dataSrc' : "",
+			'columns' : [
+			 	{'data':'memId'},   
+				{'data' : 'mobile_no_m'},
+				{'data' : 'member_type_m'},
+				{'data' : 'registration_m'},
+				{'data' : 'monthly_fee_m'},
+				{'data' : 'joiningdate_m'},
+				{'data' : 'memberShowActive'},
+				{'data' : 'relation_name'},
+				{'data' : 'action'}
+					]	
+			});
+		  });
+	
+	function searchData() {
+	 
+		$('#table').DataTable().draw();
+	}	
+	
+
+	const ipAPI = 'https://api.ipify.org?format=json';
+	function DeleteItem(index){
+	 // alert(index);
+	swal({
+			title				: "Are you sure want to Delete this membership?",
+			text				: "Once Deleted,Can't revert back !",
+			type 				: "warning",
+			showCancelButton	: true,
+			confirmButtonColor	: "#DD6BB5",
+			confirmButtonText	:"Submit",
+			showLoaderOnConfirm	: true,
+			reverseButtons : true,
+			confirmButtonAriaLabel : 'Thumbs up, great!',
+			cancelButtonText : '<i class="fa fa-thumbs-down">cancel</i>',
+			cancelButtonAriaLabel : 'Thumbs down',
+			preConfirm: () => {
+			    return fetch(ipAPI)
+			      .then(response => response.json())
+			      .then(data => Swal.insertQueueStep(data.ip))
+			      .catch(() => {
+			        Swal.insertQueueStep({
+			          type: 'error',
+			          title: 'Unable to get your public IP'
+			        })
+			      })
+			 }  
+		}).then((result) => {
+			if(result.value){
+			$.ajax({
+			type		: "POST",
+			url 		: "delete-membership-registration",
+			dataType	: "json",
+			contentType	: "application/json",
+			data		: JSON.stringify(index),
+			success		: function(response){
+				console.log(response);
+				if(response.message=="Success"){
+					swal({
+							title:"Data Deleted Successfully.",
+							type: "success",
+					}).then(function(){
+							location.reload(); 
+					})
+				}else{
+					console.log('i m in unsuccess');
+					swal({
+						title:response.code,
+						text: response.message,
+						type:"warning"
+					})
+				}
+			},error		: function(response){
+				swal(response.code);	
+			}
+		}) //ajax ends
+			}
+		})//swal function block ends
+	}
+	  
+
+</script>
+</head>
+<div layout:fragment="content">
+ <div class="content-wrap">
+         <div class="main mrt_20">
+            <div class="col-md-12">
+               <ol class="breadcrumb breadcrumb-arrow">
+                  <li><a href="index.html">Home</a></li>
+                  <li><a th:href="@{/user/add-membership-registration}">Add Member</a></li>
+                  <li class="active"><span>View Member</span></li>
+               </ol>
+            </div>
+            <div class="card-title">
+               <h4>Listing of Member</h4>
+            </div>
+            <div class="container-fluid">
+             
+               
+               <div class="card">
+                    <div class="search-field">
+                    <div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary"
+										href="add-membership-registration">Create</a>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div>
+							<div class="row">
+								<div class="col-md-2">
+									<label>Membership No.</label>
+								
+									<input class="form-control" id="param1">
+								</div>
+								<div class="col-md-2">
+									<label>Member Type</label>
+								
+                             		<select class="org-name form-control" id="param2">
+                            			<option th:value="NULL">Select</option>
+						    			<option th:each="c:${memberData}" th:value='${c.key}'
+							 			th:text="${c.name}"></option>
+                            		</select>
+                           		</div>
+                           		
+                           		<div class="col-md-2">
+									<label>Mobile No.</label>
+								
+									<input class="form-control" id="param3">
+								</div>
+								
+								<div class="col-md-2 mrt_10">
+	                              <div class="form-group filtersearch">
+	                                 <button class="btn btn-info" onclick="searchData()">Search</button>
+	                                 
+	                              </div>
+	                           </div>
+							</div>
+						</div>
+                  
+              
+                     
+                     <div class="table-responsive" style="width:100%;">
+                        <table id="table" class="table table-bordered">
+                           <thead>
+                              <tr> 
+                                 
+                                 <th>Membership No.</th>  
+	                             <th>Mobile </th>
+                                 <th>Type</th>
+                                 <th>Registration Fee </th>
+                                 <th>Monthly Fee</th>
+                                 <th>Joining Date</th>
+                                 <th>Status</th>
+                                 <th>Relation </th>
+                                 <th>Action</th> 
+                              </tr>
+                           </thead>
+                           
+                        </table>
+                        
+                     </div>
+                     <div style="clear:both;"></div>
+                  
+               </div>
+            </div>
+         </div>
+  <!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">View Details of Membership Registration</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<table style="width: 100%;" id="table1">
+						</table>
+					</div>
+					<div class="modal-body">
+						<table style="width: 100%;" id="table2">
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+      
+         
+      </div>
+</div>
+</html>

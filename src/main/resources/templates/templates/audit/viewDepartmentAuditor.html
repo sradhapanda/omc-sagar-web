@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script type="text/javascript">
+
+	$(document).ready(function() {
+		$('#tblDepartmentAuditor').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-department-auditor-throughAjax',
+				'data' : function(d) {
+					//d.param1 = $('#param1').val();
+					d.param2 = $('#param2').val();
+					d.param3 = $('#param3').val();
+					d.param4 = $('#param4').val();
+					/* d.param5 = $('#param5').val(); */
+					
+				}
+			},
+			'dataSrc' : "",
+			'columns' : [
+
+			{
+				'data' : 'departmentId'
+			}, {
+				'data' : 'section'
+			}, {
+				'data' : 'departmentHead'
+			/* }, {
+				'data' : 'auditor' */
+			}, {
+				'data' : 'auditee'
+			}, {
+				'data' : 'statusName'
+			}, {
+				'data' : 'action'
+			} ]
+		});
+	});
+	function searchData() {
+		$('#tblDepartmentAuditor').DataTable().draw();
+	}
+	function viewInModelData(index) {
+
+		var departmentId = '';
+		//var amenityName 	= '';
+		var section = '';
+		var departmentHead = '';
+		var auditor = '';
+		var auditee = '';
+		$("#depAudTble").find('tbody > tr').each(function() {
+			$(this).find("td").eq(1).remove();
+		})
+		$.ajax({
+			type : "POST",
+			url : "view-department-auditor-model",
+			dataType : 'json',
+			contentType : 'application/json',
+			data : index,
+			success : function(response) {
+				if (response.message == "success") {
+					console.log(response.body.status);
+
+					var status = "";
+					if (response.body.status) {
+						status = "Active";
+					} else {
+						status = "InActive";
+					}
+					departmentId = '<td>' + response.body.departmentId + '</td>'
+					section = '<td>' + response.body.section + '</td>'
+					departmentHead = '<td>' + response.body.departmentHead + '</td>'
+					auditor = '<td>' + response.body.auditor + '</td>'
+					auditee = '<td>' + response.body.auditee
+							+ '</td>'
+					$(".department").append(departmentId);
+					$(".section").append(section);
+					$(".departmentHead").append(departmentHead);
+				
+					$(".auditor").append(auditor);
+					$(".auditee").append(auditee);
+					$(".status").append(status);
+				}
+			},
+			error : function(data) {
+				console.log(data);
+			}
+		})
+
+	}
+
+	//Deleting the Service
+	
+function deleteItem(id){
+
+		swal.fire({
+			  title: "Are you sure want to Delete?",
+			  text: "Once Deleted,Can't revert back !",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonColor: '#d33',
+			  cancelButtonColor: '#e7b63a',
+			  confirmButtonText: 'Delete',
+			  reverseButtons : true
+			  
+			}).then((result) => {
+				if(result.value){
+				 $.ajax({
+					    type: "GET",
+					   	url : "/master/view-department-auditor-delete?id=" + id,
+					    success: function(response) {
+					        if (response.message == "success") {
+					        	swal({
+					        		title: "Record Deleted Successfully.",
+					        		type: "success"
+					        	}).then(function(){
+					        		 location.reload();
+					        	})
+					              } else {
+					            swal({
+					                title: 'Unsuccess',
+					                text: response.code
+					            })
+					        }
+					    },
+					    error: function(data) {
+	   					    }
+					})
+				}
+		});
+	}
+	
+
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li><a href="add-department-auditor">Add Section Officer</a></li>
+					<li class="active"><span>View Section Officer</span></li>
+				</ol>
+			</div>
+		</div>
+		<div class="col-md-1">
+			<div class="form-group card-title">
+				<a class="btn btn-secondary" href="add-department-auditor">Add
+					Section Officer</a>
+			</div>
+		</div>
+		<div class="card-title">
+			<h4>View Section Officer</h4>
+		</div>
+		<div class="container-fluid">
+
+			<div class="card">
+				<div class="search-field">
+					<!-- 	<div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary" href="add-department-auditor">Create</a>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div> -->
+					<div class="row">
+						<!-- <div class="col-lg-2">
+								<label>Department Name</label> 
+									<select class="form-control" id="param1">
+						                            <option th:value="NULL">Select</option>
+												    <option th:each="c:${departmentList}" th:value='${c.key}'
+													 th:text="${c.name}"></option>
+						                          </select>
+							</div> -->
+						<div class="col-lg-2">
+							<label>Section Name</label> <select class="form-control"
+								id="param2">
+								<option th:value="NULL">Select</option>
+								<option th:each="c:${sectionList}" th:value='${c.key}'
+									th:text="${c.name}"></option>
+							</select>
+						</div>
+						<div class="col-lg-2">
+							<label>Section Head</label> <select class="form-control"
+								id="param3">
+								<option th:value="NULL">Select</option>
+								<option th:each="c:${depHeadList}" th:value='${c.key}'
+									th:text="${c.name}"></option>
+							</select>
+						</div>
+						<div class="col-lg-2">
+							<label>Concern Auditee</label> <select class="form-control"
+								id="param4">
+								<option th:value="NULL">Select</option>
+								<option th:each="c:${auditorList}" th:value='${c.key}'
+									th:text="${c.name}"></option>
+							</select>
+						</div>
+						<!-- <div class="col-lg-2">
+								<label>Auditee</label> <select class="form-control" id="param5">
+						                          <option th:value="NULL">Select</option>
+												 <option th:each="c:${auditeeList}" th:value='${c.key}'
+													th:text="${c.name}"></option> 	
+													</select>	
+							</div> -->
+						<div class="col-md-2 mrt_10">
+							<div class="form-group filtersearch">
+								<button class="btn btn-info" onclick="searchData()">Search</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="table-responsive" style="width: 100%;">
+						<table id="tblDepartmentAuditor" class="table  table-bordered">
+							<thead>
+								<tr>
+
+									<th>Department</th>
+									<th>Section Name</th>
+									<th>Section Head</th>
+									<!-- <th>Auditor</th> -->
+									<th>Concern Auditee</th>
+									<th>Status</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							</tbody>
+						</table>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content" style="width: 750px;">
+					<div class="modal-header">
+						<h4 class="modal-title">View Details of Department Auditor</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<table width="100%" border="0" id="depAudTble">
+							<tbody>
+								<tr class="department">
+									<td><b>Department Name:</b></td>
+								</tr>
+								<tr class="section">
+									<td><b>Section Name :</b></td>
+								</tr>
+								<tr class="departmentHead">
+									<td><b>DepartmentHead Name :</b></td>
+								</tr>
+
+								<tr class="auditor">
+									<td><b>Auditor Name :</b></td>
+								</tr>
+
+								<tr class="auditee">
+									<td><b>Auditee Name :</b></td>
+								</tr>
+
+								<tr class="status">
+									<td><b>Status :</b></td>
+								</tr>
+							</tbody>
+							<tbody id="tModelBody"></tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+		<!-- /# row -->
+	</div>
+</div>
+</html>

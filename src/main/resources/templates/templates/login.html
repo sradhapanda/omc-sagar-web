@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+ <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Aathithya</title>
+
+        <!-- Styles -->
+       <!-- font css -->
+        <link href="assets/css/lib/font-awesome.min.css" rel="stylesheet">
+        <link href="assets/css/lib/themify-icons.css" rel="stylesheet">
+        <!-- for sidebar css -->
+        <link href="assets/css/lib/menubar/sidebar.css" rel="stylesheet">
+        <!-- bootstrap css -->
+        <link href="assets/css/lib/bootstrap.min.css" rel="stylesheet">
+
+       <!--  <link href="assets/css/lib/helper.css" rel="stylesheet"> -->
+        <link href="assets/css/style.css" rel="stylesheet">
+    </head>
+<body style="background:url(assets/images/loginbg.jpg); background-size:cover; ">
+<!--<div style="background-image: linear-gradient(#333, transparent);">-->
+    <div class="unix-login">
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                <div class="login-content"> 
+                <div class="loginformborder">
+                     <div class="login-form">
+                   <div class="row">
+                    <div class="col-lg-6" style="border-right:1px solid #ccc;">
+                        <div class="login-logo" align="center" style="padding:15px 0px;">
+                            <a href="index.html"><img src="assets/images/logo_login.png" class="img-fluid"></a>
+                        </div>
+                        <div class="loginheading">
+                       
+                        Hotel<br> Management System</div>
+                        <div class="loginsubheading">Facilitating a World Class<br> Hotel Hospitality System</div>
+                    </div>
+                    <div class="col-lg-6">
+                    
+                            <!--<h4>Administrator Login</h4> -->
+                            <form th:action="@{/login}" method="post">
+                            	<fieldset>
+				                <div style="color:red;" th:if="${loginMessage}"  class="alert alert-error">    
+				                    <span th:text="${loginMessage}">Invalid message and password.</span>
+				                </div>
+				                <!--<div th:if="${param.logout}" class="alert alert-success"> 
+				                    You have been logged out.
+				                </div>-->
+                                <div class="form-group">
+                                    <!--<label>Email address</label>-->
+                                    <input type="text" id="username" name="username" class="login-field" placeholder="Email">
+                                </div>
+                                <div class="form-group">
+                                    <!--<label>Password</label>-->
+                                    <input type="password" id="password" name="password" class="login-field" placeholder="Password">
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> Remember Me
+                                    </label>
+                                    <label class="pull-right">
+                                        <a href="#">Forgotten Password?</a>
+                                    </label>
+
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">Sign in</button>
+                               
+                                    <!--<div class="social-button row">
+                                       <div class="col-md-6"><button type="button" class="btn btn-social bg-facebook btn-flat btn-addon m-b-10"><i class="ti-facebook"></i>Facebook</button></div> 
+                                        <div class="col-md-6"><button type="button" class="btn btn-social bg-twitter btn-flat btn-addon m-t-10"><i class="ti-twitter"></i>Twitter</button></div> 
+                                    </div>-->
+                                
+                                <div class="register-link m-t-15 text-center">
+                                    <p>Don't have account ? <a href="register"> Sign Up Here</a></p>
+                                </div>
+                                </fieldset> 
+                            </form>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="login-formbtm">
+                        <div class="row">
+                        <div class="col-md-6 loginbtmtxt">Copyright @ ATITHYA</div>
+                        <div class="col-md-6 loginbtmtxt" align="right"><b>Powered By</b> : Nirmalya Labs Pvt. Ltd.</div>
+                        </div>
+                    </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--  </div>-->
+</body>
+</html>

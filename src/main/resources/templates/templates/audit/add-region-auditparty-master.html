@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script type="text/javascript">
+	function validateForm() {
+		
+		if (!blankValidation("regionName", "SelectBox",
+		"Region Name can not be left blank"))
+			return false;
+		if (!blankValidation("auditor", "SelectBox",
+		"Auditor Name can not be left blank"))
+			return false;
+		if (!blankValidation("desc", "TextField",
+			"Description can not be left blank"))
+			return false;
+		if (!blankValidation("status", "SelectBox",
+				"Status can not be left blank"))
+			return false;
+	}
+
+	function returnToAddPage(){
+		var item = $("#isEdit").val();
+		if((item == null)||(item == "")){
+			funcLoad();
+		}
+		else{
+			window.location.href = "/master/view-regional-auditparty-master" ;
+		}
+	}
+	
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li class="active"><span>Add Regional Audit Party</span></li>
+				</ol>
+			</div>
+
+			<div class="col-md-12">
+				<!--Alert Box-->
+				<div class="alert alert-success alert-dismissible"
+					style="display: none;">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;
+					</a> <strong>Success! </strong> Indicates a successful or positive
+					action.
+				</div>
+				<div class="alert alert-danger alert-dismissible"
+					style="display: none;">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;
+					</a> <strong>Success! </strong> Indicates a successful or positive
+					action.
+				</div>
+				<div class="alert alert-warning alert-dismissible"
+					style="display: none;">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;
+					</a> <strong>Success! </strong> Indicates a successful or positive
+					action.
+				</div>
+			</div>
+
+
+			<div class="card-title">
+				<h4>Add Regional Audit Party</h4>
+			</div>
+			<div class="container-fluid">
+
+				<div class="card">
+					<div class="card-body">
+						<div class="basic-elements">
+							<form action="#" th:action="@{add-region-auditparty-master-add-desc}"
+								th:object="${regAudParMaster}" method="post"
+								onsubmit="return validateForm();" autocomplete="off">
+
+								<div class="row">
+									<span style="color: red;" id="errorMsg"> </span>
+									<div th:if="${message != null}">
+										<span th:text="${message}" style="color: red;"> </span>
+									</div>
+								</div>
+
+								<div class="row">
+									<div class="col-lg-6">
+										
+										<div class="form-group">
+										<input type="hidden" th:field="*{isEdit}">
+											<label>Region Name</label> 
+												<select class="form-control" id="region"
+												th:field="*{regionId}">
+												<option th:value="NULL">Select</option>
+												 <option th:each="c:${regionList}" th:value='${c.key}'
+													th:text="${c.name}"></option> 
+													</select>
+										</div>
+										
+										<div class="form-group">
+												
+												 <label>Auditor Name</label>
+						                          <select class="form-control" id="auditor" th:field="*{auditId}">
+						                            <option th:value="NULL">Select</option>
+												    <option th:each="c:${auditorList}" th:value='${c.key}'
+													 th:text="${c.name}" ></option>
+						                          </select>
+										</div>
+										
+										<div class="form-group">
+										 </div>
+										<div class="form-group">
+											<input type="submit" value="Submit" class="btn btn-success" />
+											<input type="reset" value="Cancel" class="btn btn-warning"
+												onclick="window.location.reload();" />
+
+										</div>
+									</div>
+										<div class="col-lg-6">
+										<div class="form-group">
+											<label>Description</label>
+											<textarea name="" cols="" rows=""  th:field="*{desc}"
+												class="form-control textarea"></textarea>
+										</div>
+										
+										<div class="form-group">
+											<label>Status</label> <select class="form-control"
+												th:field="*{status}">
+												<option th:value="null">Select</option>
+												<option th:value="true">Active</option>
+												<option th:value="false">Inactive</option>
+											</select>
+										</div>
+										
+									</div>
+							
+									
+								</div>
+							</form>
+						</div>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

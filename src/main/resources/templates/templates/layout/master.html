@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
+
+<title>OMC</title>
+<!-- Styles -->
+<!-- font css -->
+<link href="../assets/css/lib/font-awesome.min.css" rel="stylesheet">
+<link href="../assets/css/lib/themify-icons.css" rel="stylesheet">
+<!-- for sidebar css -->
+<link href="../assets/css/lib/menubar/sidebar.css" rel="stylesheet">
+<!-- bootstrap css -->
+<link href="../assets/css/lib/bootstrap.min.css" rel="stylesheet">
+<!--  <link href="../assets/css/lib/helper.css" rel="stylesheet"> -->
+<link href="../assets/css/style.css" rel="stylesheet">
+<!-- bootstrap Datepicker css -->
+<link rel="stylesheet" href="../assets/css/bootstrap-datepicker.css">
+
+<link rel="stylesheet"
+	href="../assets/css/jquery.datetimepicker.min.css">
+<!-- bootstrap datatable  -->
+<link href="../datatables/dataTables.bootstrap4.min.css"
+	rel="stylesheet">
+	
+	<link rel="stylesheet"
+	href="../assets/css/selectizedefault.css">
+	<link rel="stylesheet"
+	href="../assets/css/sselectize.css">
+		<link rel="stylesheet"
+	href="../assets/css/plugin.css">
+	
+<link href="../assets/css/lightbox.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/slimselect.min.css">
+<script src="../assets/js/lib/jquery-3.4.1.min.js"></script>
+<script src="../assets/js/lib/bootstrap.min.js"></script>
+<script src="../assets/js/bundle.min.js"></script>
+<script src="../assets/js/slimselect.min.js"></script>
+
+
+<!-- Validator css Starts -->
+
+<link rel="stylesheet" href="../assets/css/sweetalert2.min.css">
+<!-- Validator css End -->
+<!-- Validator Js starts -->
+<script src="../assets/js/validate.js"></script>
+<script src="../assets/js/jquery.datetimepicker.js"></script>
+
+<script src="../assets/js/sweetalert2.all.min.js"></script>
+<script src="../assets/js/lightbox.min.js"></script>
+<!-- Validator Js Ends -->
+
+<script src="../assets/highchart/highcharts.js"></script>
+<script src="../assets/highchart/series-label.js"></script>
+<script src="../assets/highchart/exporting.js"></script>
+<script src="../assets/highchart/export-data.js"></script>
+<script src="../assets/ckeditor/ckeditor.js"></script>
+<script src="../assets/js/slimselect.min.js"></script>
+<script src="../assets/js/slimselect.js"></script>
+<script src="../assets/js/selectize.js"></script>
+<script src="../assets/standalone/selectize.js"></script>
+<script src="../assets/js/plugin.js"></script>
+<script src="../assets/js/main.js"></script>
+
+
+<!-- bikash -->
+<script src="../assets/chosen/chosen.jquery.min.js"></script>
+<link rel="stylesheet" href="../assets/chosen/chosen.min.css">
+<!-- end -->
+
+<style type="text/css">
+.tr-bg {
+	background-color: #8093f3 !important;
+}
+</style>
+<script>
+	$(function () {
+		//Date picker
+		$('#datepicker').datepicker({
+		autoclose: true
+		})
+	})
+
+	
+	 $( document ).ready(function() {
+	   $(".activityClass").click(function() {   
+		     var protocol = location.protocol;
+		     var protocol=protocol+'//';
+ 			 var hosturl=location.host;  
+		     var hrefurl=protocol+hosturl; 
+           	 var href = $(this).attr('href'); 
+           	 var href=hrefurl+href; 
+           	 var activityId= $(this).closest('li').attr('id');
+           	 var functionId = $(this).closest('ul').closest('li').attr('id');
+           	 var moduleId = $(this).closest('ul').closest('li').closest('ul').closest('li').attr('id'); 
+           	 
+           	 localStorage.setItem("activityId", activityId);
+           	 localStorage.setItem("functionId", functionId);
+           	 localStorage.setItem("moduleId", moduleId);
+           	 localStorage.setItem("href", href); 
+        });  
+	 
+		 var href=localStorage.getItem("href");
+	 	 var moduleName = localStorage.getItem("moduleId");
+	 	 var funtionName = localStorage.getItem("functionId");
+	 	 var activityName = localStorage.getItem("activityId");
+	 	 
+	 	 var CurURL=window.location.href;
+	 	 
+		 var protocol1= location.protocol;
+	     var protocol1=protocol1+'//';
+		 var hosturl1=location.host;  
+	     var hrefurl1=protocol1+hosturl1;
+	     var hrefurl1len=hrefurl1.length;
+	     var hrefurl1len=parseInt(hrefurl1len)+1;
+	     var CurURL1=window.location.href;
+	     var urlfresh=CurURL1.slice(hrefurl1len);
+	     var l = urlfresh.split("/");
+	 	 var urlindb = l[1];
+	 	 var f=urlindb.split("-");
+	 	 var req=f[0]+1;
+	 	 var req = req.charAt(0).toUpperCase() + req.slice(1);
+	 	 var funtionName1=funtionName.slice(0,-1);
+	 	 var activityName1=funtionName1+req;
+	 	 
+		 if(href==CurURL){
+			 //remove active class
+			 $("#dash").removeClass('active');
+			 $(".moDule").removeClass('active').removeClass('open');
+			 $(".funTion").removeClass('open');
+			 $(".acTivity").removeClass('active');
+			 //add Active class
+			 $("#"+moduleName).addClass('active').addClass('open');
+			 $("#"+funtionName).addClass('open');
+			 $("#"+activityName).addClass('active');		 
+		 }  
+
+		 if(href != CurURL){
+			 //remove active class
+			 $("#dash").removeClass('active');
+			 $(".moDule").removeClass('active').removeClass('open');
+			 $(".funTion").removeClass('open');
+			 $(".acTivity").removeClass('active');  
+			 
+			//add Active class
+			 $("#"+moduleName).addClass('active').addClass('open');
+			 $("#"+funtionName).addClass('open');
+			 $("#"+activityName1).addClass('active'); 
+		 } 
+});
+
+
+	</script>
+</head>
+<body>
+	<!--sidebar-->
+	<div th:replace="layout/app-sidebar :: sidebar"></div>
+	<!-- /# sidebar -->
+	<!-- header-->
+	<div th:replace="layout/app-header :: header"></div>
+	<!-- content section starts -->
+	<div class="content-wrap">
+		<!-- Main content -->
+		<div layout:fragment="content"></div>
+		<!-- footer-->
+		<div th:replace="layout/app-footer :: footer"></div>
+		<!-- footer -->
+	</div>
+	<!-- include script files -->
+	<div th:replace="layout/app-js :: includejs"></div>
+</body>
+</html>

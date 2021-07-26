@@ -1,0 +1,1253 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<style type="text/css">
+select {
+	width: 500px;
+}
+
+.selectBox {
+	position: relative;
+}
+
+.selectBox select {
+	width: 100%;
+	font-weight: bold;
+}
+
+.overSelect {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.staffDesign {
+	background-color: rgb(167, 188, 206);
+	background-color: rgba();
+	color: white;
+	text-align: center;
+	padding: 8px;
+	font-size: 14px;
+	display: block;
+}
+
+.staffDesign .fa-caret-down {
+	font-size: 17px;
+	position: relative;
+	top: 1px;
+	left: 101px;
+}
+
+#checkboxes {
+	display: none;
+	border: 1px #dadada solid;
+}
+
+#checkboxes label {
+	display: block;
+}
+
+.middle {
+	transition: .5s ease;
+	opacity: 0;
+	position: absolute;
+	top: 26%;
+	left: 120px;
+	transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+	text-align: center;
+}
+
+.dinning:hover .middle {
+	opacity: 1;
+}
+
+.text {
+	background-color: rgba(28, 245, 58, 0.8);
+	background-color: rgba();
+	color: white;
+	position: relative;
+	right: 68px;
+	border-radius: 50%;
+	padding: 10px;
+	font-size: 12px;
+	display: block;
+	width: 120px;
+}
+
+#checkboxes label:hover {
+	background-color: #1e90ff;
+}
+
+.ulbg {
+	background-color: rgba(66, 139, 202, 0.3);
+	color: #2c61e1;
+	width: 92%;
+}
+
+.ulbg li {
+	border-bottom: 1px solid #fff;
+	padding: 5px;
+}
+
+/* The container */
+.dinning {
+	display: block;
+	position: relative;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+/* Hide the browser's default checkbox */
+.dinning input {
+	position: absolute;
+	opacity: 0;
+	cursor: pointer;
+	height: 0;
+	width: 0;
+}
+/* Create a custom checkbox */
+.checkmark {
+	position: absolute;
+	top: 40px;
+	left: 35px;
+	height: 25px;
+	width: 25px;
+}
+
+.dinning  input:checked ~ .checkmark {
+	/*  background-color: #2196F3;*/
+	
+}
+
+.checkmark:after {
+	content: "";
+	position: absolute;
+	display: none;
+}
+/* Show the checkmark when checked */
+.dinning  input:checked ~ .checkmark:after {
+	display: block;
+}
+/* Style the checkmark/indicator */
+.dinning  .checkmark:after {
+	left: 6px;
+	top: -7px;
+	width: 18px;
+	height: 27px;
+	border: solid #6880fb;
+	border-width: 0 3px 3px 0;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+.table-tick {
+	width: 100%;
+}
+
+#autocomplete-list {
+	float: left;
+	list-style: none;
+	margin-top: -3px;
+	padding: 0;
+	/* width: 570px; */
+	position: absolute;
+	z-index: 9999;
+}
+
+#autocomplete-list li {
+	padding: 10px;
+	background: #f2f2f2;
+	border-bottom: 1px solid #373757;
+	color: #373757;
+	font-weight: 500;
+}
+
+#autocomplete-list li:hover {
+	background: #373757;
+	color: #f2f2f2;
+	cursor: pointer;
+}
+
+.panel-heading {
+	padding: 0;
+	border: 0;
+}
+
+.panel-title>a, .panel-title>a:active {
+	display: block;
+	padding: 9px;
+	color: #555;
+	font-size: 13px;
+	font-weight: bold;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	word-spacing: 3px;
+	text-decoration: none;
+}
+
+.panel-heading  a:before {
+	font-family: 'FontAwesome';
+	content: "\f078";
+	float: right;
+	transition: all 0.5s;
+}
+
+.panel-heading.active a:before {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+</style>
+<style>
+.form-box {
+	background-color: rgba(91, 202, 239, 0.1);
+	border: 1px solid transparent;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+label {
+	font-weight: 500;
+	margin-bottom: 0px;
+	color: #19559e;
+	font-size: 13px;
+	min-width: 100%;
+}
+
+.form-control {
+	border: 1px solid rgb(229, 244, 249);
+}
+</style>
+<style>
+.required:after {
+	content: " *";
+	color: red;
+	font-size: large;
+}
+</style>
+<script src="../assets/js/dob-validation.js"></script>
+<script type="text/javascript">
+	function validateForm() {
+		if (!blankValidation("employeeFname", "TextField",
+				" First Name can not be left blank"))
+			return false;
+
+		if (!blankValidation("employeeLname", "TextField",
+				"Last Name can not be left blank"))
+			return false;
+		if (!blankValidation("employeeDob", "TextField",
+				"Date Of Birth can not be left blank"))
+			return false;
+		if (!blankValidation("employeeNationality", "SelectBox",
+				"Nationality can not be left blank"))
+			return false;
+		if (!blankValidation("employeeGender", "SelectBox",
+				"Gender can not be left blank"))
+			return false;
+		if (!blankValidation("employeeMarital", "SelectBox",
+				"Marital Status can not be left blank"))
+			return false;
+		if (!blankValidation("employeepPin", "TextField",
+				"Please enter 4 digit pin"))
+			return false;
+		if (!blankValidation("employeePassword", "TextField",
+				"Password can not be left blank"))
+			return false;
+		if (!blankValidation("employeeAdhar", "TextField",
+				"Adhar Number can not be left blank"))
+			return false;
+		/* if (!blankValidation("employeeEsicNo", "TextField",
+				"ESIC NO  can not be left blank"))
+			return false; */
+
+		if (!blankValidation("employeeEmployment", "SelectBox",
+				"Employement Type can not be left blank"))
+			return false;
+
+		var checkedCount = $('input:checkbox[name=userRole]:checked').length;
+		if (checkedCount == 0) {
+			swal({
+				title : "Please Choose User Role",
+			})
+			return false;
+		}
+		if (!blankValidation("employeePayGrade", "SelectBox",
+				"Pay Grade can not be left blank"))
+			return false;
+		if (!blankValidation("employeeWorkStationId", "TextField",
+				"Work Station Id can not be left blank"))
+			return false;
+		if (!fieldLengthCheck("employeeWorkStationId", 10, "employeeWorkStationId", "Min"))
+			return false;
+		if (!fieldLengthCheck("employeeWorkStationId", 10, "employeeWorkStationId", "Max"))
+			return false;
+		if (!blankValidation("employeeDepartment", "SelectBox",
+				"Department can not be left blank"))
+			return false;
+
+		if (!blankValidation("employeeRegion", "SelectBox",
+				"Region can not be left blank"))
+			return false;
+
+		if (!blankValidation("empDesignation", "SelectBox",
+				"Designation can not be left blank"))
+			return false;
+		if (!blankValidation("employeeAddress", "TextField",
+				"Address can not be left blank"))
+			return false;
+
+		if (!blankValidation("employeeCity", "TextField",
+				"City can not be left blank"))
+			return false;
+
+		if (!blankValidation("EmployeeCountry", "SelectBox",
+				"Country can not be left blank"))
+			return false;
+		if (!blankValidation("employeeState", "SelectBox",
+				"State can not be left blank"))
+			return false;
+		if (!blankValidation("employeePin", "TextField",
+				"Zip Code can not be left blank"))
+			return false;
+		if (!blankValidation("employeeMobilePhoneNo", "TextField",
+				"Mobile Number can not be left blank"))
+			return false;
+		if (!blankValidation("employeeWEmail", "TextField",
+				"Work Email  can not be left blank"))
+			return false;
+		if (!blankValidation("employeePEmail", "TextField",
+				"Personal Email  can not be left blank"))
+			return false;
+
+		if (!checkSpecialCharacterFirst("employeeFname", "SelectBox",
+				"Special Character is not allowed at First Name"))
+			return false;
+		if (!checkSpecialCharacterFirst("employeeMname", "SelectBox",
+				"Special Character is not allowed at Middle Name"))
+			return false;
+		if (!checkSpecialCharacterFirst("employeeLname", "SelectBox",
+				"Special Character is not allowed at Last Name"))
+			return false;
+
+		
+		
+		if (!fieldLengthCheck("employeeAdhar", 12, "Adhar Number", "Min"))
+			return false;
+		if (!fieldLengthCheck("employeeAdhar", 12, "Adhar Number", "Max"))
+			return false;
+		if (!fieldLengthCheck("employeeOtherId", 10, "Pan Code", "Min"))
+			return false;
+		if (!fieldLengthCheck("employeeOtherId", 10, "Pan Code", "Max"))
+			return false;
+		/* if (!fieldLengthCheck("employeeEsicNo", 17, "ESIC Code",
+				"Min"))
+			return false;
+		if (!fieldLengthCheck("employeeEsicNo", 17, "ESIC Code",
+				"Max")) 
+			return false;
+		*/
+		if (!fieldLengthCheck("employeeDl", 16, "Driving Licence Code", "Min"))
+			return false;
+		if (!fieldLengthCheck("employeeDl", 16, "Driving Licence Code", "Max"))
+			return false;
+		if (!fieldLengthCheck("employeePin", 6, "Zip Code", "Min"))
+			return false;
+		if (!fieldLengthCheck("employeePin", 6, "Zip Code", "Max"))
+			return false;
+		if (!fieldLengthCheck("employeeWorkStationId", 10, "employeeWorkStationId", "Min"))
+			return false;
+		if (!fieldLengthCheck("employeeWorkStationId", 10, "employeeWorkStationId", "Max"))
+			return false;
+		/* if (!fieldLengthCheck("employeePassword", 6, "Password", "Min"))
+			return false; */
+		
+		if (!checkMobileNumberIN("employeeMobilePhoneNo",
+				"Please Enter A Valid Mobile Number"))
+			return false;
+		if (!validateTelephone("employeeWorkPhoneNo",
+				"Pleaase Enter A Valid Phone Number like 91-674-2495452"))
+			return false;
+		if (!checkEmailId("employeeWEmail",
+				"Pleaase Enter A Valid Email like abc@gmail.com"))
+			return false;
+		if (!checkEmailId("employeePEmail",
+				"Pleaase Enter A Valid Email like abc@gmail.com"))
+			return false;
+		/* if (!allowAlphaNumericCharacter("employeeOtherId",
+		"Please enter valid pan number ex:WQO12LVBDF")) 
+		return false;*/
+		 if (!fieldLengthCheck("employeepPin", 4, "PIN No", "Min"))
+			return false;
+		if (!fieldLengthCheck("employeepPin", 4, "PIN No", "Max"))
+			return false; 
+
+	}
+
+	lightbox.option({
+		'resizeDuration' : 200,
+		'wrapAround' : true,
+
+	})
+	$(document).on('click', '.close', function() {
+		$(this).siblings("img").toggle();
+
+	})
+	//for refreshing image on the same page
+	function readIMG(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+
+			reader.onload = function(e) {
+				$('#image').attr('src', e.target.result);
+			}
+
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
+
+	var expanded = false;
+	function showCheckboxes() {
+		if (!expanded) {
+			$("#checkboxes").show();
+			expanded = true;
+		} else {
+			$("#checkboxes").hide();
+
+			expanded = false;
+		}
+	}
+	function saveFile() {
+		$("#upload_prev").empty();
+		var uFile = $('#fileUpload')[0].files[0];
+		var fileName = $('#fileUpload').val();
+
+		var lastIndex = fileName.lastIndexOf("\\");
+		if (lastIndex >= 0) {
+			fileName = fileName.substring(lastIndex + 1);
+		}
+		var iURL = URL.createObjectURL(uFile);
+		$("#uploadedImgDiv").html("");
+		var LightImg = "<a class='example-image-link' href='"+iURL+"' title='"+fileName+"' data-lightbox='"+fileName+"'>Preview Image</a>";
+		$("#uploadedImgDiv").html(LightImg);
+
+		var fileData = new FormData();
+		fileData.append('file', uFile);
+		fileData.append('path', 'none');
+		console.log(fileData, "sdcf")
+		$.ajax({
+			type : "POST",
+			url : "uploadFile",
+			enctype : "multipart/form-data",
+			contentType : false,
+			data : fileData,
+			processData : false,
+			cache : false,
+			success : function(response) {
+
+			},
+			error : function(e) {
+
+			}
+		});
+
+	}
+
+	//date time picker
+	$(document)
+			.ready(
+					function() {
+
+						$('.panel-collapse').on(
+								'show.bs.collapse',
+								function() {
+									$(this).siblings('.panel-heading')
+											.addClass('active');
+								});
+
+						$('.panel-collapse').on(
+								'hide.bs.collapse',
+								function() {
+									$(this).siblings('.panel-heading')
+											.removeClass('active');
+								});
+
+						$("#fileUpload").change(function() {
+							readIMG(this);
+						});
+						$("#employeeJoinDate").datetimepicker({
+							format : 'd-m-Y',
+							closeOnDateSelect : true,
+							timepicker : false,
+							scrollMonth : false,
+							scrollInput : false
+						})
+
+						$("#employeeTerminateDate").datetimepicker({
+							format : 'd-m-Y',
+							closeOnDateSelect : true,
+							timepicker : false,
+							scrollMonth : false,
+							scrollInput : false
+						})
+						$("#employeeConfirmDate").datetimepicker({
+							format : 'd-m-Y',
+							closeOnDateSelect : true,
+							timepicker : false,
+							scrollMonth : false,
+							scrollInput : false
+						})
+						$("#employeeDob").datetimepicker({
+							format : 'd-m-Y',
+							closeOnDateSelect : true,
+							maxDate : new Date(),
+							timepicker : false,
+							scrollMonth : false,
+							scrollInput : false
+						})
+
+						$("#submit").click(
+								function() {
+									var userRole = [];
+									$("input:checkbox[name=userRole]:checked")
+											.each(function() {
+												userRole.push($(this).val());
+											})
+									$("#roleList").val(userRole);
+
+								});
+
+						var employeeId = $("#employeeNo").val();
+						if (employeeId == "" || employeeId == null) {
+							$("#employeePassword").val("User@123");
+
+							var fullDate = new Date();
+							var twoDigitMonth = ((fullDate.getMonth() + 1) >= 10) ? (fullDate
+									.getMonth() + 1)
+									: '0' + (fullDate.getMonth() + 1);
+							var twoDigitDate = ((fullDate.getDate()) >= 10) ? (fullDate
+									.getDate())
+									: '0' + (fullDate.getDate());
+							var currentDate = twoDigitDate + "-"
+									+ twoDigitMonth + "-"
+									+ fullDate.getFullYear();
+							$("#employeeJoinDate").val(currentDate);
+							$("#employeeConfirmDate").val(currentDate);
+						}
+
+					});
+
+	/* function departmentChange() {
+		var employeeDepartment = $("#employeeDepartment").val();
+		$("#empDesignation").empty();
+		$("#empDesignation").append($("<option value>--Select--</option>"));
+		if (employeeDepartment) {
+
+			$.ajax({
+				type : "POST",
+				url : "add-employee-jobtitle",
+				dataType : 'json',
+				contentType : 'application/json',
+				data : employeeDepartment,
+				success : function(response) { 
+					if (response.message == "success") {
+						console.log(response)
+						for (var i = 0; i < response.body.length; i++) {
+							var option = $("<option></option>");
+							$(option).val(response.body[i].key);
+							$(option).html(response.body[i].name);
+							$("#empDesignation").append(option);
+
+						}
+					}
+				},
+				error : function(data) {
+
+				}
+			})
+		} else {
+			$("#employeeJobTitle").empty();
+			$("#employeeJobTitle").append(
+					$("<option value>--Select--</option>"));
+		}
+	} */
+
+	// for state change 
+	function stateChange() {
+		var country = $("#EmployeeCountry").val();
+
+		$("#employeeState").empty();
+		$("#employeeState").append($("<option value>--Select--</option>"));
+		if (country) {
+			$.ajax({
+				type : "POST",
+				url : "add-employee-state-change",
+				dataType : 'json',
+				contentType : 'application/json',
+				data : country,
+				success : function(response) {
+					console.log(response);
+					if (response.message == "success") {
+
+						for (var i = 0; i < response.body.length; i++) {
+							var option = $("<option></option>");
+							$(option).val(response.body[i].key);
+							$(option).html(response.body[i].name);
+							$("#employeeState").append(option);
+
+						}
+					}
+				},
+				error : function(data) {
+
+				}
+			})
+		} else {
+			$("#employeeState").empty();
+			$("#employeeState").append($("<option value>--Select--</option>"));
+		}
+	}
+
+	// Email validation
+	function validateEmail(email) {
+		var emailPattern = /^[A-Za-z0-9\-_\.]+@+[A-Za-z0-9\-\.]+\.+[A-Za-z]{2,10}$/;
+		var email = $('#' + fieldId).val();
+		if (email != '') {
+			if (emailPattern.test(email) == true)
+				return true;
+			else {
+				$('#' + fieldId).focus();
+				swal(message);
+				return false;
+			}
+		} else
+			return true;
+
+	}
+
+	// password validation
+	function CheckPassword(inputtxt) {
+		var decimal = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9])(?!.*\s).{6,15}$/;
+		if (inputtxt.value.match(decimal)) {
+
+			return true;
+		} else {
+			swal('Password must contain at least one lowercase letter, one uppercase letter, one numeric digit, and one special character ,and more than 6 characters')
+			$("#employeePassword").val('');
+			return false;
+		}
+	}
+
+	function dateValidation() {
+		var joinDate = $("#employeeJoinDate").val();
+		var confirmDate = $("#employeeConfirmDate").val();
+
+		var parts = joinDate.split('-');
+		var d1 = Number(parts[2] + parts[1] + parts[0]);
+		parts = confirmDate.split('-');
+		var d2 = Number(parts[2] + parts[1] + parts[0]);
+		if (d1 <= d2) {
+			return true;
+		} else {
+			swal("Confirm Date Can't  be Larger Than Joining Date.")
+			$("#employeeConfirmDate").val('');
+			return false;
+		}
+
+	}
+
+	function dateValidation1() {
+		var joinDate = $("#employeeConfirmDate").val();
+		var confirmDate = $("#employeeTerminateDate").val();
+
+		var parts = joinDate.split('-');
+		var d1 = Number(parts[2] + parts[1] + parts[0]);
+		parts = confirmDate.split('-');
+		var d2 = Number(parts[2] + parts[1] + parts[0]);
+		if (d1 <= d2) {
+			return true;
+		} else {
+			swal("Terminate Date Can't  be Larger Than Confirm Date.")
+			$("#employeeTerminateDate").val('');
+			return false;
+		}
+
+	}
+
+	function funcReset() {
+		location.href = "/employee/view-employee";
+	}
+	/*
+	To chaeck alphaNumeric(PAN) ***ON KYE UP*****************
+	 */
+	function checkAlphabetAndNumber(fieldId) {
+		var val = $("#" + fieldId).val();
+		var res = val.toUpperCase();
+		var tempVal = res.replace(/[^A-Z0-9 ]/g, '');
+		$("#" + fieldId).val(tempVal);
+	}
+	/* 
+	To check alphaNumeric(For pan Validation)
+	 */
+	function allowAlphaNumericCharacter(fieldId, message) {
+		//var alphaNumericRegExp = new RegExp(/^([0-9]|[a-z])+([a-z]+)$/i);
+		var alphaNumericRegExp = new RegExp("^[a-zA-Z0-9\s]+$");
+		var fieldVal = $("#" + fieldId).val();
+
+		if (alphaNumericRegExp.test(fieldVal) == false) {
+			$('#' + fieldId).focus();
+			swal(message);
+			return false;
+		}
+		return true;
+
+	}
+
+	/* 
+	To chaeck alphabet(Names) ***ON KYE UP*****************
+	 */
+
+	function checkAlphabetWithSpace(fieldId) {
+		var tempVal = $("#" + fieldId).val().replace(/[^a-zA-Z.]/g, '');
+		$("#" + fieldId).val(tempVal);
+	}
+	function checkAlphabetWithSpacess1(fieldId) {
+		var val1 = $("#" + fieldId).val();
+		var capitalized = val1.replace(/^./, val1[0].toUpperCase());
+		$("#" + fieldId).val(capitalized);
+	}
+	function panvalidation() {
+		var pan = $('#employeeOtherId').val();
+		var pno = /[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+		if (pan != '') {
+			if (pan.match(pno)) {
+			} else {
+
+				$('#employeeOtherId').focus();
+				swal("please enter valid pan number ex: ABCDE1234F");
+
+				return false;
+
+			}
+		}
+		/* else {
+		$('#empPan')
+		swal("please Enter PAN Number");
+		return false;
+		} */
+
+	}
+
+	function dlvalidation() {
+		var dl = $('#employeeDl').val();
+		var dlno = /^(([A-Z]{2}[0-9]{2})( )|([A-Z]{2}-[0-9]{2}))((19|20)[0-9][0-9])[0-9]{7}$/;
+		if (dl != '') {
+			if (dl.match(dlno)) {
+			} else {
+
+				$('#employeeDl').focus();
+				swal("please enter valid DL number ex: HR06 19850034761 OR HR-0619850034761");
+
+				return false;
+
+			}
+		}
+	}
+	function getAge() {
+		var birthDate = $('#employeeDob').val();
+
+		var today = new Date();
+
+		var date = today.getDate() + '-' + (today.getMonth() + 1) + '-'
+				+ today.getFullYear();
+
+		var bd = new Date(birthDate);
+
+		var bdate = bd.getDate() + '-' + (bd.getMonth() + 1) + '-'
+				+ bd.getFullYear();
+
+		var age = today.getFullYear() - bd.getFullYear();
+
+		var m = today.getMonth() - bd.getMonth();
+		/* if (m < 0 || (m === 0 && today.getDate() < bd.getDate())) {
+			alert("here");
+		    age--;
+		} */
+		if (age < 18) {
+			//alert(age);
+			$('#employeeDob').val(' ');
+			swal("Under 18 is not eligible ");
+
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+
+	$(document).ready(function() {
+		//stateChange();
+		showCheckboxes();
+	});
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<!--Alert Box-->
+				<div class="alert alert-danger alert-dismissible"
+					th:if="${message != null}">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<span th:text="${message}"></span>
+				</div>
+
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li class="active"><span>Add Employee </span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Add Employee Form</h4>
+			</div>
+			<div class="card">
+				<div class="card-body">
+					<div class="basic-elements">
+						<form th:action="@{add-employee}" th:object="${employee}"
+							method="post" autocomplete="off"
+							onsubmit=" return validateForm();">
+
+							<div class="row">
+								<div class="col-md-12">
+									<div align="center" th:if="${employee.employeeImage==null}">
+										<label for="fileUpload"> <img
+											src="../assets/images/user.png" alt="Empty" height="140"
+											width="140" style="cursor: pointer; border-radius: 50%;"
+											id="image" />
+										</label> <input type="file" name="fileUpload" id="fileUpload"
+											accept="image/*" onchange="saveFile()">
+										<div id="uploadedImgDiv" align="center">
+											<span th:if="*{action !=null}"> <a
+												class="example-image-link" th:href="*{action}"
+												data-lightbox="hsdjas">Preview Image</a>
+											</span>
+										</div>
+										<span class="fornerrormsg" id="subcategory_photoerr"></span>
+
+									</div>
+									<div align="center" th:unless="${employee.employeeImage==null}">
+										<label for="fileUpload"> <img th:src="${image}"
+											alt="../assets/images/user.png"
+											onerror="this.onerror=null;this.src='../assets/images/user.png';"
+											height="140" width="140"
+											style="cursor: pointer; border-radius: 50%;" id="image" />
+										</label> <input type="file" name="fileUpload" id="fileUpload"
+											accept="image/*" onchange="saveFile()">
+										<div id="uploadedImgDiv" align="center">
+											<span th:if="*{action !=null}"> <a
+												class="example-image-link" th:href="*{action}"
+												data-lightbox="hsdjas">Preview Image</a>
+											</span>
+										</div>
+										<span class="fornerrormsg" id="subcategory_photoerr"></span>
+
+									</div>
+								</div>
+
+								<div class="col-md-12">
+									<div class="row">
+										<div style="width: 100%;">
+											<h3 class="header-text">PERSONAL INFO</h3>
+										</div>
+									</div>
+
+									<div class="row form-box">
+										<div class="col-md-4">
+											<input type="hidden" th:field="*{employeeNo}" /> <label
+												class="required">First Name</label> <input type="text"
+												class="form-control"
+												placeholder="Click here to enter Firstname Name"
+												th:field="*{employeeFname}"
+												onkeyup="checkAlphabetWithSpace('employeeFname');checkAlphabetWithSpacess1('employeeFname')">
+										</div>
+										<div class="col-md-4">
+											<label>Middle Name</label> <input type="text"
+												placeholder="Click here to enter Middle Name"
+												class="form-control" th:field="*{employeeMname}"
+												onkeyup="checkAlphabetWithSpace('employeeMname');checkAlphabetWithSpacess1('employeeMname')">
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">Last Name</label> <input type="text"
+												placeholder="Click here to enter Last Name"
+												class="form-control" th:field="*{employeeLname}"
+												onkeyup="checkAlphabetWithSpace('employeeLname');checkAlphabetWithSpacess1('employeeLname')">
+										</div>
+
+										<div class="col-md-4">
+											<label class="required">Date of Birth</label> <input
+												type="text" placeholder="Click here to select Date of birth"
+												class="form-control" th:field="*{employeeDob}"
+												onchange="getAge();" readonly>
+										</div>
+										<div class="col-md-4">
+											<label class="required">Nationality</label> <select
+												class="form-control" th:field="*{employeeNationality}">
+												<option th:each="c:${nationalityList}" th:value='${c.key}'
+													th:text="${c.name}"
+													th:selected="${c.key==employeeNationality}"></option>
+											</select>
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">Gender</label> <select
+												class="form-control" th:field="*{employeeGender}">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${genderList}" th:value='${c.key}'
+													th:text="${c.name}" th:selected="${c.key==employeeGender}"></option>
+											</select>
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">Marital Status</label> <select
+												class="form-control" th:field="*{employeeMarital}">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${maritalList}" th:value='${c.key}'
+													th:text="${c.name}" th:selected="${c.key==employeeMarital}"></option>
+											</select>
+										</div>
+										<div class="col-md-4" th:if="${employee.employeeNo==null}">
+											<label>Password</label> <input type="text" value=""
+												class="form-control" th:field="*{employeePassword}"
+												onblur="CheckPassword(this);">
+
+										</div>
+										<div class="col-md-4" th:if="${employee.employeeNo==null}">
+											<label class="required">4 Digit Pin</label> <input
+												type="text" MAXLENGTH="4"
+												;
+											placeholder="Click here to enter 4 Digit Pin "
+												class="form-control" th:field="*{employeepPin}"
+												onkeyup="checkNum('employeepPin')">
+
+										</div>
+									</div>
+
+								</div>
+								<div class="col-md-12">
+									<div class="row">
+										<div style="width: 100%;">
+											<h3 class="header-text">IDENTITY PROOF</h3>
+										</div>
+									</div>
+
+									<div class="row form-box">
+										<div class="col-md-4">
+
+											<label class="required">Aadhaar No</label> <input type="text"
+												MAXLENGTH="12" class="form-control"
+												th:field="*{employeeAdhar}"
+												placeholder="Click here to enter Aadhaar No "
+												onkeyup="checkNum('employeeAdhar')" />
+										</div>
+										<div class="col-md-4">
+											<label>PAN ID</label> <input type="text" class="form-control"
+												th:field="*{employeeOtherId}"
+												placeholder="Click here to enter PAN ID "
+												onkeyup="checkAlphabetAndNumber('employeeOtherId')"
+												onfocusout="panvalidation()">
+
+										</div>
+										<div class="col-md-4">
+											<label>ESIC No</label> <input type="text"
+												placeholder="Click here to enter ESIC No "
+												class="form-control" MAXLENGTH="17"
+												th:field="*{employeeEsicNo}">
+
+										</div>
+										<div class="col-md-4">
+											<label>Driving Licence No</label> <input type="text"
+												placeholder="Click here to enter Driving Licence No "
+												class="form-control" th:field="*{employeeDl}" MAXLENGTH="16"
+												;onkeyup="checkAlphabetAndNumber('employeeDl')"
+												onfocusout="dlvalidation()">
+										</div>
+									</div>
+
+								</div>
+
+								<div class="col-md-12">
+									<div class="row">
+										<div style="width: 100%;">
+											<h3 class="header-text">WORK DETAILS</h3>
+										</div>
+									</div>
+
+									<div class="row form-box">
+										<div class="col-md-4">
+
+											<label class="required">Employment Status</label> <select
+												class="form-control" th:field="*{employeeEmployment}">
+												<option th:each="c:${EmploymentList}" th:value='${c.key}'
+													th:text="${c.name}"
+													th:selected="${c.key==employeeEmployment}"></option>
+											</select>
+
+										</div>
+										<div class="col-md-4">
+											<div class="multiselect" id="mselct">
+												<div class="wrapper center-block">
+													<div class="panel-group" id="accordion" role="tablist"
+														aria-multiselectable="true">
+														<div class="panel panel-default">
+															<div class="selectBox">
+																<div class="panel-heading active" role="tab"
+																	id="headingOne">
+																	<h4 class="panel-title">
+																		<a role="button" data-toggle="collapse"
+																			data-parent="#accordion" href="#collapseOne"
+																			aria-expanded="true" aria-controls="collapseOne"
+																			class="staffDesign"> Select User Role</a>
+																	</h4>
+																</div>
+																<div id="collapseOne" class="panel-collapse collapse in"
+																	role="tabpanel" aria-labelledby="headingOne">
+																	<div class="panel-body">
+																		<div id="checkboxes"
+																			style="height: 50px; overflow-y: scroll;">
+																			<label
+																				th:if="*{employeeNo != null && employeeNo !=''} "
+																				th:each="c,iter : ${userRole}"
+																				class="multiselecttxxt"> <input
+																				type="checkbox" th:id="'staff_'+${iter.index}"
+																				name="userRole" class="userRoleCls"
+																				th:if="${#lists.contains(selectedRoles, c.key)}"
+																				th:checked="${#lists.contains(selectedRoles, c.key)}"
+																				th:value='${c.key}' th:text="${c.name}" /> <input
+																				type="checkbox" name="userRole"
+																				th:id="'staff_'+${iter.index}" class="userRoleCls"
+																				th:unless="${#lists.contains(selectedRoles, c.key)}"
+																				th:value='${c.key}' th:text="${c.name}"
+																				style="width: 16px; margin-right: 7px;">
+																			</label> <label
+																				th:unless="*{employeeNo != null && employeeNo !=''}"
+																				class="multiselecttxxt"
+																				th:each="c,iter : ${userRole}"> <input
+																				type="checkbox" name="userRole" class="userRoleCls"
+																				th:id="'staff_'+${iter.index}" th:value='${c.key}'
+																				th:text="${c.name}" th:attr="data-moduleId=${c.key}"
+																				style="margin-right: 7px;" />
+																			</label>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+
+												</div>
+												<input type="hidden" th:field="*{roleList}">
+											</div>
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">Pay Grade</label> <select
+												class="form-control" th:field="*{employeePayGrade}">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${payGradeList}" th:value='${c.key}'
+													th:text="${c.name}"
+													th:selected="${c.key==employeePayGrade}"></option>
+
+											</select>
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">Work Station Id</label> <input
+												type="text"
+												placeholder="Click here to enter Work Station Id "
+												class="form-control" th:field="*{employeeWorkStationId}"
+												maxlength="10">
+										</div>
+										<div class="col-md-4">
+											<label class="required">Department</label> <select
+												class="form-control" th:field="*{employeeDepartment}">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${DepartmentList}" th:value='${c.key}'
+													th:text="${c.name}"
+													th:selected="${c.key==employeeDepartment}"></option>
+											</select>
+										</div>
+										<div class="col-md-4">
+											<label class="required">Region</label> <select
+												class="form-control" th:field="*{employeeRegion}">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${RegiontList}" th:value='${c.key}'
+													th:text="${c.name}" th:selected="${c.key==employeeRegion}"></option>
+											</select>
+										</div>
+										<div class="col-md-4">
+											<label class="required">Designation</label> <select
+												class="form-control" th:field="*{empDesignation}">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${jobTitleList}" th:value='${c.key}'
+													th:text="${c.name}" th:selected="${c.key==empDesignation}"></option>
+											</select>
+										</div>
+									</div>
+
+								</div>
+
+								<div class="col-md-12">
+									<div class="row">
+										<div style="width: 100%;">
+											<h3 class="header-text">ADDRESS</h3>
+										</div>
+									</div>
+
+									<div class="row form-box">
+										<div class="col-md-4">
+
+											<label class="required">Address</label>
+											<textarea class="form-control textarea"
+												th:field="*{employeeAddress}"></textarea>
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">City</label> <input type="text"
+												class="form-control" th:field="*{employeeCity}">
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">Country</label> <select
+												class="form-control" th:field="*{EmployeeCountry}"
+												onchange="stateChange();">
+
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${countryList}" th:value='${c.key}'
+													th:text="${c.name}" th:selected="${c.key==EmployeeCountry}"></option>
+											</select>
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">State</label> <select
+												class="form-control" th:field="*{employeeState}">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${stateList}" th:value='${c.key}'
+													th:text="${c.name}" th:selected="${c.key==employeeState}"></option>
+											</select>
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">ZIP Code</label> <input type="text"
+												MAXLENGTH="6" class="form-control" th:field="*{employeePin}"
+												onkeyup="checkNum('employeePin')">
+										</div>
+									</div>
+
+								</div>
+
+								<div class="col-md-12">
+									<div class="row">
+										<div style="width: 100%;">
+											<h3 class="header-text">CONTACT INFO</h3>
+										</div>
+									</div>
+
+									<div class="row form-box">
+										<div class="col-md-4">
+											<label>Home Phone</label> <input type="text"
+												class="form-control" th:field="*{employeeHomePhoneNo}"
+												onkeyup="checkNum('employeeHomePhoneNo')">
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">Mobile No</label> <input type="text"
+												MAXLENGTH="10" class="form-control"
+												th:field="*{employeeMobilePhoneNo}"
+												onkeyup="checkNum('employeeMobilePhoneNo')">
+
+										</div>
+										<div class="col-md-4">
+											<label>Work Phone</label> <input type="text"
+												class="form-control" th:field="*{employeeWorkPhoneNo}">
+
+										</div>
+										<div class="col-md-4">
+											<label class="required">Work Email</label> <input type="text"
+												class="form-control" th:id="employeeWEmail"
+												th:field="*{employeeWorkEmail}"
+												onblur="validateEmail(this);">
+										</div>
+										<div class="col-md-4">
+											<label class="required">Personal Email</label> <input
+												type="text" class="form-control" th:id="employeePEmail"
+												th:field="*{employeePersonalEmail}"
+												onblur="validateEmail(this);">
+										</div>
+									</div>
+
+								</div>
+
+								<div class="col-md-12">
+									<div class="row">
+										<div style="width: 100%;">
+											<h3 class="header-text">DATES</h3>
+										</div>
+									</div>
+
+									<div class="row form-box">
+										<div class="col-md-4">
+											<label>Joined Date</label> <input type="text"
+												class="form-control" th:field="*{employeeJoinDate}" readonly>
+
+										</div>
+										<div class="col-md-4">
+											<label>Confirmation Date</label> <input type="text"
+												class="form-control" th:field="*{employeeConfirmDate}"
+												readonly onchange="dateValidation()">
+
+										</div>
+										<!-- <div class="col-md-4" th:if="${employee.employeeNo!=null}">
+											<label>Terminated Date</label> <input type="text"
+												class="form-control" th:field="*{employeeTerminateDate}"
+												readonly onchange="dateValidation1()">
+										</div> -->
+
+
+									</div>
+
+								</div>
+							</div>
+
+							
+
+							<div class="row">
+
+								<div class="col-md-12">
+									<div class="form-group">
+										<button type="submit" id="submit" class="btn btn-success">Submit</button>
+										<button type="button" value="Reset" class="btn btn-warning"
+											onclick="funcReset()">Cancel</button>
+									</div>
+								</div>
+
+							</div>
+						</form>
+					</div>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

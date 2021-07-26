@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+ <script type="text/javascript">
+       
+     function validateForm(){
+    	 
+	  if (!blankValidation("userTypeName","TextField", "User TypeName can not be left blank"))
+          return false;
+     
+      if (!blankValidation("userTypeDescrptn","TextField", "userType Description can not be left blank"))
+          return false;
+      if (!blankValidation("userTypeActive","TextField", "Status  can not be left blank"))
+          return false;
+      
+     }  
+    
+    </script> 
+
+</head>
+<div layout:fragment="content">
+ <div class="content-wrap">
+        <div class="main mrt_20">
+            <div class="col-md-12">
+                <!--Alert Box-->
+          <div class="alert alert-success alert-dismissible" style="display: none;">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Success!</strong> Indicates a successful or positive action.
+          </div>
+          
+          <div class="alert alert-danger alert-dismissible" style="display: none;">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Success!</strong> Indicates a successful or positive action.
+          </div>
+          
+          <div class="alert alert-warning alert-dismissible" style="display: none;">
+              <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+              <strong>Success!</strong> Indicates a successful or positive action.
+          </div>
+          
+          <!--Alert Box-->
+                <ol class="breadcrumb breadcrumb-arrow">
+                    <li><a href="/index-dashboard">Home</a></li>
+                    <li class="active"><span>Add Employee Type </span></li>
+                </ol>
+            </div>
+            <div class="card-title">
+                <h4>Add Employee Type </h4>
+            </div>
+            <div class="container-fluid">
+                <div class="card">
+                    <!-- <div class="row">
+                        <div class="card-title">
+                            <h4>Page Name</h4>
+                            <p>Small Description Goes Here...</p>
+                        </div>
+                    </div> -->
+                    <div class="card-body">
+                        <div class="basic-elements">
+                            <form th:action="@{/user/add-user-type}" th:object="${userType}"   method="post" onsubmit="return validateForm();" >
+                            <input type="hidden" th:field="*{userType}" />
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label> Name</label>
+                                             <input type="text" class="form-control" placeholder=" Name"th:id="userTypeName" th:field="*{userTypeName}" th:name="userTypeName">
+                                        </div>
+                                        
+                                        
+                                       
+                                         <div class="form-group">
+                                            <label>Description.</label>
+                                            <textarea class="form-control textarea" placeholder="Description"th:id="userTypeDescrptn" th:field="*{userTypeDescrptn}" th:name="userTypeDescrptn"></textarea>
+                                        </div>
+										<div class="form-group">
+                                            <label>Status</label>
+                                            <select class="form-control"th:id="userTypeActive" th:field="*{userTypeActive}" th:name="userTypeActive">
+                                                <option th:value=null>select</option>
+                                                
+                                                <option th:value=1>Active</option>
+                                                <option th:value=0>Inactive</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-success">submit</button>
+                                        <button type="reset" value="Reset" class="btn btn-warning">cancel</button>
+                                    </div>
+                                    
+                                        
+                                    </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

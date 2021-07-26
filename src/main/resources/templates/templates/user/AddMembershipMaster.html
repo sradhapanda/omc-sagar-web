@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script>
+function validateForm(){
+//	alert('hello validateForm');
+	 if (!blankValidation("memName","TextField", "Membership Master Name can not be left blank"))
+        return false;
+	 
+	 if (!checkSpecialCharacter("memName", " Invalid Membership Name"))
+			return false;
+
+	 
+	 if (!blankValidation("memMonthlyFee","TextField", "Monthly fee can not be left blank"))
+	        return false;
+	 
+	
+	 
+	 if (!blankValidation("memRegistrationFee","TextField", "Registration fee can not be left blank"))
+	        return false;
+        
+    if (!blankValidation("memValidity","SelectBox", "Please Select Validity."))
+            return false;
+    
+    if (!blankValidation("tDependentsLimit","TextField", "Dependents Limit can not be left blank"))
+        return false;
+    if (!blankValidation("tChildrenAgeLimit","TextField", "Children Age Limit can not be left blank"))
+        return false;
+    if (!blankValidation("tEffectiveFromDate","TextField", "Effective From Date can not be left blank"))
+        return false;
+    if (!blankValidation("memStatus","SelectBox", "Please Select Status."))
+        return false;
+    
+    if (!blankValidation("memDescription","TextField", "Description can not be left blank"))
+        return false;
+       
+}
+
+
+
+function checkAlphabetAndNumber(){
+  var tempVal = $("#"+memName).val().replace(/[^a-zA-Z]/g,'');
+  $("#"+memName).val(tempVal);
+}
+
+
+function checkNumber() {
+	var qty = $('#tDependentsLimit').val();
+	if(qty) {
+		
+		 checkNum("tDependentsLimit");
+	}
+
+	var price = $('#tChildrenAgeLimit').val();
+	if(price) {
+		
+		checkNum("tChildrenAgeLimit");
+	}
+}
+
+
+
+//var fieldId=$('#memMonthlyFee').val();
+function checkNum(memMonthlyFee){
+	  var tempVal = $("#"+memMonthlyFee).val().replace(/[^0-9\.]/g,'');
+	  $("#"+memMonthlyFee).val(tempVal);
+	} 
+
+
+
+//Date Formater
+
+$(document).ready(function() {
+	
+$( "#tEffectiveFromDate" ).datetimepicker({
+format:'d-m-Y',
+closeOnDateSelect: true,
+minDate: new Date() ,
+timepicker : false,
+})
+	
+
+/////////////////////////////
+			$('#memMonthlyFee').bind("cut copy paste",function(e) {
+			     e.preventDefault();
+			 }); // Restrict Copy Cut Paste
+			
+	        //Only number and one dot
+	        function onlyDecimal(element, decimals)
+	        {
+	        	
+	            $(element).keypress(function(event)
+	            {
+	            	
+	                num = $(this).val() ;
+	                num = isNaN(num) || num === '' || num === null ? 0.00 : num ;
+	                if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57))
+	                {
+	                    event.preventDefault();
+
+	                }
+	                if($(this).val() == parseFloat(num).toFixed(decimals))
+	                {
+	                    event.preventDefault();
+	                }
+	            });
+	        }
+
+	         onlyDecimal("#memMonthlyFee", 2) ;
+
+
+	         $('#memRegistrationFee').bind("cut copy paste",function(e) {
+			     e.preventDefault();
+			 }); // Restrict Copy Cut Paste
+			
+	        //Only number and one dot
+	        function onlyDecimal(element, decimals)
+	        {
+	        	
+	            $(element).keypress(function(event)
+	            {
+	            	
+	                num = $(this).val() ;
+	                num = isNaN(num) || num === '' || num === null ? 0.00 : num ;
+	                if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57))
+	                {
+	                    event.preventDefault();
+
+	                }
+	                if($(this).val() == parseFloat(num).toFixed(decimals))
+	                {
+	                    event.preventDefault();
+	                }
+	            });
+	        }
+
+	         onlyDecimal("#memRegistrationFee", 2) ;
+
+
+
+	    });
+
+
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="index.html">Home</a></li>
+					<li class="active"><span>Add Membership Type Master</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Membership Type Master</h4>
+			</div>
+			<div class="container-fluid">
+
+				<!--      <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  <li class="nav-item">
+                     <a class="nav-link" th:href="@{/user/view-membership-master}" role="tab">View Membership Master</a>
+                  </li>
+                  <li class="nav-item">
+                     <a class="nav-link active" th:href="@{/user/add-membership-master}" role="tab">Add Membership Master</a>
+                  </li>
+                  
+               </ul> -->
+				<div class="card">
+
+
+
+					<div class="card-body">
+						<div class="basic-elements">
+							<form th:action="@{add-membership-type-master}"
+								th:object="${membershipmstr}" onsubmit="return validateForm();"
+								method="post" autocomplete="off">
+								<div class="row">
+                    <span style="color: red;" id="errorMsg">
+                    </span>
+                    <div th:if="${message != null}">
+                      <span th:text="${message}" style="color: red;">
+                      </span>
+                    </div>
+                  </div>
+								<div class="row">
+									<div th:if="${message != null}">
+										<span th:text="${message}" style="color: red;"></span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-6">
+										<input type="hidden" th:field="*{memId}" />
+										<div class="form-group">
+											<label>Membership Type Name</label> <input type="text"
+												class="form-control" th:field="*{memName}" onkeypress="return checkAlphabetAndNumber()">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Monthly Fee</label> <input type="text"
+												class="form-control" th:field="*{memMonthlyFee}"
+												onkeypress="return checkNum()">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Registration Fee</label> <input type="text"
+												class="form-control" th:field="*{memRegistrationFee}">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Validity</label> <select class="org-name form-control"
+												th:field="*{memValidity}">
+												<option th:value="NULL">-Select-</option>
+												<option th:each="c:${validityData}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+
+										<div class="form-group">
+											<label> Dependent Limit</label> <input type="text"
+												class="form-control" onkeyup="checkNumber();" th:field="*{tDependentsLimit}">
+										</div>
+
+										<div class="form-group">
+											<label>Effective From Date</label> <input
+												class="form-control" name="tEffectiveFromDate" value=""
+												th:field="*{tEffectiveFromDate}" id="tEffectiveFromDate"
+												autocomplete='off' readonly>
+										</div>
+
+										<div class="form-group">
+											<label>Status</label> <select class="form-control"
+												th:field="*{memStatus}">
+												<option th:value="NULL">-Select-</option>
+												<option th:value="true">Active</option>
+												<option th:value="false">Inactive</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label> Child Age Limit</label> <input type="text"
+												class="form-control" onkeyup="checkNumber();" th:field="*{tChildrenAgeLimit}">
+										</div>
+										<div class="form-group">
+											<label>Description</label>
+											<textarea class="form-control textarea"
+												th:field="*{memDescription}"> </textarea>
+										</div>
+									</div>
+
+									<div class="col-md-12">
+									<div class="form-group">
+										<input type="submit" value="Submit" class="btn btn-success" />
+										<input type="reset" value="Cancel" class="btn btn-warning"
+											onclick="window.location.reload();" />
+									</div>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

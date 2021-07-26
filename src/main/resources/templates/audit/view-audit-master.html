@@ -1,0 +1,1293 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script>
+	 
+	$(document).ready(function() {
+		$('#tblTheme').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-audit-master-ThroughAjax',
+				'data' : function(d) {
+					d.param1 = $('#param1').val(); 
+					d.param2 = $('#param2').val(); 
+					d.param3 = $('#param3').val(); 
+				}
+			},
+			'dataSrc' : "",
+			'columns' : [ {
+				'data' : 'auditName'
+			}, {
+				'data' : 'organisation'
+			}, {
+				'data' : 'department'
+			}, {
+				'data' : 'section'
+			}, {
+				'data' : 'deptHead'
+			}, {
+				'data' : 'auditee'
+			}, {
+				'data' : 'auditor'
+			}, {
+				'data' : 'fromDate'
+			}, {
+				'data' : 'toDate'
+			}, {
+				'data' : 'status'
+			}, {
+				'data' : 'auditAt'
+			}, {
+				'data' : 'action'
+			} ]
+		});
+	});
+
+	function searchData() {
+		$('#tblTheme').DataTable().draw();
+	}
+	
+	//date time picker
+	$(document).ready(function() {
+		$("#param2").datetimepicker({
+			format : 'd-m-Y',
+			closeOnDateSelect : true,
+			timepicker : false,
+		})
+		$("#param3").datetimepicker({
+			format : 'd-m-Y',
+			closeOnDateSelect : true,
+			timepicker : false,
+		})
+
+	});
+	
+	function pdfCreate(id) {
+		window.open("/download/view-audit-master-question-pdf?id="+id,'_blank');
+	}
+	function reportCreate(id) {
+		window.open("/download/audit-details?param1="+id,'_blank');
+	}
+	
+	function requestRequisition(id) {
+	    $('#table2').empty();
+	    $("#id").val(id);
+	    $.ajax({
+	        type: 'GET',
+	        url: 'view-audit-master-getDocument?id=' + id,
+	        contentType: false,
+	        //data : id,
+	        success: function(response) {
+	            console.log(response);
+	            if (response.message == "Success") {
+	                table2 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th> <th><b>Date</b></th></tr>';
+	                var data = [];
+	                $('#table2').append(table2);
+	                for (var i = 0; i < response.body.length; i++) {
+	                    data.push('<tr><td><a href="/document/audit/' + response.body[i].document + '" target="_blank">' +
+	                        response.body[i].document +
+	                        '</a></td><td>' +
+	                        response.body[i].comment +
+	                        '</td><td>' +
+	                        response.body[i].createdOn +
+	                        '</td></tr>');
+	                }
+	                $('#table2').append(data);
+	            }
+
+	        },
+	        error: function(e) {
+	            console.log("error");
+	        }
+	    });
+	    $('#requisition').modal('show');
+	}
+
+
+	function reqRequisition(id) {
+	    $('#response').modal('show');
+	    $('#viewReqData1').empty();
+	    $('#viewReqData2').empty();
+	    $.ajax({
+	        type: 'GET',
+	        url: 'view-audit-master-getReqDocument?id=' + id,
+	        contentType: false,
+	        //data : id,
+	        success: function(response) {
+	            console.log(response);
+	            if (response.message == "Success") {
+	                table2 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th><th><b>Date</b></th></tr>';
+	               // table3 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th><th><b>Date</b></th></tr>';
+	                var data1 = [];
+	                var data2 = [];
+	                $('#viewReqData1').append(table2);
+	               // $('#viewReqData2').append(table3);
+	               // for (var i = 0; i < response.body.length; i++) {
+	                    data1.push('<tr><td><a href="/document/audit/' + response.body[0].document + '" target="_blank">' +
+	                        response.body[0].document +
+	                        '</a></td><td>' +
+	                        response.body[0].comment +
+	                        '</td><td>' +
+	                        response.body[0].createdOn +
+	                        '</td></tr>');
+	              
+	                $('#viewReqData1').append(data1);
+	                if( response.body[1].document !=null ||  response.body[1].document!=''){
+	                	$('#modalId').show();
+	                }
+	                    data2.push('<tr><td><a href="/document/audit/' + response.body[1].document + '" target="_blank">' +
+	                        response.body[1].document +
+	                        '</a></td><td>' +
+	                        response.body[1].comment +
+	                        '</td><td>' +
+	                        response.body[1].createdOn +
+	                        '</td></tr>');
+	             
+	                $('#viewReqData2').append(data2);
+	            }
+
+	        },
+	        error: function(e) {
+	            console.log("error");
+	        }
+	    });
+
+	}
+
+	//view Ir Status Report
+
+	function viewIRStatusReport(id) {
+	    $('#viewIR').empty();
+	    $.ajax({
+	        type: 'GET',
+	        url: 'get-IrStatusReportView?id=' + id,
+	        contentType: false,
+	        //data : id,
+	        success: function(response) {
+	            console.log(response);
+	            if (response.message == "Success") {
+	                table2 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th><th><b>Date</b></th></tr>';
+	                var data = [];
+	                $('#viewIR').append(table2);
+	                for (var i = 0; i < response.body.length; i++) {
+	                    data.push('<tr><td><a href="/document/audit/' + response.body[i].document + '" target="_blank">' +
+	                        response.body[i].document +
+	                        '</a></td><td>' +
+	                        response.body[i].comment +
+	                        '</td><td>' +
+	                        response.body[i].createdOn +
+	                        '</td></tr>');
+	                }
+	                $('#viewIR').append(data);
+	            }
+	            $('#viewIrStatus').modal('show');
+
+	        },
+	        error: function(e) {
+	            console.log("error");
+	        }
+	    });
+
+	}
+	// response requisition
+	function requisition() {
+	    var comment = $("#comment").val();
+	    var id = $("#id").val();
+	    swal.fire({
+	        title: "Are you sure want to send requisition request?",
+	        text: "Once request send ,Can't revert back !",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: '#d33',
+	        cancelButtonColor: '#e7b63a',
+	        confirmButtonText: 'Request',
+	        showLoaderOnConfirm: true,
+	        //closeOnConfirm: false,
+	        reverseButtons: true,
+	        preConfirm: () => {
+	            return new Promise((resolve) => {
+	                setTimeout(() => {
+	                    console.log("Doing async operation");
+	                    resolve()
+	                }, 3000)
+	            })
+	        }
+	    }).then((result) => {
+	        if (result.value) {
+	            $.ajax({
+	                type: "GET",
+	                url: "view-audit-master-sendRequest?id=" + id + "&comment=" + comment,
+	                dataType: "json",
+	                contentType: "application/json",
+	                // data : JSON.stringify(obj),
+	                success: function(response) {
+	                    console.log(response);
+	                    if (response.message == "success") {
+	                        swal({
+	                            title: "Request sent successfully.",
+	                            type: "success"
+	                        }).then(function() {
+	                            location.reload();
+	                        })
+
+	                    } else {
+	                        swal({
+	                            title: 'Unsuccess',
+	                            text: response.code
+	                        })
+	                    }
+	                },
+	                error: function(data) {
+
+	                }
+	            })
+	        }
+
+	    });
+	}
+
+
+	function generateIrReport(audit, dept) {
+	    var dept1 = window.atob(dept);
+	    $('#irStatus').modal('show');
+	    $("#audit").val(audit);
+	    $('#dept').val(dept1);
+
+
+	}
+	// response requisition
+	function saveGenerateIrReport() {
+	    var audit = $("#audit").val();
+	    var dept = $('#dept').val();
+	    var comment = $('#commentIRstatus').val();
+	    var obj = {};
+	    obj['auditAutoGenId'] = audit;
+	    obj['department'] = dept;
+	    obj['organisation'] = comment;
+
+	    console.log(obj);
+	    swal.fire({
+	        title: "Are you sure want to get IR status Report?",
+	        text: "Once request send ,Can't revert back !",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: '#d33',
+	        cancelButtonColor: '#e7b63a',
+	        confirmButtonText: 'Send',
+	        showLoaderOnConfirm: true,
+	        //closeOnConfirm: false,
+	        reverseButtons: true,
+	        preConfirm: () => {
+	            return new Promise((resolve) => {
+	                setTimeout(() => {
+	                    console.log("Doing async operation");
+	                    resolve()
+	                }, 3000)
+	            })
+	        }
+	    }).then((result) => {
+	        if (result.value) {
+	            $.ajax({
+	                type: "POST",
+	                url: "get-IrStatusReport",
+	                dataType: "json",
+	                contentType: "application/json",
+	                data: JSON.stringify(obj),
+	                success: function(response) {
+	                    console.log(response);
+	                    if (response.message == "Success") {
+	                        swal({
+	                            title: "Request sent successfully.",
+	                            type: "success"
+	                        }).then(function() {
+	                            location.reload();
+	                        })
+
+	                    } else {
+	                        swal({
+	                            title: 'Unsuccess',
+	                            text: response.code
+	                        })
+	                    }
+	                },
+	                error: function(data) {
+
+	                }
+	            })
+	        }
+
+	    });
+	}
+	// response IR Status
+	function sendIrStatus() {
+	    var audit = $("#audit").val();
+	    var dept = $('#dept').val();
+	    var comment = $('#commentIr').val();
+	    var obj = {};
+	    obj['auditAutoGenId'] = audit;
+	    obj['department'] = dept;
+	    obj['organisation'] = comment;
+
+	    console.log(obj);
+	    swal.fire({
+	        title: "Are you sure want to upload IR status report?",
+	        text: "Once send ,Can't revert back !",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: '#d33',
+	        cancelButtonColor: '#e7b63a',
+	        confirmButtonText: 'Send',
+	        showLoaderOnConfirm: true,
+	        //closeOnConfirm: false,
+	        reverseButtons: true,
+	        preConfirm: () => {
+	            return new Promise((resolve) => {
+	                setTimeout(() => {
+	                    console.log("Doing async operation");
+	                    resolve()
+	                }, 3000)
+	            })
+	        }
+	    }).then((result) => {
+	        if (result.value) {
+	            $.ajax({
+	                type: "POST",
+	                url: "view-audit-master-sendIrStatus",
+	                dataType: "json",
+	                contentType: "application/json",
+	                data: JSON.stringify(obj),
+	                success: function(response) {
+	                    console.log(response);
+	                    if (response.message == "Success") {
+	                        swal({
+	                            title: "Uploaded successfully.",
+	                            type: "success"
+	                        }).then(function() {
+	                            location.reload();
+	                        })
+
+	                    } else {
+	                        swal({
+	                            title: 'Unsuccess',
+	                            text: response.code
+	                        })
+	                    }
+	                },
+	                error: function(data) {
+
+	                }
+	            })
+	        }
+
+	    });
+	}
+
+	function saveFile() {
+	    $("#upload_prev").empty();
+	    var uFile = $('#fileUpload')[0].files[0];
+	    var fileName = $('#fileUpload').val();
+
+	    var lastIndex = fileName.lastIndexOf("\\");
+	    if (lastIndex >= 0) {
+	        fileName = fileName.substring(lastIndex + 1);
+	    }
+	    var iURL = URL.createObjectURL(uFile);
+	    $("#uploadedImgDiv").html("");
+	    var LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_blank'>Preview</a>";
+	    $("#uploadedImgDiv").html(LightImg);
+
+	    var fileData = new FormData();
+	    fileData.append('file', uFile);
+	    fileData.append('path', 'none');
+
+	    $.ajax({
+	        type: "POST",
+	        url: "view-audit-master-uploadFile",
+	        enctype: "multipart/form-data",
+	        contentType: false,
+	        data: fileData,
+	        processData: false,
+	        cache: false,
+	        success: function(response) {
+
+	        },
+	        error: function(e) {
+
+	        }
+	    });
+	}
+
+	function saveIRFile() {
+	    $("#upload_prev").empty();
+	    var uFile = $('#fileUploadIR')[0].files[0];
+	    var fileName = $('#fileUploadIR').val();
+
+	    var lastIndex = fileName.lastIndexOf("\\");
+	    if (lastIndex >= 0) {
+	        fileName = fileName.substring(lastIndex + 1);
+	    }
+	    var iURL = URL.createObjectURL(uFile);
+	    $("#uploadedImgDivIR").html("");
+	    var LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_blank'>Preview</a>";
+	    $("#uploadedImgDivIR").html(LightImg);
+
+	    var fileData = new FormData();
+	    fileData.append('file', uFile);
+	    fileData.append('path', 'none');
+
+	    $.ajax({
+	        type: "POST",
+	        url: "view-audit-master-uploadIRFile",
+	        enctype: "multipart/form-data",
+	        contentType: false,
+	        data: fileData,
+	        processData: false,
+	        cache: false,
+	        success: function(response) {
+
+	        },
+	        error: function(e) {
+
+	        }
+	    });
+	}
+
+	function saveIRSendFile() {
+	    $("#upload_prev").empty();
+	    var uFile = $('#fileUploadSend')[0].files[0];
+	    var fileName = $('#fileUploadSend').val();
+
+	    var lastIndex = fileName.lastIndexOf("\\");
+	    if (lastIndex >= 0) {
+	        fileName = fileName.substring(lastIndex + 1);
+	    }
+	    var iURL = URL.createObjectURL(uFile);
+	    $("#uploadedImgDivSend").html("");
+	    var LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_blank'>Preview</a>";
+	    $("#uploadedImgDivSend").html(LightImg);
+
+	    var fileData = new FormData();
+	    fileData.append('file', uFile);
+	    fileData.append('path', 'none');
+
+	    $.ajax({
+	        type: "POST",
+	        url: "view-audit-master-uploadIRFile",
+	        enctype: "multipart/form-data",
+	        contentType: false,
+	        data: fileData,
+	        processData: false,
+	        cache: false,
+	        success: function(response) {
+
+	        },
+	        error: function(e) {
+
+	        }
+	    });
+	}
+
+	function uploadIrReport(audit, dept) {
+	    var dept1 = window.atob(dept);
+	    $("#audit").val(audit);
+	    $('#dept').val(dept1);
+	    $('#responseToIrStatus').modal('show');
+	    $('#viewIRRequest').empty();
+	    $.ajax({
+	        type: 'GET',
+	        url: 'view-audit-master-getIrStatus?id=' + audit,
+	        contentType: false,
+	        //data : id,
+	        success: function(response) {
+	            console.log(response);
+	            if (response.message == "Success") {
+	                table2 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th><th><b>Date</b></th></tr>';
+	                var data = [];
+	                $('#viewIRRequest').append(table2);
+	                for (var i = 0; i < response.body.length; i++) {
+	                    data.push('<tr><td><a href="/document/audit/' + response.body[i].document + '" target="_blank">' +
+	                        response.body[i].document +
+	                        '</a></td><td>' +
+	                        response.body[i].comment +
+	                        '</td><td>' +
+	                        response.body[i].createdOn +
+	                        '</td></tr>');
+	                }
+	                $('#viewIRRequest').append(data);
+	            }
+
+	        },
+	        error: function(e) {
+	            console.log("error");
+	        }
+	    });
+
+	}
+
+	function viewIrRepotTo(id) {
+	    //$('#viewIrStatus').modal('show');
+	    $('#viewIR').empty();
+	    $.ajax({
+	        type: 'GET',
+	        url: 'view-audit-master-getIrStatus?id=' + id,
+	        contentType: false,
+	        //data : id,
+	        success: function(response) {
+	            console.log(response);
+	            if (response.message == "Success") {
+	                table2 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th><th><b>Date</b></th></tr>';
+	                var data = [];
+	                $('#viewIR').append(table2);
+	                for (var i = 0; i < response.body.length; i++) {
+	                    data.push('<tr><td><a href="/document/audit/' + response.body[i].document + '" target="_blank">' +
+	                        response.body[i].document +
+	                        '</a></td><td>' +
+	                        response.body[i].comment +
+	                        '</td><td>' +
+	                        response.body[i].createdOn +
+	                        '</td></tr>');
+	                }
+	                $('#viewIR').append(data);
+	            }
+	            $('#viewIrStatus').modal('show');
+
+	        },
+	        error: function(e) {
+	            console.log("error");
+	        }
+	    });
+
+	}
+	function complianceOfDraft(audit, dept) {
+	    var dept1 = window.atob(dept);
+	    $("#auditCompliance").val(audit);
+	    $('#deptCompliance').val(dept1);
+	    $('#compliance').modal('show');
+	    $('#complianceBody').empty();
+	    $.ajax({
+	        type: 'GET',
+	        url: 'view-audit-master-getDraft?id=' + audit,
+	        contentType: false,
+	        //data : id,
+	        success: function(response) {
+	            console.log(response);
+	            if (response.message == "Success") {
+	                table2 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th><th><b>Date</b></th></tr>';
+	                var data = [];
+	                $('#complianceBody').append(table2);
+	                for (var i = 0; i < response.body.length; i++) {
+	                    data.push('<tr><td><a href="/document/audit/' + response.body[i].document + '" target="_blank">' +
+	                        response.body[i].document +
+	                        '</a></td><td>' +
+	                        response.body[i].comment +
+	                        '</td><td>' +
+	                        response.body[i].createdOn +
+	                        '</td></tr>');
+	                }
+	                $('#complianceBody').append(data);
+	            }
+
+	        },
+	        error: function(e) {
+	            console.log("error");
+	        }
+	    });
+
+	}
+
+	function saveComplianceFile() {
+		console.log("saveComplianceFile");
+	
+	    $("#upload_prev").empty();
+	    var uFile = $('#compliancefile')[0].files[0];
+	    var fileName = $('#compliancefile').val();
+
+	    var lastIndex = fileName.lastIndexOf("\\");
+	    if (lastIndex >= 0) {
+	        fileName = fileName.substring(lastIndex + 1);
+	    }
+	    var iURL = URL.createObjectURL(uFile);
+	    $("#uploadedImgDivCom").html("");
+	    var LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_blank'>Preview</a>";
+	    $("#uploadedImgDivCom").html(LightImg);
+
+	    var fileData = new FormData();
+	    fileData.append('file', uFile);
+	    fileData.append('path', 'none');
+
+	    $.ajax({
+	        type: "POST",
+	        url: "view-audit-master-uploadComplianceFile",
+	        enctype: "multipart/form-data",
+	        contentType: false,
+	        data: fileData,
+	        processData: false,
+	        cache: false,
+	        success: function(response) {
+
+	        },
+	        error: function(e) {
+
+	        }
+	    });
+	}
+	function saveParaComplianceFile() {
+		console.log("saveParaComplianceFile");
+	
+	    $("#upload_prev").empty();
+	    var uFile = $('#paraCompliancefile')[0].files[0];
+	    var fileName = $('#paraCompliancefile').val();
+
+	    var lastIndex = fileName.lastIndexOf("\\");
+	    if (lastIndex >= 0) {
+	        fileName = fileName.substring(lastIndex + 1);
+	    }
+	    var iURL = URL.createObjectURL(uFile);
+	    $("#uploadedImgDivParaCom").html("");
+	    var LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_blank'>Preview</a>";
+	    $("#uploadedImgDivParaCom").html(LightImg);
+
+	    var fileData = new FormData();
+	    fileData.append('file', uFile);
+	    fileData.append('path', 'none');
+
+	    $.ajax({
+	        type: "POST",
+	        url: "view-audit-master-uploadComplianceFile",
+	        enctype: "multipart/form-data",
+	        contentType: false,
+	        data: fileData,
+	        processData: false,
+	        cache: false,
+	        success: function(response) {
+
+	        },
+	        error: function(e) {
+
+	        }
+	    });
+	}
+	// complianceSubmit
+	function complianceSubmit() {
+	    var audit = $("#auditCompliance").val();
+	    var dept = $('#deptCompliance').val();
+	    var comment = $('#commentCompliance').val();
+	   
+	    swal.fire({
+	        title: "Are you sure want to send compliance?",
+	        text: "Once send ,Can't revert back !",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: '#d33',
+	        cancelButtonColor: '#e7b63a',
+	        confirmButtonText: 'Send',
+	        showLoaderOnConfirm: true,
+	        //closeOnConfirm: false,
+	        reverseButtons: true,
+	        preConfirm: () => {
+	            return new Promise((resolve) => {
+	                setTimeout(() => {
+	                    console.log("Doing async operation");
+	                    resolve()
+	                }, 3000)
+	            })
+	        }
+	    }).then((result) => {
+	        if (result.value) {
+	            $.ajax({
+	                type: "GET",
+	                url: "view-audit-master-sendCompliance?id=" + audit + "&comment=" + comment,
+	                dataType: "json",
+	                contentType: "application/json",
+	               // data: JSON.stringify(obj),
+	                success: function(response) {
+	                    console.log(response);
+	                    if (response.message == "success") {
+	                        swal({
+	                            title: "Compliance send successfully.",
+	                            type: "success"
+	                        }).then(function() {
+	                            location.reload();
+	                        })
+
+	                    } else {
+	                        swal({
+	                            title: 'Unsuccess',
+	                            text: response.code
+	                        })
+	                    }
+	                },
+	                error: function(data) {
+
+	                }
+	            })
+	        }
+
+	    });
+	}
+	/* //view Ir Status Report
+
+	function viewDraft(id) {
+	    $('#draftBody').empty();
+	    $.ajax({
+	        type: 'GET',
+	        url: 'view-audit-master-getDraft?id=' + id,
+	        contentType: false,
+	        //data : id,
+	        success: function(response) {
+	            console.log(response);
+	            if (response.message == "Success") {
+	                table2 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th><th><b>Date</b></th></tr>';
+	                var data = [];
+	                $('#draftBody').append(table2);
+	                for (var i = 0; i < response.body.length; i++) {
+	                    data.push('<tr><td><a href="/document/audit/' + response.body[i].document + '" target="_blank">' +
+	                        response.body[i].document +
+	                        '</a></td><td>' +
+	                        response.body[i].comment +
+	                        '</td><td>' +
+	                        response.body[i].createdOn +
+	                        '</td></tr>');
+	                }
+	                $('#draftBody').append(data);
+	            }
+	            $('#viewDraft').modal('show');
+
+	        },
+	        error: function(e) {
+	            console.log("error");
+	        }
+	    });
+
+	} */
+	function complianceOfDraftPara(audit, dept) {
+	    var dept1 = window.atob(dept);
+	    $("#auditParaCompliance").val(audit);
+	    $('#deptParaCompliance').val(dept1);
+	    $('#DaraftParacompliance').modal('show');
+	    $('#paraComplianceBody').empty();
+	    $.ajax({
+	        type: 'GET',
+	        url: 'view-audit-master-getDraftPara?id=' + audit,
+	        contentType: false,
+	        //data : id,
+	        success: function(response) {
+	            console.log(response);
+	            if (response.message == "Success") {
+	                table2 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th><th><b>Date</b></th></tr>';
+	                var data = [];
+	                $('#paraComplianceBody').append(table2);
+	                for (var i = 0; i < response.body.length; i++) {
+	                    data.push('<tr><td><a href="/document/audit/' + response.body[i].document + '" target="_blank">' +
+	                        response.body[i].document +
+	                        '</a></td><td>' +
+	                        response.body[i].comment +
+	                        '</td><td>' +
+	                        response.body[i].createdOn +
+	                        '</td></tr>');
+	                }
+	                $('#paraComplianceBody').append(data);
+	            }
+
+	        },
+	        error: function(e) {
+	            console.log("error");
+	        }
+	    });
+
+	}
+	//view Daraft para
+
+	function viewDraftPara(id) {
+	    $('#draftParaBody').empty();
+	    $.ajax({
+	        type: 'GET',
+	        url: 'view-audit-master-getDraftPara?id=' + id,
+	        contentType: false,
+	        //data : id,
+	        success: function(response) {
+	            console.log(response);
+	            if (response.message == "Success") {
+	                table2 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th><th><b>Date</b></th></tr>';
+	                var data = [];
+	                $('#draftParaBody').append(table2);
+	                for (var i = 0; i < response.body.length; i++) {
+	                    data.push('<tr><td><a href="/document/audit/' + response.body[i].document + '" target="_blank">' +
+	                        response.body[i].document +
+	                        '</a></td><td>' +
+	                        response.body[i].comment +
+	                        '</td><td>' +
+	                        response.body[i].createdOn +
+	                        '</td></tr>');
+	                }
+	                $('#draftParaBody').append(data);
+	            }
+	            $('#viewDraftPara').modal('show');
+
+	        },
+	        error: function(e) {
+	            console.log("error");
+	        }
+	    });
+
+	}
+	// complianceSubmit
+	function paraComplianceSubmit() {
+	    var audit = $("#auditParaCompliance").val();
+	    var dept = $('#deptParaCompliance').val();
+	    var comment = $('#commentParaCompliance').val();
+	   
+	    swal.fire({
+	        title: "Are you sure want to send para compliance?",
+	        text: "Once send ,Can't revert back !",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: '#d33',
+	        cancelButtonColor: '#e7b63a',
+	        confirmButtonText: 'Send',
+	        showLoaderOnConfirm: true,
+	        //closeOnConfirm: false,
+	        reverseButtons: true,
+	        preConfirm: () => {
+	            return new Promise((resolve) => {
+	                setTimeout(() => {
+	                    console.log("Doing async operation");
+	                    resolve()
+	                }, 3000)
+	            })
+	        }
+	    }).then((result) => {
+	        if (result.value) {
+	            $.ajax({
+	                type: "GET",
+	                url: "view-audit-master-sendParaCompliance?id=" + audit + "&comment=" + comment,
+	                dataType: "json",
+	                contentType: "application/json",
+	               // data: JSON.stringify(obj),
+	                success: function(response) {
+	                    console.log(response);
+	                    if (response.message == "success") {
+	                        swal({
+	                            title: "Para Compliance send successfully.",
+	                            type: "success"
+	                        }).then(function() {
+	                            location.reload();
+	                        })
+
+	                    } else {
+	                        swal({
+	                            title: 'Unsuccess',
+	                            text: response.code
+	                        })
+	                    }
+	                },
+	                error: function(data) {
+
+	                }
+	            })
+	        }
+
+	    });
+	}
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li><a th:href="@{/audit/initiate-audit}">Add Audit Master</a></li>
+					<li class="active"><span>View Audit Master</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>View Audit Master</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+					<div id="demo" class="collapse">
+						<div class="search-field">
+							<div class="row">
+								<div class="col-md-2">
+									<div class="org-name">Audit Name</div>
+								</div>
+								<div class="col-md-3">
+									<input id="param1" class="form-control" type="text"
+										placeholder="" name="">
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-2">
+									<div class="org-name">From Date</div>
+								</div>
+								<div class="col-md-3">
+									<input id="param2" class="form-control" type="text"
+										placeholder="" name="" readonly>
+								</div>
+								<div class="col-md-2">
+									<div class="org-name">To Date</div>
+								</div>
+								<div class="col-md-3">
+									<input id="param3" class="form-control" type="text"
+										placeholder="" name="" readonly>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-2">
+									<div class="form-group">
+										<button class="btn btn-primary" onclick="searchData()">Search</button>
+									</div>
+								</div>
+								<!-- <div class="col-md-2">
+									<div class="org-name">Audit Type</div>
+								</div>
+								<div class="col-md-3">
+									<input id="param2" class="form-control" type="text"
+										placeholder="" name=""  >
+								</div>
+								 -->
+
+							</div>
+
+
+						</div>
+					</div>
+					<a data-toggle="collapse" data-target="#demo"
+						class="showhideangelbg"><i class="fa fa-angle-double-down"></i>
+					</a>
+					<div class="row">
+						<div class="table-responsive" style="width: 100%;">
+							<table id="tblTheme" class="table table-bordered">
+								<thead>
+									<tr>
+										<th>Audit Name</th>
+										<th>Organisation</th>
+										<th>Department</th>
+										<th>Section</th>
+										<th>Department Head</th>
+										<th>Auditee</th>
+										<th>Auditor</th>
+										<th>FromDate</th>
+										<th>ToDate</th>
+										<th>Status</th>
+										<th>Audit At</th>
+										<th align="center" style="min-width:150px;">Action</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div style="clear: both;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content" style="width: 750px;">
+					<div class="modal-header">
+						<h4 class="modal-title">View Initiate Audit</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<table style="width: 100%; border: 0;" id="table1">
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="requisition" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">Request For
+							Requisition</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="id" /> <label>Upload Document :</label>
+						<input type="file" id="fileUpload" style="display: block;"
+							onchange="saveFile()">
+						<div id="uploadedImgDiv"></div>
+						<div class="form-group">
+							<label>Comment :</label>
+							<textarea class="form-control textarea" id="comment" rows="4"></textarea>
+						</div>
+					</div>
+
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							onclick="requisition()">Send</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="irStatus" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">Request For IR
+							Report</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="audit" /> <input type="hidden" id="dept" />
+						<label>Upload Document :</label> <input type="file"
+							id="fileUploadIR" style="display: block;" onchange="saveIRFile()">
+						<div id="uploadedImgDivIR"></div>
+						<div class="form-group">
+							<label>Comment :</label>
+							<textarea class="form-control textarea" id="commentIRstatus"
+								rows="4"></textarea>
+						</div>
+					</div>
+
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							onclick="saveGenerateIrReport()">Send</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="response" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">View Request</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="id" />
+
+						<div class="modal-body">
+						<h4 class="modal-title" id="modal-title-id"> Request</h4>
+							<table width="100%" border="0" id="viewReqData1">
+							</table>
+							<h4 class="modal-title" id="modalId" style=display:none;> Response</h4>
+							<table width="100%" border="0" id="viewReqData2">
+							</table>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<!-- <button type="button" class="btn btn-success" onclick="response()">Send</button> -->
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="viewIrStatus" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">View IR Status</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="id" />
+
+						<div class="modal-body">
+							<table width="100%" border="0" id="viewIR">
+							</table>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<!-- <button type="button" class="btn btn-success" onclick="response()">Send</button> -->
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="responseToIrStatus" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">Upload IR Status</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="audit" /> <input type="hidden" id="dept" />
+
+						<div class="modal-body">
+							<table width="100%" border="0" id="viewIRRequest">
+
+							</table>
+						</div>
+						<label>Upload Document :</label> <input type="file"
+							id="fileUploadSend" style="display: block;"
+							onchange="saveIRSendFile()">
+						<div id="uploadedImgDivSend"></div>
+						<div class="form-group">
+							<label>Comment :</label>
+							<textarea class="form-control textarea" id="commentIr" rows="4"></textarea>
+						</div>
+					</div>
+
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							onclick="sendIrStatus()">Send</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="compliance" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">Upload Compliance</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="auditCompliance" /> <input type="hidden" id="deptCompliance" />
+
+						<div class="modal-body">
+							<table width="100%" border="0" id="complianceBody">
+
+							</table>
+						</div>
+						<label>Upload Document :</label> <input type="file"
+							id="compliancefile" style="display: block;"
+							onchange="saveComplianceFile();">
+						<div id="uploadedImgDivCom"></div>
+						<div class="form-group">
+							<label>Comment :</label>
+							<textarea class="form-control textarea" id="commentCompliance" rows="4"></textarea>
+						</div>
+					</div>
+
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							onclick="complianceSubmit()">Send</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="viewDraft" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">View Draft Note</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="id" />
+
+						<div class="modal-body">
+							<table width="100%" border="0" id="draftBody">
+							</table>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<!-- <button type="button" class="btn btn-success" onclick="response()">Send</button> -->
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="viewDraftPara" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">View Draft Para</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="id" />
+
+						<div class="modal-body">
+							<table width="100%" border="0" id="draftParaBody">
+							</table>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<!-- <button type="button" class="btn btn-success" onclick="response()">Send</button> -->
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="DaraftParacompliance" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">Upload Compliance</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="auditParaCompliance" /> <input type="hidden" id="deptParaCompliance" />
+
+						<div class="modal-body">
+							<table width="100%" border="0" id="paraComplianceBody">
+
+							</table>
+						</div>
+						<label>Upload Document :</label> <input type="file"
+							id="paraCompliancefile" style="display: block;"
+							onchange="saveParaComplianceFile();">
+						<div id="uploadedImgDivParaCom"></div>
+						<div class="form-group">
+							<label>Comment :</label>
+							<textarea class="form-control textarea" id="commentParaCompliance" rows="4"></textarea>
+						</div>
+					</div>
+
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-success"
+							onclick="paraComplianceSubmit()">Send</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+	</div>
+</div>
+</html>

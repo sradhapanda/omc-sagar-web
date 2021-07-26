@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script src="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<style type="text/css">
+textarea {
+    overflow: auto;
+    resize: vertical;
+    width: 350px;
+}
+
+.zoombox3 {
+    position: relative;
+    background: #f00;
+    height: 28px;
+    width: 18px;
+    color: #fff;
+    padding: 5px;
+    top: -35px;
+    right: -331px;
+    border-radius: 2px;
+}
+</style>
+
+<script type="text/javascript">
+
+
+function searchData(){
+	var param1=$("#param1").val();
+	var param2=$("#param2").val();
+	var param3=$("#param3").val();
+	
+	console.log(param1);
+	console.log(param2);
+	console.log(param3);
+
+	window.open("/audit/view-initiated-audit-draftReportSearch-report?param1=" +param1+"&param2="+param2+"&param3="+param3 , '_blank');
+}
+//function for auto complete
+
+function itemAutoComplete() {
+	
+	$.ajax({
+		type : "POST",
+		url : "view-initiated-audit-documentAutoSearch",
+		dataType : 'json',
+		contentType : 'application/json',
+		data : $("#param5").val(),
+		success : function(response) {
+			if (response.message == "success") {
+				
+			if(response.body.length!=0)	{
+				
+				$("#param5").css("background","#FFF");
+				var content = '<ul id="autocomplete-list">';
+				for (var i = 0; i < response.body.length; i++) {
+					content += '<li onClick="selectAutocompleteValue(\''+response.body[i].key+'\',\''+response.body[i].key+'\')">'+response.body[i].key+'</li>';
+				} 
+				content += '</ul>';
+				$("#suggesstion-box").show();
+				$("#suggesstion-box").html(content);
+				
+			}
+			else {
+				
+				$("#param5").css("background","#FFF");
+				var content = '<ul id="autocomplete-list">';
+				content += '<li onClick="selectAutocompleteValue(\''+''+'\',\''+''+'\')">'+"No Data Found"+'</li>';
+				content += '</ul>';
+				$("#suggesstion-box").show();
+				$("#suggesstion-box").html(content);
+			}
+			}
+		},
+		error : function(data) {
+			console.log(data);
+		}
+	})
+}
+function selectAutocompleteValue(key,key) {
+	if (key) {
+		$("#param5").val(key);
+		$("#param5").attr('data-procat', key);
+		$("#suggesstion-box").hide();
+		}
+	else {
+		$("#param5").val("");
+		$("#param5").attr('data-procat', "");
+		$("#suggesstion-box").hide();
+	}
+}
+function getAuditNo() {
+		var currentVal = $("#param1").val();
+		if(currentVal==='ADTM005'){
+			$("#quarter").show();
+		}
+		if (currentVal) {
+			$.ajax({
+				type : 'POST',
+				url : 'view-initiated-audit-document-report',
+				contentType : false,
+				data : currentVal,
+				success : function(response) {
+					$("#param2").empty();
+					$("#param2").append(
+							"<option value>Select</option>");
+					for (var i = 0; i < response.body.length; i++) {
+						var option = $("<option></option>");
+						$(option).val(response.body[i].key);
+						$(option).html(response.body[i].key);
+						$("#param2").append(option);
+					}
+				},
+				error : function(data) {
+					console.log(data)
+				}
+			});
+		} else {
+			$("#param2").empty();
+			$("#param2").append(
+			"<option value>Select</option>");
+		}
+	}
+	
+</script>
+<style>
+.ui-autocomplete-loading {
+	background: white url("/static/images/ui-anim_basic_16x16.gif") right
+		center no-repeat;
+}
+</style>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<ol class="breadcrumb breadcrumb-arrow">
+				<li><a href="/index-dashboard">Home</a></li>
+				<!-- <li><a href="add-section-master">Audit Documents</a></li> -->
+			</ol>
+		</div>
+		<div class="card-title">
+			<h4>Search Documents</h4>
+		</div>
+		<div class="container-fluid">
+
+			<div class="card">
+				
+			<div class="row">
+							<div class="col-lg-4">
+								<label>Audit Type</label> <select  class="form-control"
+												id="param1"  onchange="getAuditNo();">
+												<option value="">Select</option>
+												<option th:each="c,iter:${auditTypeList}"
+													th:value="${c.key}" th:text="${c.name}"></option>
+											</select>
+							</div>
+							<div class="col-lg-4">
+								<label>Audit No</label>  <select  class="form-control"
+												id="param2">
+												<option value="">Select</option>
+											</select>
+							</div>
+							<div class="col-lg-4">
+								<label>Financial Year</label> <select  class="form-control"
+												id="param3">
+												<option value="">Select</option>
+												<option th:each="c,iter:${financialYearList}"
+													th:value="${c.key}" th:text="${c.key}"></option>
+											</select>
+							</div>
+							
+						
+							<div class="col-md-2 mrt_10">
+								<div class="form-group filtersearch">
+									<button class="btn btn-info" onclick="searchData()">Search</button>
+								</div>
+							</div>
+						</div>
+			</div>
+			
+		</div>
+
+	
+		<!-- Modal End-->
+		<!-- /# row -->
+	</div>
+</div>
+</html>

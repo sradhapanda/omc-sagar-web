@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Handling Form Submission</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>Add User without Ajax</h1>
+	<p th:if="${message} != null" th:text="${message}"></p>
+	
+    <form action="#" th:action="@{/addUserRole}" th:object="${userRole}" method="post">
+    	<input type="hidden" th:field="*{roleId}" />
+        <p>Role Name: <input type="text" th:field="*{userRoleName}" /></p>
+        <p>Department: <input type="text" th:field="*{department}" /></p>
+        <p>Description   : <input type="text" th:field="*{description}" /></p>
+        <!-- <p>Status : <input type="text" th:field="*{status}" /></p> -->
+        
+       <select th:field="*{status}">
+	   		<option th:value="true" th:text="Active"></option>
+	   		<option th:value="false" th:text="InActive"></option>
+	   </select>
+
+        <!-- <p>phone   : <input type="text" th:field="*{phone}" /></p>
+        <P> Image  : <input type="file" id="fileUpload" onchange="saveFile()" />-->
+        <p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
+    </form>
+</body>
+
+<script src="assets/js/lib/jquery.min.js"></script>
+<script src="assets/js/lib/jquery.nanoscroller.min.js"></script>
+
+<script type="text/javascript">
+
+	/*function saveFile() {
+		
+		var uFile = $('#fileUpload')[0].files[0]; 
+		
+		var fileData = new FormData();
+		fileData.append('file',uFile);
+		fileData.append('path','none');
+		
+		$.ajax({
+			type        : "POST",
+			url         : "uploadFile",
+			enctype     : "multipart/form-data",
+			contentType : false,
+			data        : fileData,
+			processData : false,
+			cache       : false,
+			success     : function(response){
+							console.log(response);
+						  },
+						  
+			error       : function(e) {
+				
+						  }
+		});
+		
+	}*/
+
+</script>
+
+</html>

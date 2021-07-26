@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Audit Report</title>
+<link href="https://fonts.googleapis.com/css?family=Montserrat"
+	rel="stylesheet" />
+<style type="text/css">
+.tblgap {
+	margin: 20px 0px;
+}
+
+body {
+	font-family: 'Montserrat', sans-serif;
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+}
+
+.maintbl tr td {
+	/*border: 1px solid black;*/
+	border-collapse: collapse;
+	padding: 12px 5px;
+}
+
+.theader-padding {
+	padding: 10px 5px;
+	background: #f5f5f5;
+}
+
+.transcation-text {
+	font-size: 17px;
+	font-weight: 600;
+	padding: 13px;
+	text-align: center;
+}
+
+.wrapper {
+	margin: 0 auto;
+	width: 900px;
+	padding: 20px 40px;
+	position: relative;
+}
+
+.paid-red {
+	position: absolute;
+	right: 0px;
+	top: 0;
+	z-index: 9999;
+}
+
+.hrline {
+	border: 2px solid #cccccc;
+}
+
+.clearfix {
+	clear: both;
+}
+
+.tableheader {
+	padding: 10px 5px;
+	color: #418AB3;
+	font-weight: 600;
+	background: #f5f5f5;
+	border-bottom: 1px solid #ccc;
+	border-top: 10px solid #FFF;
+	text-align: center;
+}
+
+.bill {
+	text-align: center;
+	color: #333 !important;
+	font-size: 24px;
+	padding: 25px;
+}
+
+.invoicedate {
+	color: #000;
+	text-align: left;
+	padding: 5px;
+}
+
+.mailing {
+	height: auto;
+	padding: 10px;
+	color: #333;
+	text-align: left;
+}
+
+.strip2 {
+	width: 500px;
+	padding-left: 17px;
+	font-size: 14px;
+	color: #418ab3;
+	text-align: center;
+	margin: 25px;
+}
+
+.td-border {
+	border-bottom: 1px solid #BABABA;
+}
+
+.td-border-right {
+	height: 1px;
+	border-left: 1px solid #BABABA;
+	text-align: center;
+	width: 126px;
+	font-size: 12px;
+}
+
+.text-style {
+	color: #3B494A;
+	font-size: 12px;
+	padding: 10px;
+}
+
+.pdt {
+	padding: 4px;
+}
+
+.transcation-text {
+	font-size: 17px;
+	font-weight: 600;
+	margin-right: 180px;
+	color: #418AB3;
+}
+
+.text-style2 {
+	background-color: #f2f2f2;
+	padding: 10px;
+	color: #373757;
+}
+
+.btn-danger {
+	color: #fff !important;
+	background: #d9534f !important;
+	box-shadow: none !important;
+}
+
+.textarea {
+	font-size: 12px;
+	color: #333;
+	height: 80px;
+	width: 300px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	padding: 8px;
+}
+
+.content-wrap {
+	width: 1080px;
+	margin: 0 auto;
+}
+
+.thanks {
+	padding: 15px 0px;
+}
+
+#table tr td:last-child {
+	border-right: 1px solid #ccc;
+}
+</style>
+
+</head>
+<body th:attr="style='background: #fff url(\''+${image}+'\') no-repeat'">
+
+	<div class="content-wrap" style="margin-left: -175px;">
+		<div class="main mrt_20">
+			<div class="container-fluid">
+				<div class="card">
+					<div class="card-body">
+						<div class="containersec">
+							<div class="wrapper">
+
+								<table cellpadding="0" cellspacing="0" style="width: 675px;">
+
+									<tr>
+										<td colspan="2"><img
+											src="http://localhost:8171/assets/images/logo_heading.png"
+											height="100" width="350" /></td>
+										<td class="bill" width="350" th:text="${AuditMasterPdfModelList[0].auditName}"></td>
+
+									</tr>
+
+									<tr>
+										<td colspan="3">
+											<table width="675px" bgcolor="#F2F2F2"
+												style="padding-bottom: 30px; padding-top: 10px; border-top: 3px solid #333; margin-top: 10px;"
+												th:if="${not #lists.isEmpty(AuditMasterPdfModelList)}">
+												<tr style="border-top: 10px solid #FFF;">
+
+													<td width="150" class="mailing" valign="top">TO</td>
+													<td width="250">
+														<div class="pdt">
+															<span th:text="${AuditMasterPdfModelList[0].auditTo}"></span>
+														</div>
+
+													</td>
+
+
+
+												</tr>
+												<tr style="border-top: 10px solid #FFF;">
+
+													<td width="150" class="mailing" valign="top">COPIED TO</td>
+													<td width="250">
+														<div class="pdt">
+															<!-- <span
+																th:text="${AuditMasterPdfModelList[0].auditTo}"></span> -->
+															<div>Odiash Mining Corporation</div>
+															<div>Head office Anugul</div>
+														</div>
+
+													</td>
+
+
+
+												</tr>
+												<tr style="border-top: 10px solid #FFF;">
+
+													<td width="150" class="mailing" valign="top">CONTACT</td>
+													<td width="250">
+														<div class="pdt">
+															<span th:text="${AuditMasterPdfModelList[0].auditTo}"></span>
+
+															Internal Audit
+														</div>
+
+													</td>
+
+
+
+												</tr>
+											</table>
+										</td>
+									</tr>
+									<tr>
+										<td colspan="3" class="thanks">We wolud like to thank
+											Management and Staff OMC.</td>
+									</tr>
+
+									<tr>
+										<td width="591">
+											<div>
+												<strong>SUMMARY:</strong>
+											</div>
+											<div>
+												<textarea class="textarea"
+													th:text="${AuditMasterPdfModelList[0].summery}"></textarea>
+											</div>
+										</td>
+
+									</tr>
+									<tr>
+										<td colspan="3">&nbsp;</td>
+									</tr>
+									<tr style="border-top: 10px solid #FFF;">
+
+										<td colspan="3"><label id="trId" style="font-size: 20px;"><b>AUDIT
+													DETAILS</b></label>
+											<table class="maintbl" id="table" cellpadding="0"
+												cellspacing="0" style="width: 675px;">
+												<thead id="tblHead">
+													<tr>
+														<th class="tableheader">SL.NO</th>
+														<th class="tableheader">QUESTION</th>
+														<th class="tableheader">OBSERVATION</th>
+														<th class="tableheader">OBSERVATION TYPE</th>
+														<th class="tableheader">SEVERITY</th>
+														<th class="tableheader">AGREED ACTION</th>
+
+													</tr>
+												</thead>
+												<tbody
+													th:if="${not #lists.isEmpty(AuditMasterPdfModelList)}">
+													<tr th:each="other,iter : ${AuditMasterPdfModelList}">
+														<td class="td-border td-border-right"
+															th:text=" ${iter.index+1}"></td>
+														<td class="td-border td-border-right"
+															th:text="${other.question}"></td>
+														<td class="td-border td-border-right"
+															th:text="${other.observation}"></td>
+															<td class="td-border td-border-right"
+															th:text="${other.auditType}"></td>
+														<td class="td-border td-border-right"
+															th:text="${other.severityName}"></td>
+														<td class="td-border td-border-right"
+															th:text="${other.agreedAction}"></td>
+													</tr>
+												</tbody>
+
+												<tbody
+													th:unless="${not #lists.isEmpty(AuditMasterPdfModelList)}">
+													<tr>
+														<td style="color: #e30f0f;" width="100%" valign="top"
+															align="center" colspan="10"><b>No records found</b></td>
+													</tr>
+
+
+												</tbody>
+
+
+											</table></td>
+
+
+									</tr>
+
+
+									<!-- <tr>
+										<td colspan="3">
+											<div class="strip2">
+												<b>THANK YOU FOR YOUR BUSINESS</b>
+											</div>
+										</td>
+									</tr> -->
+
+
+								</table>
+							</div>
+						</div>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /# row -->
+
+</body>
+</html>
+

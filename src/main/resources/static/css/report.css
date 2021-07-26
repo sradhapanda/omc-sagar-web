@@ -1,0 +1,95 @@
+body {
+	font-family: 'Montserrat', sans-serif;
+	margin: 0;
+	padding: 0;
+	font-size: 12px;
+}
+
+.logotext {
+	font-size: 20px;
+	color: #2952a4;
+	padding: 5px;
+}
+
+.heading {
+	font-size: 20px;
+	color: #2952a4;
+	padding: 5px;
+	text-align: center;
+	font-weight: bold;
+}
+
+.slogan {
+	font-size: 14px;
+	color: #333;
+	padding: 5px;
+}
+
+.containersec {
+	width: 800px;
+	margin: 0 auto;
+}
+
+.address {
+	font-size: 12px;
+	text-align: right;
+}
+
+div {
+	padding: 4px 0px;
+}
+
+th {
+	background: #5772FE;
+	color: #FFF;
+	padding: 8px 5px;
+	text-align: left;
+}
+
+.innertable td {
+	color: #333;
+	padding: 8px 5px;
+}
+
+.total {
+	background: #f9965a;
+	color: #FFF;
+	padding: 8px 5px;
+	text-align: left;
+	font-weight: bold;
+}
+
+.description {
+	padding: 20px 0px;
+	line-height: 20px;
+}
+
+.declair {
+	padding: 20px 0px;
+	line-height: 20px;
+}
+
+.declair span {
+	background: #b3caf7;
+	text-transform: uppercase;
+	color: #000;
+}
+
+.points {
+	padding: 20px 0px;
+	line-height: 26px;
+}
+
+.points span {
+	background: #b3caf7;
+	text-transform: uppercase;
+	color: #000;
+	padding: 5px 10px;
+	border-radius: 12px;
+	margin: 3px;
+}
+
+.righttxt {
+	text-aign: right;
+	width: 350px;
+}

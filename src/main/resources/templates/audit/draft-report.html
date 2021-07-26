@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style type="text/css">
+  .btm-section{
+    background-color: #eee;
+    padding: 5px;
+    margin: 20px 0px;
+  }
+  .btm-section i{
+    font-size: 18px;
+    color: #f43b03;
+    margin: 3px 0px;
+    cursor: pointer;
+  }
+  .icon-text{
+    font-size: 16px;
+    color: #000;
+    font-weight: 500;
+  }
+  .btn-txtlft{
+    text-align: left !important;
+  }
+  .accordion-toggle:after {
+    font-family: 'FontAwesome';
+    content: "\f078";    
+    float: right;
+}
+.accordion-opened .accordion-toggle:after {    
+    content: "\f054";    
+}
+h5
+{
+font-size:14px;
+color:#06a74f;
+padding:8px 0px;
+}
+.heading
+{
+background:#f5f5f5;
+font-weight:bold;
+color:#000000;
+text-align:left;
+padding:5px;
+}
+.text
+{
+padding:5px;
+}
+.paraheading
+{
+color:#931b1e;
+padding:10px 0px;
+font-size:16px;
+font-weight:bold;
+}
+.docheading
+{
+color:#106436;
+padding:10px 0px;
+font-size:16px;
+font-weight:bold;
+}
+.pdf
+{
+color:#F00;
+}
+.excel
+{
+color:#027d39;
+}
+.additionalinfo
+{
+border-bottom:1px solid #ccc;
+margin-bottom:4px;
+text-align:justify;
+}
+.cordinator span{
+font-size:12px;}
+.timeline {
+  position:relative;
+  margin:10px 0 40px 0;
+  padding:0;
+  list-style:none;
+}
+
+.timeline:before {
+  content:'';
+  position:absolute;
+  top:0;
+  bottom:0;
+  width:4px;
+  background:#ddd;
+  left:31px;
+  margin:0;
+  border-radius:2px;
+}
+
+.timeline>li {
+  position:relative;
+  margin-right:10px;
+  margin-bottom:15px;
+}
+
+.timeline>li:before,
+.timeline>li:after {
+  content:" ";
+  display:table;
+}
+
+.timeline>li:after {
+  clear:both;
+}
+
+.timeline>li>.timeline-item {
+  -webkit-box-shadow:0 1px 1px rgba(0,0,0,0.1);
+  box-shadow:0 1px 1px rgba(0,0,0,0.1);
+  border-radius:3px;
+  margin-top:0;
+  background:#fff;
+  color:#444;
+  margin-left:60px;
+  margin-right:15px;
+  padding:0;
+  position:relative;
+}
+
+.timeline>li>.timeline-item>.time {
+  color:#999;
+  float:right;
+  padding:10px 2px;
+  font-size:12px;
+}
+
+.timeline>li>.timeline-item>.timeline-header {
+  margin:0;
+  color:#555;
+  border-bottom:1px solid #f4f4f4;
+  padding:10px 2px;
+  font-size:16px;
+  line-height:1.1;
+}
+
+.timeline>li>.timeline-item>.timeline-header>a {
+  font-weight:600;
+}
+
+.timeline>li>.timeline-item>.timeline-body,
+.timeline>li>.timeline-item>.timeline-footer {
+  padding:10px;
+}
+
+.timeline>li>.fa,
+.timeline>li>.glyphicon,
+.timeline>li>.ion {
+  width:30px;
+  height:30px;
+  font-size:15px;
+  line-height:30px;
+  position:absolute;
+  color:#FFF;
+  background:#d2d6de;
+  border-radius:50%;
+  text-align:center;
+  left:18px;
+  top:0;
+}
+
+.timeline>.time-label>span {
+  font-weight:600;
+  padding:5px;
+  display:inline-block;
+  background-color:#fff;
+  border-radius:4px;
+}
+
+.timeline-inverse>li>.timeline-item {
+  background:#f0f0f0;
+  border:1px solid #ddd;
+  -webkit-box-shadow:none;
+  box-shadow:none;
+}
+
+.timeline-inverse>li>.timeline-item>.timeline-header {
+  border-bottom-color:#ddd;
+}
+.txt_white
+{
+color:#FFF;
+}
+.paddingless
+{
+padding:0!important;
+}
+
+.select-pure__select {
+	align-items: center;
+	border-radius: 4px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+	box-sizing: border-box;
+	color: #363b3e;
+	cursor: pointer;
+	display: flex;
+	font-size: 9px;
+	font-weight: 500;
+	justify-content: left;
+	min-height: 44px;
+	padding: 5px 10px;
+	position: relative;
+	transition: 0.2s;
+	width: 100%;
+	background: #FFF;
+}
+
+.select-pure__options {
+	border-radius: 4px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+	box-sizing: border-box;
+	color: #363b3e;
+	display: none;
+	left: 0;
+	max-height: 221px;
+	overflow-y: scroll;
+	position: absolute;
+	top: 50px;
+	width: 100%;
+	z-index: 5;
+}
+
+.select-pure__select--opened .select-pure__options {
+	display: block;
+}
+
+.select-pure__option {
+	background: #fff;
+	border-bottom: 1px solid #e4e4e4;
+	box-sizing: border-box;
+	height: 44px;
+	line-height: 25px;
+	padding: 10px;
+}
+
+.select-pure__option--disabled {
+	color: #e4e4e4;
+}
+
+.select-pure__option--selected {
+	color: #e4e4e4;
+	cursor: initial;
+	pointer-events: none;
+}
+
+.select-pure__option--hidden {
+	display: none;
+}
+
+.select-pure__selected-label {
+	align-items: 'center';
+	background: #931b1e;
+	border-radius: 4px;
+	color: #fff;
+	cursor: initial;
+	display: inline-flex;
+	justify-content: 'center';
+	margin: 5px 10px 5px 0;
+	padding: 3px 7px;
+}
+
+.select-pure__selected-label:last-of-type {
+	margin-right: 0;
+}
+
+.select-pure__selected-label i {
+	cursor: pointer;
+	display: inline-block;
+	margin-left: 7px;
+}
+
+.select-pure__selected-label img {
+	cursor: pointer;
+	display: inline-block;
+	height: 18px;
+	margin-left: 7px;
+	width: 14px;
+}
+
+.select-pure__selected-label i:hover {
+	color: #e4e4e4;
+}
+
+.select-pure__autocomplete {
+	background: #f9f9f8;
+	border-bottom: 1px solid #e4e4e4;
+	border-left: none;
+	border-right: none;
+	border-top: none;
+	box-sizing: border-box;
+	font-size: 16px;
+	outline: none;
+	padding: 10px;
+	width: 100%;
+	
+}
+
+.select-pure__placeholder--hidden {
+	display: none;
+}
+</style>
+
+<script>
+	$(function() {
+		CKEDITOR.replace( 'comment',{height: 220,
+			toolbar: [
+			{ name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+			{ name: 'basicstyles', items: [ 'Bold', 'Italic','S' ] },
+			{ name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+			{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], 
+				items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] }
+			]
+			});
+		CKEDITOR.replace( 'commentNote',{height: 220,
+			toolbar: [
+			{ name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+			{ name: 'basicstyles', items: [ 'Bold', 'Italic','S' ] },
+			{ name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+			{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], 
+				items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] }
+			]
+			});
+		CKEDITOR.replace( 'commentId',{height: 220,
+			toolbar: [
+			{ name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+			{ name: 'basicstyles', items: [ 'Bold', 'Italic','S' ] },
+			{ name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+			{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], 
+				items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] }
+			]
+			});
+		
+
+	})
+function detailsOfAudit(id,initId) {
+	
+		$("#id").val(id);
+		$("#initId").val(initId);
+		$("#myModalReply").modal("show");
+	}
+	
+// Send Details
+function sendDetails() {
+	var comment = CKEDITOR.instances.commentId.getData();
+	var datasetReq = [];
+	  var personTo = "";
+		var personCC ="";
+		
+		$("#toHiddenId").each(function () {
+			personTo=$(this).val();
+		});
+		$("#CcHiddenId").each(function () {			
+			personCC=$(this).val();
+		});
+		
+	$("#tbodyDataRes > tr").each(function (i) {
+		var fileName = $(this).find(".mulDocRes").val();
+		 var uFile = $(this).find(".mulDocRes")[0].files[0];
+		if (fileName != '' && fileName != 'undefined' && fileName != null) {
+			var lastIndex = fileName.lastIndexOf("\\");
+			if (lastIndex >= 0) {
+				fileName = fileName.substring(lastIndex + 1);
+			}
+			var data = '';
+			var x = [];
+
+			var reader = new FileReader();
+			reader.readAsDataURL(uFile);
+
+			reader.onload = function () {
+
+				data = reader.result.split(",");
+
+				x.push(data[1]);
+			};
+		} else {
+			var x = [];
+			x.push('empty');
+		}
+		audit = {};
+		audit['attachDocument'] = fileName;
+		//audit['personTo'] = personTo;
+	   // audit['personCC'] = personCC;
+		audit['draftId'] = $("#id").val();
+		audit['auditType'] = $("#auditType").val();
+		audit['initiateId'] = $("#initId").val();
+		audit['comment'] = comment;
+		audit['file'] = x;
+		audit['attachfileName'] = $(this).closest("tr").find(".audiDocNameCls").val();
+		audit['attachComment'] = $(this).closest("tr").find(".resSendCommentCls").val();
+
+		datasetReq.push(audit);
+	});
+	//console.log(datasetReq)
+
+	swal.fire({
+		title: "Are you sure want to Send?",
+		text: "Once send, can't revert back !",
+		type: "warning",
+		showCancelButton: true,
+		confirmButtonColor: '#d33',
+		cancelButtonColor: '#e7b63a',
+		confirmButtonText: 'send',
+		showLoaderOnConfirm: true,
+		//closeOnConfirm: false,
+		reverseButtons: true,
+		preConfirm: () => {
+			return new Promise((resolve) => {
+				setTimeout(() => {
+					console.log("Doing async operation");
+					resolve()
+				}, 3000)
+			})
+		}
+	}).then((result) => {
+		if (result.value) {
+			$.ajax({
+				type: "POST",
+				url: "view-audit-draft-report",
+				dataType: "json",
+				contentType: 'application/json; charset=utf-8',
+				data: JSON.stringify(datasetReq),
+				success: function (response) {
+					console.log(response);
+					if (response.message == "success") {
+						swal({
+							title: "Sent Successfully.",
+							type: "success"
+						}).then(function () {
+							location.reload();
+						})
+
+					} else {
+						swal({
+							title: 'Unsuccess',
+							text: response.code
+						})
+					}
+				},
+				error: function (data) {
+
+				}
+			})
+		}
+
+	});
+
+}
+function saveFileReq(event) {
+	var AssignItemQty = event.currentTarget.value;
+	var currentFldId = event.currentTarget.getAttribute('id');
+	var l = currentFldId.split("_");
+	var counter = l[1];
+	var currentFldId = "#" + currentFldId;
+//	console.log(counter + currentFldId);
+	var uFile = $(currentFldId)[0].files[0];
+	var fileName = event.currentTarget.value;
+	var lastIndex = fileName.lastIndexOf("\\");
+	if (lastIndex >= 0) {
+	fileName = fileName.substring(lastIndex + 1);
+	}
+	var extension = fileName.split(".");
+	var iURL = URL.createObjectURL(uFile);
+	$("#sendDraft_" + counter).html("");
+	$("#replyHo_" + counter).html("");
+	var LightImg = "";
+	if(extension[1] =='png' || extension[1] =='jpg' || extension[1] =='jpeg'){
+	LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-picture-o fa-2x excel pdf\"></i></a>";
+
+	}else if(extension[1] == 'xls' || extension[1] =='xlsx'){
+	LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-file-excel-o fa-2x\"></i></a>";
+
+	}else if(extension[1] == 'pdf' ){
+	LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-file-pdf-o fa-2x \"></i></a>";
+
+	}else if(extension[1] == 'doc' || extension[1] =='dox' || extension[1] =='docx'){
+	LightImg = "<a class='example-image-link' href='" + iURL + "' title='" + fileName + "' target='_balnk'> <i class=\"fa fa-file-word-o fa-2x\"></i></a>";
+
+	}
+
+	$("#sendDraft_" + counter).html(LightImg);
+	$("#replyHo_" + counter).html(LightImg);
+	
+	}
+
+
+
+
+/* replay to requisition  add more */
+function moreResponse(){
+	var lengthOfTableRowReq = $("#tbodyDataRes").children('tr').length;
+	var cloneHtml = $("#myTableRes tbody tr:first").clone();
+	
+	$("#myTableRes tbody tr:last").find('td:last').html('');
+	$("#myTableRes tbody").append($("#myTableRes tbody tr:first").clone());
+	
+	$("#myTableRes tbody tr td:last").html("");
+	var addMore='<button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="moreResponse();"><span class="ti-plus"></span></button>&nbsp;'
+	var removeMore = '<button type="button" class="btn btn-warning rmv" name="RemoveReq"><span class="ti-minus"></span></button>';
+	
+	$("#myTableRes tbody tr:last").find('td:last').append(addMore);
+	$("#myTableRes tbody tr:last").find('td:last').append(removeMore);
+	$("#myTableRes tbody tr:last").find(".mulDocRes").val("");
+	$("#myTableRes tbody tr:last").find(".resDocNameCls").val("");
+	$("#myTableRes tbody tr:last").find(".replyHoCls").empty();
+	$("#myTableRes tbody tr:last").find(".resSendCommentCls").val("");
+	
+	
+	var editTrReq = 0;
+	
+	if(lengthOfTableRowReq>editTrReq){
+		$("#myTableRes tbody tr").eq(lengthOfTableRowReq-1).find('td:last').append(removeMore);
+	}
+	
+	$("#myTableRes > tbody > tr").each(function(i){
+		var textInput = $(this).find('input');
+		var divInput = $(this).find('div');
+		var areaInput = $(this).find('textarea');
+		textInput.eq(0).attr('id',"resDocName_"+i);
+		textInput.eq(1).attr('id',"docRes_"+i);
+		divInput.eq(1).attr('id', "row2_" + i);
+		divInput.eq(2).attr('id', "replyHo_" + i)
+		areaInput.eq(0).attr('id', "resSendComment_" + i)
+		
+	})
+	
+}
+
+$(document).ready(function() {
+				/* SEND REPONSE to Requisition */
+				var lengthOfTableRowReq = $("#tbodyDataRes").children('tr').length;
+				$('.tbllResponse').on('click', '.rmv', function () {
+					$(this).closest('tr').remove();
+					$("#myTableRes tbody tr:last").find('td:last').html('');
+					var add='<button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="moreResponse();"><span class="ti-plus"></span></button>&nbsp;'
+					var remove = '<button type="button" class="btn btn-warning rmv" name="RemoveReq"><span class="ti-minus"></span></button>';
+
+					if($("#tbodyDataRes").children('tr').length > 1){
+					$("#myTableRes tbody tr:last").find('td:last').append(add);
+					$("#myTableRes tbody tr:last").find('td:last').append(remove);
+					}else{
+					$("#myTableRes tbody tr:last").find('td:last').append(add);
+					}
+					
+					});
+	});
+
+/*** reply section end ***/
+
+	$(document).ready(function() {
+		var data = $("#jsonValue").val();
+		//console.log(data)
+		 var element = JSON.parse(data); 
+				//console.log(element);  
+		var dataset = [];	
+		for(var i = 0; i < element.length; i++) {
+			
+			obj = {};
+			obj.label = element[i].name;
+			obj.value = element[i].key;
+			dataset.push(obj);
+		}
+	//	console.log(dataset)
+		var autocomplete = new SelectPure(".autocomplete-select", {
+			options: dataset, 
+	        multiple: true,
+	        autocomplete: true,
+	        icon: "fa fa-times",
+	        onChange: key => { 
+	        	console.log(key);
+	        	var data = [];
+	        	data.push(key);
+	        	
+	        	 $("#toHiddenId").val(data);
+	        	   },
+	        classNames: {
+	          select: "select-pure__select",
+	          dropdownShown: "select-pure__select--opened",
+	          multiselect: "select-pure__select--multiple",
+	          label: "select-pure__label",
+	          placeholder: "select-pure__placeholder",
+	          dropdown: "select-pure__options",
+	          option: "select-pure__option",
+	          autocompleteInput: "select-pure__autocomplete",
+	          selectedLabel: "select-pure__selected-label",
+	          selectedOption: "select-pure__option--selected",
+	          placeholderHidden: "select-pure__placeholder--hidden",
+	          optionHidden: "select-pure__option--hidden",
+	        }
+	      });
+		
+		
+		var data = $("#personList").val();
+		//console.log(data)
+		 var element = JSON.parse(data); 
+				//console.log(element);  
+		var dataset = [];	
+		for(var i = 0; i < element.length; i++) {
+			
+			obj = {};
+			obj.label = element[i].name;
+			obj.value = element[i].key;
+			dataset.push(obj);
+		}
+		//console.log(dataset)
+		var autocomplete = new SelectPure(".autocomplete-select1", {
+			options: dataset, 
+	        multiple: true,
+	        autocomplete: true,
+	        icon: "fa fa-times",
+	        onChange: key => { 
+	        	//console.log(key);
+	        	var data = [];
+	        	data.push(key);
+	         	 $("#CcHiddenId").val(data);
+	        	  },
+	        classNames: {
+	          select: "select-pure__select",
+	          dropdownShown: "select-pure__select--opened",
+	          multiselect: "select-pure__select--multiple",
+	          label: "select-pure__label",
+	          placeholder: "select-pure__placeholder",
+	          dropdown: "select-pure__options",
+	          option: "select-pure__option",
+	          autocompleteInput: "select-pure__autocomplete",
+	          selectedLabel: "select-pure__selected-label",
+	          selectedOption: "select-pure__option--selected",
+	          placeholderHidden: "select-pure__placeholder--hidden",
+	          optionHidden: "select-pure__option--hidden",
+	        }
+	      });
+		
+	});
+	
+
+</script>
+<style>
+.ui-autocomplete-loading {
+	background: white url("/static/images/ui-anim_basic_16x16.gif") right
+		center no-repeat;
+}
+</style>
+</head>
+<div layout:fragment="content">
+   <div class="content-wrap">
+      <!-- Main content -->
+      <div>
+         <div class="main mrt_20">
+            <!--Alert Box-->
+            <!--Alert Box-->
+            <div class="col-md-12">
+               <ol class="breadcrumb breadcrumb-arrow">
+                  <li><a href="/index-dashboard">Home</a></li>
+                  <li class="active"><span>Audit Report</span></li>
+               </ol>
+            </div>
+           <!--  <div class="card-title">
+               <h4>Audit Report Details</h4>
+            </div> -->
+            <div class="container-fluid">
+               <div class="card">
+                  <div class="card-body">
+                     <div class="basic-elements">
+                        <input type="hidden" id="jsonValue" th:value="${empList}" />
+                        <input type="hidden" id="personList" th:value="${empList}" />
+                        <input type="hidden" id="draftId" />
+                        <div class="row">
+                           <div class="col-md-12">
+                              <div class="accordion">
+                                 <div class="accordion-group">
+                               <!--      <div class="accordion-heading">
+                                       <button type="button"
+                                          class="btn btn-warning btn-block accordion-toggle btn-txtlft"
+                                          data-toggle="collapse" data-parent="#accordion2"
+                                          href="#collapseOne">Audit Report Details</button>
+                                    </div> -->
+                                    <!-- First Collapse -->
+                              <!--       <div id="collapseOne" class="accordion-body collapse">
+                                       <div class="accordion-inner"> -->
+                                          <div class="row mrt_20">
+                                             <div class="col-md-2">
+                                                <div class="heading">Report No</div>
+                                             </div>
+                                             <div th:if="${edit}" class="col-md-4">
+                                                <div class="text" th:text="${reportdtls[0].draftNo}"></div>
+                                             </div>
+                                             <div th:unless="${edit}" class="col-md-4">
+                                                <div class="text">N/A</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Version</div>
+                                             </div>
+                                             <div th:if="${edit}" class="col-md-4">
+                                                <div class="text" th:text="${reportdtls[0].version}"></div>
+                                             </div>
+                                             <div th:unless="${edit}" class="col-md-4">
+                                                <div class="text">N/A</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Date</div>
+                                             </div>
+                                             <div th:if="${edit}" class="col-md-4">
+                                                <div class="text" th:text="${reportdtls[0].date}"></div>
+                                             </div>
+                                             <div th:unless="${edit}" class="col-md-4">
+                                                <div class="text">N/A</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Audit Type</div>
+                                             </div>
+                                             <div th:if="${edit}" class="col-md-4">
+                                                <div class="text" th:text="${reportdtls[0].auditType}"></div>
+                                             </div>
+                                             <div th:unless="${edit}" class="col-md-4">
+                                                <div class="text">N/A</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Audit Initiated Id.</div>
+                                             </div>
+                                             <div th:if="${edit}" class="col-md-4">
+                                                <div class="text" th:text="${reportdtls[0].initiateId}"></div>
+                                             </div>
+                                             <div th:unless="${edit}" class="col-md-4">
+                                                <div class="text">N/A</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Audit Report Type</div>
+                                             </div>
+                                             <div th:if="${edit}" class="col-md-4">
+                                                <div class="text" th:text="${reportdtls[0].reportType}"></div>
+                                             </div>
+                                             <div th:unless="${edit}" class="col-md-4">
+                                                <div class="text">N/A</div>
+                                             </div>
+                                             <div class="col-md-12">
+                                                <div class="paraheading">Summary</div>
+                                                <div th:if="${edit}" class="col-md-12">
+                                                   <div class="text" th:utext="${reportdtls[0].comment}"></div>
+                                                </div>
+                                                <div th:unless="${edit}" class="col-md-12">
+                                                   <div class="text">N/A</div>
+                                                </div>
+                                             </div>
+                                          </div>
+                                          <h5>Attachment</h5>
+                                          <div class="row mrt_20">
+                                             <div class="col-md-2">
+                                                <div class="heading">Financial Year</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Type</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Date</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">File Name</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Document</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Comment</div>
+                                             </div>
+                                          </div>
+                                          <div class="row" th:each="doc: ${reportdtls}">
+                                             <div class="col-md-2">
+                                                <div class="text" th:text="${doc.fYear}"></div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="text" th:text="${doc.type}"></div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="text" th:text="${doc.attachDate}"></div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="text" th:text="${doc.attachfileName}"></div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <span class="time" th:utext="${doc.attachDocument}">
+                                                </span>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <textarea class="form-control text textarea"  rows="10" th:text="${doc.attachComment}"></textarea>
+                                             </div>
+                                          </div>
+                                          <h5>Additional Information</h5>
+                                          <div class="row mrt_20">
+                                             <div class="col-md-2">
+                                                <div class="heading">Document Name</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Document</div>
+                                             </div>
+                                             <div class="col-md-8">
+                                                <div class="heading">Comment</div>
+                                             </div>
+                                          </div>
+                                          <div class="row"
+                                             th:each="doc1: ${reportdtls[0].additionalInfo}">
+                                             <div class="col-md-2">
+                                                <div class="text" th:text="${doc1.infoFileName}"></div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <!-- <span class="time"><i
+                                                   class="fa fa-file-pdf-o fa-2x pdf" title="document.pdf"></i>
+                                                   </span> <span class="time"><i
+                                                   class="fa fa-file-excel-o fa-2x excel"
+                                                   title="document.xl"></i> </span> -->
+                                                <div class="text" th:utext="${doc1.infoDocument}"></div>
+                                             </div>
+                                             <div class="col-md-8">
+                                                <textarea class="form-control text teaxtarea" rows="10" th:text="${doc1.infoComment}" ></textarea>
+                                             </div>
+                                          </div>
+                                          <h5>Basis Of Qualification</h5>
+                                          <div class="row mrt_20">
+                                             <div class="col-md-2">
+                                                <div class="heading">Document Name</div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <div class="heading">Document</div>
+                                             </div>
+                                             <div class="col-md-8">
+                                                <div class="heading">Additional Information</div>
+                                             </div>
+                                          </div>
+                                          <div class="row"
+                                             th:each="doc2: ${reportdtls[0].basicOfQualify}">
+                                             <div class="col-md-2">
+                                                <div class="text" th:text="${doc2.qlfyFileName}"></div>
+                                             </div>
+                                             <div class="col-md-2">
+                                                <!-- <span class="time"><i
+                                                   class="fa fa-file-pdf-o fa-2x pdf" title="document.pdf"></i>
+                                                   </span> <span class="time"><i
+                                                   class="fa fa-file-excel-o fa-2x excel"
+                                                   title="document.xl"></i> </span> -->
+                                                <div class="text" th:utext="${doc2.qlfyDocument}"></div>
+                                             </div>
+                                             <div class="col-md-8">
+                                                <textarea class="form-control text textarea" rows="10" th:text="${doc2.qlfyComment}" ></textarea>
+                                             </div>
+                                          </div>
+                                          <h5>Notify</h5>
+                                          <div class="row mrt_20">
+                                             <div class="col-md-2">
+                                                <div class="heading">To</div>
+                                             </div>
+                                             <!-- <div class="col-md-2">
+                                                <div class="heading">CC</div>
+                                                </div> -->
+                                          </div>
+                                          <div class="row">
+                                             <div class="col-md-2">
+                                                <div class="text" th:each="c,iter:${TOList}"
+                                                   th:text="${c}"></div>
+                                             </div>
+                                             <!-- <div class="col-md-2">
+                                                <div class="text" th:each="c,iter:${CCList}" th:text="${c}"></div>
+                                                </div> -->
+                                          </div>
+                                          <h4 th:if="${#lists.size(comments)>0}" >Comments</h4>
+                                                <ul th:if="${#lists.size(comments)>0}" class="timeline">
+                                                <th:block th:each="c:${comments}">
+                                                   <li class="time-label"><span
+                                                      class="bg-red txt_white" th:text="${c.date}"></span></li>
+                                                  
+                                                   <li>
+                                                      <i class="fa fa-envelope bg-blue"></i>
+                                                      <div class="timeline-item">
+                                                         <span class="time">
+                                                         <i class="fa fa-clock-o"></i>
+                                                         <span th:text="${c.time}"></span>
+                                                         </span>
+                                                         <th:block th:each="addinfo:${c.additionalInfo}">
+                                                            <span class="time" th:utext="${addinfo.infoFileName}"></span>
+                                                         </th:block>
+                                                         <h3 class="timeline-header">
+                                                            <a href="#" th:text="${c.createdBy}"></a>&nbsp
+                                                           <!--  <span th:text="${c.designation}"></span>&nbsp -->
+                                                            <span th:text="${c.organisation}"></span>
+                                                         </h3>
+                                                         <div class="timeline-body" th:utext="${c.comment}"></div>
+                                                         <div class="timeline-footer">
+                                                        </div>
+                                                      </div>
+                                                   </li>
+                                                </th:block>
+                                                <li><i class="fa fa-clock-o bg-gray"></i></li>
+                                               										
+                                             </ul>
+                                             <a th:if="${!#lists.contains(session.USER_ROLES, 'rol024')}" class="btn btn-primary btn-xs" data-toggle="modal"
+                                                               data-target="#requisition"  th:attr="onclick=|detailsOfAudit('${reportdtls[0].draftId}','${reportdtls[0].initiateId}')|">Reply</a>
+                                                      
+                                          <div align="right"  th:if="${#lists.contains(session.USER_ROLES, 'rol024') }">
+                                          
+                                             <button class="btn btn-primary" 
+                                                th:attr="onclick=|detailsOfAudit('${reportdtls[0].draftId}','${reportdtls[0].initiateId}')|">Send
+                                             To Co-ordinator</button>
+                                          </div>
+                                     <!--   </div>
+                                    </div> -->
+                                    <!-- First Collapse -->
+                                    <!-- Second Collapse -->
+                                   <!--  <div class="accordion-group mrt_20">
+                                       <div class="accordion-heading">
+                                          <button
+                                             class="btn btn-warning btn-block accordion-toggle btn-txtlft"
+                                             data-toggle="collapse" data-parent="#accordion2"
+                                             href="#collapseTwo"> Manage Audit Report</button>
+                                       </div>
+                                       <div id="collapseTwo" class="accordion-body collapse" th:if="${comments}">
+                                          <div class="accordion-inner">
+                                             <ul class="timeline">
+                                                <th:block th:each="c:${comments}">
+                                                   <li class="time-label"><span
+                                                      class="bg-red txt_white" th:text="${c.date}"></span></li>
+                                                  
+                                                   <li>
+                                                      <i class="fa fa-envelope bg-blue"></i>
+                                                      <div class="timeline-item">
+                                                         <span class="time">
+                                                         <i class="fa fa-clock-o"></i>
+                                                         <span th:text="${c.time}"></span>
+                                                         </span>
+                                                         <th:block th:each="addinfo:${c.additionalInfo}">
+                                                            <span class="time" th:utext="${addinfo.infoDocument}"></span>
+                                                         </th:block>
+                                                         <h3 class="timeline-header">
+                                                            <a href="#" th:text="${c.createdBy}"></a>&nbsp
+                                                            <span th:text="${c.designation}"></span>&nbsp
+                                                            <span th:text="${c.organisation}"></span>
+                                                         </h3>
+                                                         <div class="timeline-body" th:utext="${c.comment}"></div>
+                                                         <div class="timeline-footer">
+                                                            <a class="btn btn-primary btn-xs" data-toggle="modal"
+                                                               data-target="#requisition" onclick="reply(event)">Reply</a>
+                                                         </div>
+                                                      </div>
+                                                   </li>
+                                                </th:block>
+                                                <li><i class="fa fa-clock-o bg-gray"></i></li>
+                                               										
+                                             </ul>
+                                             <a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#requisition" 
+                                                th:attr="onclick=|detailsOfAudit('${reportdtls[0].draftId}','${reportdtls[0].initiateId}')|">Reply</a>
+                                          </div>
+                                       </div>
+                                       <div id="collapseTwo" class="accordion-body collapse" th:unless="${comments}">
+                                          <div class="accordion-inner" style="text-align:center">
+                                             <h3>No Comments</h3>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div> -->
+                              <!-- Second Collapse -->
+                        <!--       	<moda Strat>
+                              <div id="detailsModal" class="modal fade" role="dialog">
+                                 <div class="modal-dialog">
+                                    Modal content
+                                    <div class="modal-content">
+                                       <div class="modal-header">
+                                          <h4 class="modal-title" id="modal-title-id">Notes</h4>
+                                          <button type="button" class="close" data-dismiss="modal">
+                                          <i class="fa fa-close fa-2x" style="color:#FFF;cursor: pointer;"></i>
+                                          </button>
+                                       </div>
+                                       <div >
+                                          <button type="button" class="btn btn-success"
+                                             id="saveNotes">Save</button>
+                                          <button type="button" class="btn btn-secondary"
+                                             onclick="sendDetails();">Send</button>
+                                          <button type="button" class="btn btn-default"
+                                             data-dismiss="modal">Close</button>
+                                       </div>
+                                       <div class="modal-body">
+                                          <input type="hidden" id="id" /> <input type="hidden"
+                                             id="auditType" /> <input type="hidden" id="initId" />
+                                                <div style="overflow-y:scroll; height:100px;">
+                                          <table class="tbllReq tblls" id="myTableReq" width="100%"
+                                             border="0" cellspacing="0" cellpadding="0">
+                                             <thead>
+                                                <tr>
+                                                   <th width="120" align="left">Document Name</th>
+                                                   <th width="520" align="left">Upload</th>
+                                                   <th align="right">Action</th>
+                                                </tr>
+                                             </thead>
+                                             <tbody id="tbodyDataReq">
+                                                <tr class="tr_clone" id="row">
+                                                   <td width="300"><input type="text"
+                                                      class="form-control audiDocNameCls" id="audiDocName_0"></td>
+                                                   <td width="320">
+                                                      <div class="row" id="rowId_0">
+                                                         <div class="col-md-5" id="row2_0" style="text-align: right;">
+                                                            <div class="text sendDraftCls" id="sendDraft_0"></div>
+                                                         </div>
+                                                         <div class="upload-btn-wrapper">
+                                                            <label class="custom-file-upload" for="mulDocAtta"><i
+                                                               class="fa fa-cloud-upload"></i>Document</label> <input
+                                                               type="file" class="mulDocReq" id="docReq_0"
+                                                               style="display: block;"
+                                                               onchange="saveFileReq(event);checkImageFormat(this);">
+                                                         </div>
+                                                      </div>
+                                                   </td>
+                                                   <td align="Right" width="200">
+                                                      <button type="button"
+                                                         class="btn btn-primary tr_clone_add" name="add"
+                                                         onclick="addAuditDetails();">
+                                                      <span class="ti-plus"></span>
+                                                      </button>
+                                                   </td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                          </div>
+                                          <div class="form-group">
+                                             <label>Comment :</label>
+                                             <div class="box-body pad">
+                                                <textarea id="commentNote" class="form-control textarea"
+                                                   name="commentNote" rows="10" cols="80">
+                                                </textarea>
+                                             </div>
+                                          </div>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div> -->
+                              <!-- reply modal start -->
+                              <div id="myModalReply" class="modal fade" role="dialog">
+                                 <div class="modal-dialog">
+                                    <!-- Modal content-->
+                                    <div class="modal-content" width="100%">
+                                       <div class="modal-header">
+                                          <h4 class="modal-title">Reply</h4>
+                                          <button type="button" class="close" data-dismiss="modal">
+                                          <i class="fa fa-close fa-2x" style="color:#FFF;cursor: pointer;"></i>
+                                          </button>
+                                       </div>
+													   <input type="hidden" id="id" /><input type="hidden" id="auditType" /> <input
+														type="hidden" id="initId" />
+													<div >
+                                          <button type="button" class="btn btn-success"
+                                             id="saveNotes">Save</button>
+                                          <button type="button" class="btn btn-secondary"
+                                             onclick="sendDetails();">Send</button>
+                                          <button type="button" class="btn btn-default"
+                                             data-dismiss="modal">Close</button>
+                                       </div>
+                                       <div class="row">
+                                          <div class="col-md-6">
+                                             <div>To:</div>
+                                             <span class="autocomplete-select"></span> 
+                                             <input type="hidden" id="toHiddenId">
+                                          </div>
+                                          <div class="col-md-6">
+                                             <div>Cc:</div>
+                                             <span class="autocomplete-select1"></span> 
+                                             <input type="hidden" id="CcHiddenId">
+                                          </div>
+                                       </div>
+                                       <div class="modal-body">
+                                          <div style="overflow-y:scroll; height:100px;">
+                                          <table class="tbllResponse tblls" id="myTableRes" width="100%" border="0"
+                                             cellspacing="1" cellpadding="5">
+                                             <thead>
+                                                <tr>
+                                                   <th width="120" align="left">Document Name</th>
+                                                   <th width="520" align="left">Upload</th>
+                                                   <th width="520" align="left">Comment</th>
+                                                 
+                                                   <th  align="right">Action</th>
+                                                </tr>
+                                             </thead>
+                                             <tbody id="tbodyDataRes">
+                                                <tr class="tr_clone" id="row">
+                                                   <td width="300">
+                                                      <input type="text" class="form-control resDocNameCls" id="resDocName_0" >
+                                                   </td>
+                                                   <td width="320" >
+                                                      <div
+                                                         class="row" id="rowId_0">
+                                                         <div class="col-md-5" id="row2_0" style="text-align: right;">
+                                                            <div class="text replyHoCls" id="replyHo_0"></div>
+                                                         </div>
+                                                         <div class="upload-btn-wrapper">
+                                                            <label class="custom-file-upload" for="mulDocAtta"><i
+                                                               class="fa fa-cloud-upload"></i>Document</label> <input type="file"
+                                                               class="mulDocRes" id="docRes_0"
+                                                               style="display: block;" onchange="saveFileReq(event);checkImageFormat(this);">
+                                                         </div>
+                                                      </div>
+                                                   </td>
+                                                        <td width="300">
+                                                      <textarea  class="form-control resSendCommentCls" id="resSendComment_0" ></textarea>
+                                                   </td>
+                                                   <td align="Right" width="200">
+                                                      <button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="moreResponse();">
+                                                      <span class="ti-plus"></span>
+                                                      </button>
+                                                   </td>
+                                                </tr>
+                                             </tbody>
+                                          </table>
+                                          </div>
+                                          <div class="form-group">
+                                             <input type="hidden" id="repInitId">
+                                             <input type="hidden" id="repDrId">
+                                             <label>Comment :
+                                             </label>
+                                             <div class="box-body pad">
+                                                <textarea id="commentId" class="form-control commentCls" name="commentId" rows="10" cols="80">
+                                                </textarea>
+                                             </div>
+                                          </div>
+                                       </div>
+                                      
+                                    </div>
+                                 </div>
+                                 <!-- footer-->
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <!-- /.content-wrapper -->
+   </div>
+</div>
+</html>

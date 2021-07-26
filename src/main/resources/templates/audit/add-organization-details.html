@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script type="text/javascript">
+	//validation
+
+	function validateForm() {
+		if (!blankValidation("tOrgName", "TextField",
+				" First Name can not be left blank"))
+			return false;
+
+		if (!blankValidation("tOrgMobile", "TextField",
+				"Mobile No. can not be left blank"))
+			return false;
+
+		if (!blankValidation("tOrgPINno", "TextField", "Pin no.required"))
+			return false;
+
+		if (!blankValidation("tOrgAddress", "TextArea", " Address required"))
+			return false;
+		
+		if (!blankValidation("tOrgdesc", "TextArea", " Description required"))
+			return false;
+
+		if (!blankValidation("tOrgCountry", "TextField",
+				"Country cannot be left empty"))
+			return false;
+
+		if (!blankValidation("tOrgState", "SelectBox",
+				"State cannot be left empty"))
+			return false;
+
+		if (!blankValidation("tOrgDist", "SelectBox",
+				"District cannot be left empty"))
+			return false;
+
+		if (!blankValidation("tStatus", "SelectBox",
+				"Status can not be left blank"))
+			return false;
+
+	}
+/* 	function checkNumber() {
+		var qty = $('#tGuestZipCode').val();
+		if (qty) {
+
+			checkNum("tGuestZipCode");
+		}
+
+	} */
+
+	//Dropdown for District Name
+	$(document).ready(function() {
+		$("#tOrgState").on('change', function() {
+			var tOrgState = $(this).val();
+			//console.log(tOrgState);
+			if (tOrgState) {
+
+				$.ajax({
+					type : 'POST',
+					url : 'add-organization-details-districtName-ajax',
+					contentType : false,
+					data : tOrgState,
+					success : function(response) {
+						if (response.message == "success") {
+							$("#tOrgDist").empty();
+
+							var option = $("<option></option>");
+							$(option).val(null);
+							$(option).html("Select");
+							$("#tOrgDist").append(option);
+							for (var i = 0; i < response.body.length; i++) {
+								var option = $("<option></option>");
+								$(option).val(response.body[i].key);
+								$(option).html(response.body[i].name);
+								$("#tOrgDist").append(option);
+							}
+						}
+					},
+					error : function(e) {
+						alert("error");
+					}
+				});
+			} else {
+				$("#tOrgDist").empty();
+				var option = $("<option></option>");
+				$(option).val(null);
+				$(option).html("Select");
+				$("#tOrgDist").append(option);
+			}
+		});
+	});
+
+	//Dropdown for District Name
+	$(document).ready(function() {
+		$("#tOrgCountry").on('change', function() {
+			var tOrgCountry = $(this).val();
+			//console.log(tOrgCountry);
+			if (tOrgCountry) {
+				$("#tOrgDist").empty();
+				var option = $("<option></option>");
+				$(option).val(null);
+				$(option).html("Select");
+				$("#tOrgDist").append(option);
+				$.ajax({
+					type : 'POST',
+					url : 'add-organization-details-stateName-ajax',
+					contentType : false,
+					data : tOrgCountry,
+					success : function(response) {
+						if (response.message == "success") {
+							$("#tOrgState").empty();
+
+							var option = $("<option></option>");
+							$(option).val(null);
+							$(option).html("Select");
+							$("#tOrgState").append(option);
+							for (var i = 0; i < response.body.length; i++) {
+								var option = $("<option></option>");
+								$(option).val(response.body[i].key);
+								$(option).html(response.body[i].name);
+								$("#tOrgState").append(option);
+							}
+						}
+					},
+					error : function(e) {
+						alert("error");
+					}
+				});
+			} else {
+				$("#tOrgState").empty();
+				var option = $("<option></option>");
+				$(option).val(null);
+				$(option).html("Select");
+				$("#tOrgState").append(option);
+				$("#tOrgDist").empty();
+				var option = $("<option></option>");
+				$(option).val(null);
+				$(option).html("Select");
+				$("#tOrgDist").append(option);
+			}
+		});
+	});
+</script>
+
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li class="active"><span>Add Organization Details </span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Add Organization Details</h4>
+			</div>
+			<div class="container-fluid">
+
+				<div class="card">
+					<div class="card-body">
+						<div class="basic-elements">
+							<form th:action="@{add-organization-details}"
+								th:object="${org}" method="post"
+								onsubmit="return validateForm();" autocomplete="off">
+								<div class="row">
+									<span style="color: red;" id="errorMsg"> </span>
+									<div th:if="${message != null}">
+										<span th:text="${message}" style="color: red;"> </span>
+									</div>
+								</div>
+								<input type="hidden" th:field="*{tOrg}" />
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Organization Name</label> <input type="text"
+												class="form-control" name="tOrgName" value=""
+												th:field="*{tOrgName}">
+										</div>
+
+										
+
+										<div class="form-group">
+											<label>Country</label> <select class="form-control"
+												th:field="*{tOrgCountry}">
+												<option value="">Select</option>
+												<option th:each="c:${countryList}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+											</select>
+										</div>
+										<div class="form-group">
+											<label>State</label> <select class="form-control"
+												th:field="*{tOrgState}">
+												<option value="">Select</option>
+												<option th:each="c:${stateList}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+											</select>
+										</div>
+
+										<div class="form-group">
+											<label>District</label> <select class="form-control"
+												th:field="*{tOrgDist}">
+												<option value="">Select</option>
+												<option th:each="c:${districtList}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+											</select>
+										</div>
+
+									
+										<div class="form-group">
+											<label>Status</label> <select class="form-control"
+												th:field="*{tStatus}">
+												<option th:value="null">Select</option>
+												<option th:value="true">Active</option>
+												<option th:value="false">Inactive</option>
+											</select>
+										</div>
+
+									</div>
+									<div class="col-lg-6">
+									<div class="form-group">
+											<label>Contact No.</label> <input type="text"
+												class="form-control" name="tOrgMobile" value=""
+												th:field="*{tOrgMobile}">
+										</div>
+									
+										<div class="form-group"
+											th:style="*{tOrgPINno} == null ? 'display:block' : 'display:none' ">
+											<label>Pin No.</label> <input type="text"
+												onkeyup="checkNum('tOrgPINno');" class="form-control"
+												name="tOrgPINno" value="" th:field="*{tOrgPINno}">
+										</div>
+											<div class="form-group">
+											<label>Address</label>
+											<textarea name="tOrgAddress" cols="" rows=""
+												th:field="*{tOrgAddress}" class="form-control textarea"></textarea>
+										</div>
+										
+										<div class="form-group">
+											<label>Description</label>
+											<textarea name="tOrgdesc" cols="" rows=""
+												th:field="*{tOrgdesc}" class="form-control textarea"></textarea>
+										</div>
+										
+									</div>
+									<div class="col-md-12">
+										<div class="form-group">
+											<input type="submit" value="Submit" class="btn btn-success" />
+											<input type="reset" value="Cancel" class="btn btn-warning"
+												onclick="window.location.reload();" />
+										</div>
+									</div>
+								</div>
+
+							</form>
+						</div>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

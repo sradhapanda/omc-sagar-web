@@ -1,0 +1,31 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<h3>welcome !</h3>
+<div th:if="${userDetails} != null">
+	<p th:text="${frontDesk}"></p>
+</div>
+<div th:if="${frontDesk} != null">
+	<p th:text="${frontDesk}"></p>
+</div>
+<div th:if="${Housekeeping} != null">
+	<p th:text="${Housekeeping}"></p>
+</div>
+<div th:if="${Inventory} != null">
+	<p th:text="${Inventory}"></p>
+</div>
+<div th:if="${Maintenance} != null">
+	<p th:text="${Maintenance}"></p>
+</div>
+<div th:if="${Property} != null">
+	<p th:text="${Property}"></p>
+</div>
+<div th:if="${Restaurant} != null">
+	<p th:text="${Restaurant}"></p>
+</div>
+<div th:if="${User} != null">
+	<p th:text="${User}"></p>
+</div>
+</body>
+</html>

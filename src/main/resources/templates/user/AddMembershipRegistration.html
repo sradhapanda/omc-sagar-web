@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script type="text/javascript">
+       
+      
+      $(document).ready(function() {
+    	  //Auto Validation for mobile number
+    	  $("#mobile_no_m").on("blur", function(){
+		        var mobNum = $(this).val();
+		        var filtermob = /^\d*(?:\.\d{1,2})?$/;
+
+		          if (filtermob.test(mobNum)) {
+		            if(mobNum.length==10){
+		             } else {
+		            	 $('#mobile_no_m').focus();
+		                swal('Please Enter 10  digit mobile number');
+		                return false; 
+		              }
+		            }
+		            else {
+		            	 $('#mobile_no_m').focus();
+		               swal('Not a valid mobile number'); 
+		              return false;
+		           }
+		   });
+    	 
+    	  //Auto Validation for pin number
+    	  $("#pin_m").on("blur", function(){
+		        var pinNum = $(this).val();
+		        var filterpin = /^\d*(?:\.\d{1,2})?$/;
+		          if (filterpin.test(pinNum)) {
+		            if(pinNum.length==4){
+		             } else {
+		            	$('#pin_m').focus();
+		                swal('Please Enter 4  digit pin number');
+		                return false; 
+		              }
+		            }
+		            else {
+		               $('#pin_m').focus();
+		               swal('Not a valid pin number'); 
+		              return false;
+		           }
+		     });
+			
+    	  //Auto Validation for zip
+			$("#zip_m").on("blur", function(){
+		        var zipNum = $(this).val();
+		        var filterzip = /^\d*(?:\.\d{1,2})?$/;
+
+		          if (filterzip.test(zipNum)) {
+		            if(zipNum.length==6){ 
+		             } else {
+		            	$('#zip_m').focus();
+		                swal('Please Enter 6  digit zip number');
+		                return false; 
+		              }
+		            }
+		            else {
+		               $('#zip_m').focus();
+		               swal('Not a valid zip number'); 
+		              return false;
+		           }		    
+		     });
+			
+			//Auto Validation for Registration fee
+			$("#registration_m").on("blur", function(){
+		        var regNum = $(this).val();
+		        var filterreg = /^\d*(?:\.\d{1,2})?$/;
+
+		          if (filterreg.test(regNum)) {
+		            if(regNum>0){
+		             } else {
+		            	$('#registration_m').focus();
+		                swal('Please Enter Registration Fee more then Zero');
+		                return false; 
+		              }
+		            }
+		            else {
+		               $('#registration_m').focus();
+		               swal('Not a valid Registration Fee'); 
+		              return false;
+		           }		    
+		     });			
+			
+			 //Auto Validation for monthly fee
+			$("#monthly_fee_m").on("blur", function(){
+		        var monNum = $(this).val();
+		        var filtermon = /^\d*(?:\.\d{1,2})?$/;
+
+		          if (filtermon.test(monNum)) {
+		            if(monNum>0){ 
+		             } else {
+		            	$('#monthly_fee_m').focus();
+		                swal('Please Enter Monthly Fee more then Zero');
+		                return false; 
+		              }
+		            }
+		            else {
+		               $('#monthly_fee_m').focus();
+		               swal('Not a valid Monthly Fee'); 
+		              return false;
+		           }	    
+		     });
+    	  
+    	//Hide dependent form in starting time  
+    	$("#dep_parent_class").hide();
+		
+    	
+    	//datapicker
+  	 	$(".datepickerforthis").datepicker({
+  			format : 'dd-mm-yyyy',
+  			endDate: new Date(),
+  			autoclose : true
+  		})  
+  		
+  		//Datepicker for joining date common data
+		$("#joiningdate_m").datepicker({ 
+			format : 'dd-mm-yyyy',
+			startDate: new Date(),
+			autoclose : true
+		})
+		
+		
+    	//Registration fee validation common data
+   		$('#registration_m').bind("cut copy paste",function(e) {
+		     e.preventDefault();
+		});  
+    	
+  	  if(addcountdepMemType<=0){
+			$("#dep_2").hide();
+				$("#dep_parent_class").hide();
+				$("#addDepbtn").show();
+				
+	 		}	
+  	});
+ 
+ 		var countDependent=0;
+		//Validation for add Dependent 
+ 		function addDependentBtn(){
+ 			 
+ 			countDependent=countDependent+1;
+ 			if(addcountdepMemType>0){
+ 		 	$("#dep_parent_class").show();
+ 			$("#addDepbtn").hide();
+ 			}
+ 			if(addcountdepMemType<=0){
+ 			if (!blankValidation("member_type_m","SelectBox", "Please Select Member Type"))
+		    return false;
+ 	 		}
+ 		}
+      
+     
+			var addbtn ='<button type="button" class="btn btn-success addmore" value="value" onClick="AddMoreDependent(this)"><span class="ti-plus"></span>&nbsp;</button>';
+			var removebtn ='<button type="button" class="btn btn-warning rmv" name="Remove" id="remScnt" onClick="RemoveDependent(this)"><span class="ti-minus"></span></button>';
+			
+			//function after click on add more button
+			function AddMoreDependent(ele){ 
+				 var numid= $(ele).parent('.buttoncontainer').parent('.row').parent('.dependent_cls').attr('id');
+				 var lastChar = numid.slice(-1); 
+				 var lll = parseInt(lastChar);
+				 var idIndex=lll-1; 
+				 
+	    		   if (!blankValidation("first_name_m","TextField", "First Name can not be left blank"))
+    	          	 return false;
+    				  
+   				   if (!blankValidation("last_name_m","TextField", "Last Name can not be left blank"))
+  	              	 return false;
+    				
+   				   if (!blankValidation("mobile_no_m","TextField", "Mobile No.  can not be left blank"))
+  	                 return false;
+    				 
+   				   //mobile number validation after click on add button
+     				$("#mobile_no_m").on("blur", function(){
+     			        var mobNum = $(this).val();
+     			        var filtermob = /^\d*(?:\.\d{1,2})?$/;
+
+     			          if (filtermob.test(mobNum)) {
+     			            if(mobNum.lengt==10){
+     			             } else {
+     			            	  $('#mobile_no_m').focus();
+     			                swal('Please Enter 10  digit mobile number');
+     			                return false; 
+     			              }
+     			            }
+     			            else {
+     			            	  $('#mobile_no_m').focus();
+     			               swal('Not a valid mobile number'); 
+     			              return false;
+     			           }
+     			      });
+     			
+    				 
+    				 if (!blankValidation("email_m","TextField", "Email can not be left blank"))
+   	                     return false;
+    				 
+    				 
+    				//email id validation after click on add button
+    				 var email_id_m=$("#email_m").val();
+    				 var filter = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+    				 if (filter.test(email_id_m)) {
+    				 }
+   					 else {
+   						$('#email_m').focus();
+   						 swal("Email is not valid");
+   						 
+   				 		return false;
+   				 	 }
+    				
+    				 if (!blankValidation("password_m","TextField", "Password  can not be left blank"))
+   	                     return false;
+   				 
+   				     if (!blankValidation("pin_m","TextField", "Pin can not be left blank"))
+  	                     return false;
+   				     
+   				      //pin number validation after click on add button
+	   				  $("#pin_m").on("blur", function(){
+	   			        var pinNum = $(this).val();
+	   			        var filterpin = /^\d*(?:\.\d{1,2})?$/;
+	
+	   			          if (filterpin.test(pinNum)) {
+	   			            if(pinNum.length==4){
+	   			             } else {
+	   			            	$('#pin_m').focus();
+	   			                swal('Please Enter 4 digit pin number');
+	   			                return false; 
+	   			              }
+	   			            }
+	   			            else {
+	   			               $('#pin_m').focus();
+	   			               swal('Not a valid pin number'); 
+	   			              return false;
+	   			           }
+	   			    
+	   			      });
+   				
+   				
+     				
+     				 if (!blankValidation("country_m","SelectBox" ,"Please Select Country"))
+     			         return false;
+     				
+     				 if (!blankValidation("state_m","SelectBox" ,"Please Select State"))
+     			         return false;
+     				
+     				 if (!blankValidation("district_m","SelectBox" ,"Please Select District"))
+     			         return false;
+     				
+     				 if (!blankValidation("zip_m","TextField", "Zip can not be left blank"))
+     	                  return false
+     	                  
+     	            
+     	    			
+     	               //Zip validation after click on add button
+	   	    			$("#zip_m").on("blur", function(){
+	   	    		        var zipNum = $(this).val();
+	   	    		        var filterzip = /^\d*(?:\.\d{1,2})?$/;
+	
+	   	    		          if (filterzip.test(zipNum)) {
+	   	    		            if(zipNum.length==6){ 
+	   	    		             } else {
+	   	    		            	$('#zip_m').focus();
+	   	    		                swal('Please Enter 6  digit zip number');
+	   	    		                return false; 
+	   	    		              }
+	   	    		            }
+	   	    		            else {
+	   	    		               $('#zip_m').focus();
+	   	    		               swal('Not a valid zip number');
+	   	    		              return false;
+	   	    		           }
+	   	    		    
+	   	    		   });
+     	    			
+     	                 
+     				 if (!blankValidation("address_m","TextArea", "Address can not be left blank"))
+     			         return false;
+     				
+     				 if (!blankValidation("member_type_m","SelectBox", "Please Select Member Type"))
+     			         return false;
+     				
+     				 if (!blankValidation("relation_m","SelectBox", "Please Select Relation Type"))
+     			         return false;
+     				
+     				 if (!blankValidation("registration_m","TextField", "Registration Fee can not be left blank"))
+     	                  return false;
+     				 
+     				//registration fee validation after click on add button
+     				$("#registration_m").on("blur", function(){
+     			        var regNum = $(this).val();
+     			        var filterreg = /^\d*(?:\.\d{1,2})?$/;
+
+     			          if (filterreg.test(regNum)) {
+     			            if(regNum>0){  
+     			             } else {
+     			            	$('#registration_m').focus();
+     			                swal('Please Enter Registration Fee more then Zero');
+     			                return false; 
+     			              }
+     			            }
+     			            else {
+     			               $('#registration_m').focus();
+     			               swal('Not a valid Registration Fee');  
+     			              return false;
+     			           }
+     			    
+     			      });
+     		 	
+     				
+     				 
+     				 if (!blankValidation("monthly_fee_m","TextField", "Monthly fee can not be left blank"))
+    	                  return false;
+     				
+     				//monthly fee validation after click on add button
+     				$("#monthly_fee_m").on("blur", function(){
+     			        var monNum = $(this).val();
+     			        var filtermon = /^\d*(?:\.\d{1,2})?$/;
+
+     			          if (filtermon.test(monNum)) {
+     			            if(monNum>0){ 
+     			             } else {
+     			            	$('#monthly_fee_m').focus();
+     			                swal('Please Enter Monthly Fee more then Zero');
+     			                return false; 
+     			              }
+     			            }
+     			            else {
+     			               $('#monthly_fee_m').focus();
+     			               swal('Not a valid Monthly Fee');  
+     			              return false;
+     			           }
+     			    
+     			  });
+     				 
+     				 if (!blankValidation("joiningdate_m","TextField", "Joining Date  can not be left blank"))
+    	                  return false; 
+     				
+     				 if (!blankValidation("payment_mode_m","SelectBox", "Please Select Payment Mode"))
+     			         return false;
+
+     				 if (!blankValidation("status_m","SelectBox", "Please Select Status"))
+     			        return false;     				
+     				 
+				     if (!blankValidation("first_"+idIndex,"TextField", "First Name can not be left blank"))
+     	                 return false;
+				     
+				     if (!blankValidation("last_"+idIndex,"TextField", "Last Name can not be left blank"))
+     	                 return false;
+				     
+				     if (!blankValidation("mobile_"+idIndex,"TextField", "Mobile can not be left blank"))
+     	                 return false;
+				     
+				   //mobile number for dependent validation after click on add button
+				     var mobdep=$("#mobile_"+idIndex).val();
+    				 var filtermdep =/^\d*(?:\.\d{1,2})?$/;
+    				 if (filtermdep.test(mobdep)) {
+    					  if(mobdep.length==10){ 
+			            	 } else { 
+			            		 $('#mobile_'+idIndex).focus();
+			               		 swal('Please Enter 10  digit mobile number');
+			                	 return false; 
+			              		}
+    				
+    				 }
+   					 else {
+   						$('#mobile_'+idIndex).focus();
+   						 swal("Mobile number is not valid");
+   						 
+   				 		return false;
+   				 	 }
+    				  
+				     if (!blankValidation("email_"+idIndex,"TextField", "Email can not be left blank"))
+     	                 return false;
+				     
+				     //email id for dependent validation after click on add button
+				     var emaildep3=$("#email_"+idIndex).val();
+    				 var filteremail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+    				 if (filteremail.test(emaildep3)) {
+    				//	 return true;
+    				 }
+   					 else {
+   						$('#email_'+idIndex).focus();
+   						 swal("Email is not valid");
+   						 
+   				 		return false;
+   				 	 }
+				     
+				     if (!blankValidation("password_"+idIndex,"TextField", "Password can not be left blank"))
+     	                 return false;
+				     
+				     if (!blankValidation("pin_"+idIndex,"TextField", "Pin can not be left blank"))
+     	                 return false;
+				     
+				     //pin number for dependent validation after click on add button
+				     var pindep=$("#pin_"+idIndex).val();
+    				 var filterpdep =/^\d*(?:\.\d{1,2})?$/;
+    				 if (filterpdep.test(pindep)) {
+    					  if(pindep.length==4){ 
+			            	 } else { 
+			            		 $('#pin_'+idIndex).focus();
+			               		 swal('Please Enter 4  digit pin number');
+			                	 return false; 
+			              		}
+    				
+    				 }
+   					 else {
+   						$('#pin_'+idIndex).focus();
+   						 swal("pin number is not valid");
+   						 
+   				 		return false;
+   				 	 }
+				     
+				    if (!blankValidation("relation_"+idIndex,"SelectBox", "Please check Relation"))
+     	                 return false;
+ 			     
+				     if (!blankValidation("dateofbirth_"+idIndex,"TextField", "DOB can not be left blank"))
+     	                 return false;
+				     
+				        //relation age for dependent validation after click on add button
+					    var valueofrelationdep=$("#relation_"+idIndex).val();
+					    if(valueofrelationdep != 'REL002'){
+					    	var ageLimitForchild=addcountagelimit;
+	     					var fullDate = new Date();  
+						    var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+						    var currentDate = fullDate.getDate() + "-" + twoDigitMonth + "-" + fullDate.getFullYear();
+										
+							var parts = currentDate.split('-');
+						    var date33 = parts[0];
+						    var month33 = parts[1];
+						    var year = parts[2];
+						    var nowday=parseInt(date33);
+						    var nowmonth=parseInt(month33);
+						    var nowyear=parseInt(year);
+						     
+	     				    var gotdatefromdatepicker=$("#dateofbirth_"+idIndex).val();
+	     				  
+	     				    var parts1 = gotdatefromdatepicker.split('-');
+						    var date11 = parts1[0];
+						    var month11 = parts1[1];
+						    var year11 = parts1[2];
+						    
+						    var birthday=parseInt(date11);
+						    var birthmonth=parseInt(month11);
+						    var birthyear=parseInt(year11);
+	     				    
+	     				    var age = nowyear - birthyear;
+	     				    var age_month = nowmonth - birthmonth;
+	     				    var age_day = nowday - birthday;
+	     				   
+	     				    if(age_month < 0 || (age_month == 0 && age_day <0)) {
+	     				            age = parseInt(age) -1;
+	     				        }
+	     				    if ((age == ageLimitForchild && age_month <= 0 && age_day <=0) || age < ageLimitForchild ) {
+	     				    }
+	     				    else {
+	     				    	 $('#dateofbirth_'+idIndex).focus();
+	     				    	swal("Age should be with in  "+ageLimitForchild+" years from today");
+	     				        return false;
+	     				    }
+					    }
+				     
+				     if (!blankValidation("status_"+idIndex,"SelectBox", "Please check Status"))
+     	                 return false;
+				     
+				 
+						//count the total dependent length
+					 	var dependentCount = $(".dependent_cls").length;
+						//compare for how many dependent record will open or not
+						if(addcountdepMemType>dependentCount){
+							var cloneHtml = $(".dependent_cls:last").clone();
+						}
+						//Last dependent limit accoording to member type
+						if(addcountdepMemType==dependentCount){
+							swal('You Can add only '+addcountdepMemType+' Dependent.');
+						} 
+						cloneHtml.find(':input').val(''); 
+						
+						$(".dependent_parent_cls").append(cloneHtml);
+						$(".dependent_parent_cls").find('.buttoncontainer').html('');
+								
+						//Adding button when length of dependent is larger than or eqaul to 1 		
+						if(dependentCount >= 1){
+							$(".dependent_cls").find('.buttoncontainer').append(removebtn);
+							$(".dependent_cls:last").find('.buttoncontainer').append(addbtn);		
+						}
+						//for showing the serial number at dependent details
+						 var v=1;
+						 $(".dependent_cls").each(function(){
+							   $(this).find('.number').html('Dependent Details-'+v);
+							    v++;
+						 });
+								
+						var f=0;
+						var l=0;
+						var m=0;
+						var p=0;
+						var e=0;
+						var im=0;
+						var depn=1;
+						var pass=0;
+						var rel=0;
+						var status=0;
+						var dob=0;
+						
+						$(".dependent_cls").each(function(i) {
+								 $(this).attr('id',"dep_"+depn);depn++;
+						})
+						
+						//Dynamic Id in dependent class 		
+						$(".dependent_cls").find('input[type=text]').each(function(i) {
+							 if($(this).attr('id').indexOf('first') !=-1 ){
+								 $(this).attr('id',"first_"+f);f++;
+							 }
+							 
+							 if($(this).attr('id').indexOf('last') !=-1 ){
+								 $(this).attr('id',"last_"+l);l++;
+							 }
+							 
+							 if($(this).attr('id').indexOf('mobile') !=-1 ){
+								 $(this).attr('id',"mobile_"+m);m++;
+							 }
+							 
+							 if($(this).attr('id').indexOf('email') !=-1 ){
+								 $(this).attr('id',"email_"+e);e++;
+							 }
+							 
+							 if($(this).attr('id').indexOf('password') !=-1 ){
+							 	$(this).attr('id',"password_"+pass);pass++;
+						 	 }
+							 
+							 if($(this).attr('id').indexOf('pin') !=-1 ){
+								 $(this).attr('id',"pin_"+p);p++;
+							 }
+							 
+							 if($(this).attr('id').indexOf('dateofbirth_') !=-1 ){
+							 	$(this).attr('id',"dateofbirth_"+dob);dob++;
+						 	 }
+							 
+							 if($(this).attr('id').indexOf('imei') !=-1 ){
+								 $(this).attr('id',"imei_"+im);im++;
+							 }	
+							 
+						})
+								
+								 			
+						$(".dependent_cls").find('select').each(function(i) {
+							 if($(this).attr('id').indexOf('relation') !=-1 ){
+								 $(this).attr('id',"relation_"+rel);rel++;
+							 }
+							 if($(this).attr('id').indexOf('status_') !=-1 ){
+								 $(this).attr('id',"status_"+status);status++;
+							 }
+						})
+						
+						$(".datepickerforthis").datepicker({ 
+							format : 'dd-mm-yyyy',
+							endDate: new Date(),
+							autoclose : true
+						}) 
+			
+	} 
+			  	 
+	 	    //Remove Function in dependent at remove more
+			function RemoveDependent(ele){
+	 	 		var dependentCount = $(".dependent_cls").length;
+	 	 		//checking the condition if dependent is only then donot remove only hide and empty the feild
+				if(dependentCount !=1){
+					//alert("greater then 1 ------");
+		 			$(ele).parent('.buttoncontainer').parent('.row').parent('.dependent_cls').remove();
+		 			$(".dependent_cls:last").find('.buttoncontainer').html('');
+		 			$(".dependent_cls:last").find('.buttoncontainer').append(removebtn);
+		 			$(".dependent_cls:last").find('.buttoncontainer').append(addbtn);
+		 				
+				}
+			   
+			    
+			   if(dependentCount==1){
+				   var numid1= $(ele).parent('.buttoncontainer').parent('.row').parent('.dependent_cls').attr('id');
+			 	   var lastChar1 = numid1.slice(-1); 
+				   var lll1 = parseInt(lastChar1);
+				   var idIndex1=lll1-1;
+				    $("#dep_parent_class").hide();
+		 		    $("#first_"+idIndex1).val('');
+		 		    $("#last_"+idIndex1).val('');
+		 		    $("#mobile_"+idIndex1).val('');
+		 		    $("#email_"+idIndex1).val('');
+		 		    $("#password_"+idIndex1).val('');
+		 		    $("#pin_"+idIndex1).val('');
+		 		    $("#relation_"+idIndex1).val('');
+		 		    $("#dateofbirth_"+idIndex1).val('');
+		 		    $("#status_"+idIndex1).val(''); 
+		 		   countDependent=0;			 		
+		 		    if(addcountdepMemType>0){
+			 			$("#addDepbtn").show();
+		 		    }	 
+		 	   } 
+			   
+			     //for showing the serial number at dependent details
+				 var v=1;
+				 $(".dependent_cls").each(function(){
+					   $(this).find('.number').html('Dependent Details-'+v);
+					    v++; 
+				 })
+				 
+				    var f=0;
+					var l=0;
+					var m=0;
+					var p=0;
+					var e=0;
+					var im=0;
+					var depn=1;
+					var pass=0;
+					var rel=0;
+					var status=0;
+					var dob=0;
+					
+					$(".dependent_cls").each(function(i) {
+							 $(this).attr('id',"dep_"+depn);depn++;	
+					})
+					
+					//Dynamic Id in dependent class 		
+					$(".dependent_cls").find('input[type=text]').each(function(i) {
+						 if($(this).attr('id').indexOf('first') !=-1 ){
+							 $(this).attr('id',"first_"+f);f++;
+						 }
+						 
+						 if($(this).attr('id').indexOf('last') !=-1 ){
+							 $(this).attr('id',"last_"+l);l++;
+						 }
+						 
+						 if($(this).attr('id').indexOf('mobile') !=-1 ){
+							 $(this).attr('id',"mobile_"+m);m++;
+						 }
+						 
+						 if($(this).attr('id').indexOf('email') !=-1 ){
+							 $(this).attr('id',"email_"+e);e++;
+						 }
+						 
+						 if($(this).attr('id').indexOf('password') !=-1 ){
+						 	$(this).attr('id',"password_"+pass);pass++;
+					 	 }
+						 
+						 if($(this).attr('id').indexOf('pin') !=-1 ){
+							 $(this).attr('id',"pin_"+p);p++;
+						 }
+						 
+						 if($(this).attr('id').indexOf('dateofbirth_') !=-1 ){
+						 	$(this).attr('id',"dateofbirth_"+dob);dob++;
+					 	 }
+						 
+						 if($(this).attr('id').indexOf('imei') !=-1 ){
+							 $(this).attr('id',"imei_"+im);im++;
+						 }	 
+					})
+							
+							 			
+					$(".dependent_cls").find('select').each(function(i) {
+						 //alert($(this).attr('id').indexOf('first'));
+						 
+						 if($(this).attr('id').indexOf('relation') !=-1 ){
+							 $(this).attr('id',"relation_"+rel);rel++;
+						 }
+						 if($(this).attr('id').indexOf('status_') !=-1 ){
+							 $(this).attr('id',"status_"+status);status++;
+						 }
+					})
+					
+					$(".datepickerforthis").datepicker({ 
+						format : 'dd-mm-yyyy',
+						endDate: new Date(),
+						autoclose : true
+					}) 	 		   	
+			}   	 
+	 	    
+	      		//function for submit the record
+				$(function () {	 
+          			const ipAPI = 'https://api.ipify.org?format=json';
+	          			$("#sbmtdata").click(function(){
+        	            
+	          				var dataset = []; 
+	     					var increm=1;
+	     					$(".dependent_cls").each(function(i) {
+		     					increm=increm+i;
+		     					item = {};
+		     					item['Id']= $("#Id").val();
+		              			item['first_name_m']= $("#first_name_m").val();
+		         				item['last_name_m']= $("#last_name_m").val();
+		         				item['mobile_no_m']= $("#mobile_no_m").val();
+		         				item['email_m']= $("#email_m").val();
+		         				item['password_m']= $("#password_m").val();
+		         				item['pin_m']= $("#pin_m").val();
+		         				item['country_m']= $("#country_m").val();
+		         				item['state_m']= $("#state_m").val();
+		         				item['district_m']= $("#district_m").val();
+		         				item['zip_m']= $("#zip_m").val();
+		         				item['address_m']= $("#address_m").val();
+		         				item['member_type_m']= $("#member_type_m").val();
+		         				item['relation_m']= $("#relation_m").val();
+		         				item['registration_m']= $("#registration_m").val();
+		         				item['monthly_fee_m']= $("#monthly_fee_m").val();
+		         				item['joiningdate_m']= $("#joiningdate_m").val();
+		         				item['payment_mode_m']= $("#payment_mode_m").val();
+		         				item['status_m']= $("#status_m").val();
+		         				item['imei_m']= $("#imei_m").val(); 
+		         				item['userType']= $("#userType").val(); 
+		         				item['dateofbirth_m']= $("#dateofbirth_m").val(); 
+		     				
+		         	 			item['first_']=$("#first_"+i).val(); 
+		         	 			item['last_']=$("#last_"+i).val();
+		         	 			item['mobile_']=$("#mobile_"+i).val();
+		         	 			item['email_']=$("#email_"+i).val();
+		         	 			item['password_']=$("#password_"+i).val();
+		         	 			item['pin_']=$("#pin_"+i).val();
+		         	 			item['relation_']=$("#relation_"+i).val();
+		         	 			item['dateofbirth_']=$("#dateofbirth_"+i).val();
+		         	 			item['status_']=$("#status_"+i).val(); 
+		         	 			
+		         	 			item['insertOrder']=increm;  
+		         	 			
+		         	 			dataset.push(item);	
+		         	 			item = {};
+	         	 			})
+	         	 		 
+	         	 			console.log(dataset);
+	          		
+	     				 //   submitMemberRegistration(dataset);	
+	         				//Validation for common form data
+	     			 
+		     				 if (!blankValidation("first_name_m","TextField", "First Name can not be left blank"))
+		     	                 return false;
+		     				 
+		     				if (!blankValidation("last_name_m","TextField", "Last Name can not be left blank"))
+		    	                 return false;
+		     				
+		     				if (!blankValidation("mobile_no_m","TextField", "Mobile No.  can not be left blank"))
+		    	                 return false;
+		     				
+		     				//mobile number  validation after click on submit button
+		     				$("#mobile_no_m").on("blur", function(){
+		     			        var mobNum = $(this).val();
+		     			        var filtermob = /^\d*(?:\.\d{1,2})?$/;
+		     			          if (filtermob.test(mobNum)) {
+		     			            if(mobNum.length==10){ 
+		     			             } else {
+		     			            	$('#mobile_no_m').focus();
+		     			                swal('Please Enter 10  digit mobile number');
+		     			                return false; 
+		     			              }
+		     			            }
+		     			            else {
+		     			               $('#mobile_no_m').focus();
+		     			               swal('Not a valid number'); 
+		     			              return false;
+		     			           }
+		     			      });
+		    				 
+		    				if (!blankValidation("email_m","TextField", "Email can not be left blank"))
+		   	                 return false;
+		    				
+		    				//email id validation after click on submit button
+		    				var email_id_m=$("#email_m").val();
+		    				 var filter = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+		    				 if (filter.test(email_id_m)) {
+		    				 }
+		   					 else {
+		   						$('#email_m').focus();
+		   						 swal("Email is not valid");
+		   				 		return false;
+		   				 	 }
+		    				 
+		    				if (!blankValidation("password_m","TextField", "Password  can not be left blank"))
+		   	                 return false;
+		   				 
+		   				    if (!blankValidation("pin_m","TextField", "Pin can not be left blank"))
+		  	                 return false;
+		   				    
+		   				     //pin number  validation after click on submit button
+			   				 $("#pin_m").on("blur", function(){
+			   			        var pinNum = $(this).val();
+			   			        var filterpin = /^\d*(?:\.\d{1,2})?$/;
+	
+			   			          if (filterpin.test(pinNum)) {
+			   			            if(pinNum.length==4){
+			   			             } else {
+			   			            	$('#pin_m').focus();
+			   			                swal('Please Enter 4  digit pin number');
+			   			                return false; 
+			   			              }
+			   			            }
+			   			            else {
+			   			               $('#pin_m').focus();
+			   			               swal('Not a valid pin number'); 
+			   			              return false;
+			   			           }
+			   			     });
+			   				
+		     				
+		     				if (!blankValidation("country_m","SelectBox" ,"Please Select Country"))
+		     			        return false;
+		     				
+		     				if (!blankValidation("state_m","SelectBox" ,"Please Select State"))
+		     			        return false;
+		     				
+		     				if (!blankValidation("district_m","SelectBox" ,"Please Select District"))
+		     			        return false;
+		     				
+		     				if (!blankValidation("zip_m","TextField", "Zip can not be left blank"))
+		     	                 return false;
+		     				
+		     				//zip number  validation after click on submit button
+		     				$("#zip_m").on("blur", function(){
+			   			        var zipNum = $(this).val();
+			   			        var filterzip = /^\d*(?:\.\d{1,2})?$/;
+			   			          if (filterzip.test(zipNum)) {
+			   			            if(zipNum.length==6){ 
+			   			             } else {
+			   			            	$('#zip_m').focus();
+			   			                swal('Please Enter 6  digit zip number');
+			   			                return false; 
+			   			              }
+			   			            }
+			   			            else {
+			   			               $('#zip_m').focus();
+			   			               swal('Not a valid zip number');
+			   			              return false;
+			   			           }
+			   			    });
+		     	                 
+		     				if (!blankValidation("address_m","TextArea", "Address can not be left blank"))
+		     			        return false;
+		     				
+		     				if (!blankValidation("member_type_m","SelectBox", "Please Select Member Type"))
+		     			        return false;
+		     				
+		     				if (!blankValidation("relation_m","SelectBox", "Please Select Relation Type"))
+		     			        return false;
+		     				
+		     				if (!blankValidation("registration_m","TextField", "Registration Fee can not be left blank"))
+		     	                 return false;
+		     				
+		     				//registration fee  validation after click on submit button
+		     				$("#registration_m").on("blur", function(){
+		     			        var regNum = $(this).val();
+		     			        var filterreg = /^\d*(?:\.\d{1,2})?$/;
+		     			          if (filterreg.test(regNum)) {
+		     			            if(regNum>0){
+		     			             } else {
+		     			            	$('#registration_m').focus();
+		     			                swal('Please Enter Registration Fee more then Zero');
+		     			                return false; 
+		     			              }
+		     			            }
+		     			            else {
+		     			               $('#registration_m').focus();
+		     			               swal('Not a valid Registration Fee'); 
+		     			              return false;
+		     			           }
+		     			    
+		     			     });
+		     				 
+		     				if (!blankValidation("monthly_fee_m","TextField", "Monthly fee can not be left blank"))
+		    	                 return false;
+		     				
+		     				//monthly fee  validation after click on submit button
+		     				$("#monthly_fee_m").on("blur", function(){
+		     			        var monNum = $(this).val();
+		     			        var filtermon = /^\d*(?:\.\d{1,2})?$/;
+
+		     			          if (filtermon.test(monNum)) {
+		     			            if(monNum>0){ 
+		     			             } else {
+		     			            	$('#monthly_fee_m').focus();
+		     			                swal('Please Enter Monthly Fee more then Zero');
+		     			                return false; 
+		     			              }
+		     			            }
+		     			            else {
+		     			               $('#monthly_fee_m').focus();
+		     			               swal('Not a valid Monthly Fee');
+		     			              return false;
+		     			           }
+		     			  });
+		     				
+		     				if (!blankValidation("joiningdate_m","TextField", "Joining Date  can not be left blank"))
+		    	                 return false;
+		     				
+		     				if (!blankValidation("payment_mode_m","SelectBox", "Please Select Payment Mode"))
+		     			        return false;
+		
+		     				if (!blankValidation("status_m","SelectBox", "Please Select Status"))
+		     			        return false;
+		     				
+		     				submitMemberRegistration(dataset);	
+		     				
+		     				if(countDependent>0){ 
+		     					
+
+		     					var dependentCountsbmt = $(".dependent_cls").length;
+		     					var depidIndexDyn=dependentCountsbmt-1;
+		     					
+		     					for(var i=0;i<dependentCountsbmt;i++){
+		     						if (!blankValidation("first_"+i,"TextField", "First Name can not be left blank"))
+		     	       	                 return false;
+		     					}
+		     					
+		     					for(var i=0;i<dependentCountsbmt;i++){
+		     						 if (!blankValidation("last_"+i,"TextField", "Last Name can not be left blank"))
+		     	       	                 return false;
+		     					}
+		     					
+		     					
+		     					for(var i=0;i<dependentCountsbmt;i++){
+		    						 if (!blankValidation("mobile_"+i,"TextField", "Mobile can not be left blank"))
+		    	       	                 return false;
+		    					}
+		    					
+		     					//mobile number for dependent validation after click on submit button
+		     					for(var i=0;i<dependentCountsbmt;i++){
+		     						 var mobdep=$("#mobile_"+i).val();
+		   	      				     var filtermdep =/^\d*(?:\.\d{1,2})?$/;
+		   	      				     if (filtermdep.test(mobdep)) {
+		   	      				    if(mobdep.length==10){ 
+		     			             } else { 
+		     			                swal('Please Enter 10  digit mobile number');
+		     			                return false; 
+		     			              } 
+		   	      				     }
+		   	     					 	else {
+		   	     						   $('#mobile_'+i).focus();
+		   	     						   swal("Mobile number is not valid");
+		   	     				 		   return false;
+		   	     				 	    } 
+		   						}
+		     					 
+		     				    for(var i=0;i<dependentCountsbmt;i++){
+		     				    	 if (!blankValidation("email_"+i,"TextField", "Email can not be left blank"))
+		     	       	                 return false;
+		   					    }
+		  				     
+		     				 //email id for dependent validation after click on submit button 
+		     				   for(var i=0;i<dependentCountsbmt;i++){
+		     					  var emaildep3=$("#email_"+i).val();
+		         				   var filteremail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+		         				   if (filteremail.test(emaildep3)) {
+		         				   }
+		        					   else {
+		        						  $('#email_'+i).focus();
+		        						  swal("Email is not valid");
+		        				 		  return false;
+		        				 	   } 
+		 						}
+		     				   
+		     				  for(var i=0;i<dependentCountsbmt;i++){
+		     					 if (!blankValidation("password_"+i,"TextField", "Password can not be left blank"))
+		         	                   return false;
+							    }
+		     				  
+		     				  
+		     				 for(var i=0;i<dependentCountsbmt;i++){
+		     					if (!blankValidation("pin_"+i,"TextField", "Pin can not be left blank"))
+		        	                   return false;
+							    }
+		  				    
+		     				//pin number for dependent validation after click on submit button
+		     				for(var i=0;i<dependentCountsbmt;i++){
+		     					var pindep=$("#pin_"+i).val();
+		       				    var filterpdep =/^\d*(?:\.\d{1,2})?$/;
+		       				    if (filterpdep.test(pindep)) {
+		       				     if(pindep.length==4){ 
+	     			             } else { 
+	     			                swal('Please Enter 4 digit pin number');
+	     			                return false; 
+	     			              }
+		       				    }
+		      					   else {
+		      						  $('#pin_'+i).focus();
+		      						  swal("Pin number is not valid");
+		      				 		  return false;
+		      				 	   } 
+		   				     
+								}
+		     				
+		     				 for(var i=0;i<dependentCountsbmt;i++){
+		     					if (!blankValidation("relation_"+i,"SelectBox", "Please check Relation"))
+		        	                   return false;
+		 					    }
+		     				 
+		     				 for(var i=0;i<dependentCountsbmt;i++){
+		     					if (!blankValidation("dateofbirth_"+i,"TextField", "DOB can not be left blank"))
+		        	                   return false; 
+		     					
+		     				 }
+		     				 
+
+							   
+							   
+		     				 
+		     				for(var i=0;i<dependentCountsbmt;i++){
+		     					 var valueofrelationdep=$("#relation_"+i).val();
+		     					 if(valueofrelationdep != 'REL002'){
+			     					var ageLimitForchild=addcountagelimit;
+			     					var fullDate = new Date();  
+		    					    var twoDigitMonth = ((fullDate.getMonth().length+1) === 1)? (fullDate.getMonth()+1) : '0' + (fullDate.getMonth()+1);
+		    					    var currentDate = fullDate.getDate() + "-" + twoDigitMonth + "-" + fullDate.getFullYear();
+		    									
+		    						var parts = currentDate.split('-');
+		    					    var date33 = parts[0];
+		    					    var month33 = parts[1];
+		    					    var year = parts[2];
+		    					    var nowday=parseInt(date33);
+		    					    var nowmonth=parseInt(month33);
+		    					    var nowyear=parseInt(year);
+		    					        
+			    					 
+			     				    var gotdatefromdatepicker=$("#dateofbirth_"+i).val();
+			     				  
+			     				    var parts1 = gotdatefromdatepicker.split('-');
+		    					    var date11 = parts1[0];
+		    					    var month11 = parts1[1];
+		    					    var year11 = parts1[2];
+		    					    
+		    					    var birthday=parseInt(date11);
+		    					    var birthmonth=parseInt(month11);
+		    					    var birthyear=parseInt(year11);
+			     				    
+			     				    var age = nowyear - birthyear;
+			     				    var age_month = nowmonth - birthmonth;
+			     				    var age_day = nowday - birthday;
+		     				   
+			     				    if(age_month < 0 || (age_month == 0 && age_day <0)) {
+			     				            age = parseInt(age) -1;
+			     				        }
+		     				    
+				     				    if ((age == ageLimitForchild && age_month <= 0 && age_day <=0) || age < ageLimitForchild ) {
+				     				    } else {
+				     				    	 $('#dateofbirth_'+i).focus();
+				     				    	swal("Age should be with in  "+addcountagelimit+" years from today");
+				     				      //  swal("You have crossed your "+ageLimitForchild+" years age limit !");
+				     				        return false;
+				     				    }
+		     				 
+ 					                 }
+		     			        
+		                    	}
+							   
+		     				 
+		     				 for(var i=0;i<dependentCountsbmt;i++){
+		     					if (!blankValidation("status_"+i,"SelectBox", "Please check Status"))
+		        	                   return false;
+		 					    }	 
+			     		   } 
+	               })
+	               
+	               
+           function submitMemberRegistration(dataset){ 
+           		
+        			swal.fire({
+        				title				: "Are you sure want to Submit?",
+        				text				: "Once Submited,Can't revert back !",
+        				type 				: "warning",
+        				
+        				showCancelButton	: true,
+        				confirmButtonColor	: "#DD6BB5",
+        				confirmButtonText	:"Submit",
+        				showLoaderOnConfirm	: true,
+        				reverseButtons : true,
+        				confirmButtonAriaLabel : 'Thumbs up, great!',
+        				cancelButtonText : 'cancel',
+        				cancelButtonAriaLabel : 'Thumbs down',
+        				
+        				 preConfirm: () => {
+        				    return fetch(ipAPI)
+        				    .then(response => response.json())
+        				    .then(data => Swal.insertQueueStep(data.ip))
+        				      .catch(() => {
+        				        Swal.insertQueueStep({
+        				          type: 'error',
+        				          title: 'Unable to get your public IP'
+        				,        })
+        				      })
+        				 }   
+        			}).then((result) => {
+        				if(result.value){
+        					$.ajax({
+        					type		: "POST",
+        					url 		: "add-membership-registration",
+        					dataType	: "json",
+        					contentType	: "application/json",
+        					data		: JSON.stringify(dataset),
+        					success		: function(response){
+        						console.log(response);
+        						if(response.message=="Success"){
+        							swal({
+        									title:"Data Saved Successfully.",
+        									type: "success",
+        							}).then(function(){
+        								window.location.href="view-membership-registration-list";
+        							})
+        						}else{ 
+        							swal({
+        								title:response.code,
+        								text: response.message,
+        								type:"warning"
+        							})
+        						}
+        					},error		: function(response){
+        						swal(response.code);	
+        					}
+        				}) 
+        			}
+        		  }) 
+        		} 
+		});
+          		 
+ 	    
+ 	 	
+ 	 	//Get Dstrict Name List according to State Unchange Function
+ 	 	function districtFunction(event){
+ 	 		var Stateid = event.currentTarget.value;
+ 	 		if(Stateid !=""){
+ 	 			$("#district_m").empty();
+ 	 			$("#district_m").append(new Option("--Select--",""))
+ 	 		 	$.ajax({
+ 	 				type 		:	"POST",
+ 	 				 url 		:	"/user/add-membership-registration-getDistrictName-throughAjax", 
+ 	 				dataType 	:	'json',
+ 	 				contentType :	'application/json',
+ 	 				data 		:	JSON.stringify(Stateid),
+ 	 				success 	: 	function(response){
+ 	 					var items = response.body;
+ 	 					console.log('data for district == ',response);
+ 	 					if(response.message=="success"){
+ 	 						if(items.length>0){
+ 	 							for(var i=0;i<items.length;i++){
+ 	 								var option	= i.toString();
+ 	 								option		= new Option(items[i].name,items[i].key)
+ 	 								$(option).html(items[i].name);
+ 	 								$("#district_m").append(option);		
+ 	 							}
+ 	 						}
+ 	 					}else{
+ 	 						swal("Please Try Again");
+ 	 					}
+ 	 				},
+ 	 				error : function(data) {
+ 	 					swal(data);
+ 	 				}
+ 	 			})
+ 	 		}
+ 	 	}
+ 	 	
+ 	 	
+ 	 	var addcountdepMemType=0;
+ 	 	var addcountagelimit=0;
+		//Function for count dependent can add
+ 	 	function countDepMemType(event){
+ 	 		var memtypeid = event.currentTarget.value;
+ 	 		if(memtypeid !=""){
+ 	 		 	$.ajax({
+ 	 				type 		:	"POST",
+ 	 				 url 		:	"/user/add-membership-registration-getDepCount-throughAjax", 
+ 	 				dataType 	:	'json',
+ 	 				contentType :	'application/json',
+ 	 				data 		:	JSON.stringify(memtypeid),
+ 	 				success 	: 	function(response){
+ 	 					var items = response.body;
+ 	 					console.log('data for dependent count == ',response);
+ 	 					if(response.message=="success"){
+ 	 						if(items.length>0){
+ 	 							addcountdepMemType=items[0].limit;
+ 	 							addcountagelimit=items[0].agelimit;
+ 	 						}
+ 	 						    //alert('Age Limit for children is----- '+addcountagelimit+" only");
+ 	 							swal('You can add only '+addcountdepMemType+" dependent");
+ 	 							if(addcountdepMemType==0){
+ 	 								swal('You can not add any dependent');
+ 	 							}
+		     					var dependentCountrr = $(".dependent_cls").length;
+		     				//	alert('total div====='+dependentCountrr);
+		     					if(dependentCountrr==1){
+
+		     						$("#dep_parent_class").hide();
+		     						$("#addDepbtn").show();
+		     					}
+		     					//start
+		     					if(addcountdepMemType==0)
+		     						{
+		     						$("#addDepbtn").hide();
+		     						}
+		     					//stop
+		     					for(var i=dependentCountrr; i>1;i--){
+		     			 		    if(i==2){
+		     			 		    	 $(".dependent_cls:first").find('.buttoncontainer').append(addbtn);
+		     			 		    }
+			     						$("#dep_"+i).remove();
+			     						$("#dep_parent_class").hide();
+			     						$("#addDepbtn").show();
+			     			 		    $("#first_0").val('');
+			     			 		    $("#last_0").val('');
+			     			 		    $("#mobile_0").val('');
+			     			 		    $("#email_0").val('');
+			     			 		    $("#password_0").val('');
+			     			 		    $("#pin_0").val('');
+			     			 		    $("#relation_0").val('');
+			     			 		    $("#dateofbirth_0").val('');
+			     			 		    $("#status_0").val('');	
+		     					}
+ 	 					}else{
+ 	 						swal("Please Try Again");
+ 	 					}
+ 	 				},
+ 	 				error : function(data) {
+ 	 					swal(data);
+ 	 				}
+ 	 			})
+ 	 		}
+ 		 
+ 	 	}
+		 
+ 	 	
+ </script>
+</head>
+<div layout:fragment="content">
+	<div class="main mrt_20">
+		<div class="col-md-12">
+			<!--Alert Box-->
+			<div class="alert alert-success alert-dismissible"
+				style="display: none;">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>Success!</strong> Indicates a successful or positive action.
+			</div>
+			<div class="alert alert-danger alert-dismissible"
+				style="display: none;">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>Success!</strong> Indicates a successful or positive action.
+			</div>
+			<div class="alert alert-warning alert-dismissible"
+				style="display: none;">
+				<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+				<strong>Success!</strong> Indicates a successful or positive action.
+			</div>
+			<ol class="breadcrumb breadcrumb-arrow">
+				<li><a href="index.html">Home</a></li> 
+			    <li class="active"><a th:href="@{/user/add-membership-registration}">Add Member Registration</a></li>
+					
+				 
+			</ol>
+		</div>
+		<div class="card-title">
+			<h4>Add Club Member</h4>
+		</div>
+		<div class="container-fluid">
+
+			<div class="card">
+				<div class="card-body">
+					<div class="basic-elements">
+						<!--  <form action="javascript:void(0)" > -->
+
+						<form action="javascript:void(0)" th:object="${membership}">
+
+							<!--<div class="card">-->
+								<div class="row">
+									<div class="card-title">
+										<h4>Club-Member Details</h4>
+									</div>
+								</div>
+
+								<input type="hidden" th:field="*{memId}" />
+
+								<div class="row">
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>First Name</label> <input type="text"
+												th:field="*{first_name_m}" class="form-control" value="">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Last Name</label> <input type="text"
+												th:field="*{last_name_m}" class="form-control" value="">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Mobile No.</label> <input type="text"
+												th:field="*{mobile_no_m}" class="form-control" value="">
+										</div>
+									</div>
+									
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Email.</label> <input type="text"
+												th:field="*{email_m}" class="form-control">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Password</label> <input type="text"
+												th:field="*{password_m}" class="form-control">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>PIN</label> <input type="text" class="form-control"
+												th:field="*{pin_m}">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Country</label> <select class="form-control"
+												th:field="*{country_m}">
+												<option th:value="0">---Select---</option>
+												<option th:value="IN">India</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>State</label> <select class="form-control"
+												th:field="*{state_m}" onchange="districtFunction(event);">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${stateData}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>District</label> <select class="form-control"
+												th:field="*{district_m}">
+												<option th:value="0">---Select---</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>ZipCode</label><input type="text" class="form-control"
+												th:field="*{zip_m}">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Address</label>
+											<textarea class="form-control textarea"
+												th:field="*{address_m}" ></textarea>
+										</div>
+									</div>
+
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Member Type</label> <select class="form-control"
+												th:field="*{member_type_m}" onchange="countDepMemType(event);">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${memberData}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Relation</label> <select class="form-control"
+												th:field="*{relation_m}">
+												<option th:each="c:${relationselfData}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+											</select>
+
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Registration Fee</label> <input type="text"
+												class="form-control" th:field="*{registration_m}">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Monthly Fee</label> <input type="text"
+												th:field="*{monthly_fee_m}" class="form-control">
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group ">
+											<label>Joining Date</label> <input class="form-control"
+												th:field="*{joiningdate_m}">
+
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Payment Mode</label> <select class="form-control"
+												th:field="*{payment_mode_m}">
+												<option th:value="NULL">--Select--</option>
+												<option th:each="c:${paymentModeData}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-lg-6">
+										<div class="form-group">
+											<label>Status</label> <select class="form-control"
+												th:field="*{status_m}">
+
+												<option th:value="NULL">--Select--</option>
+												<option th:value="true">Active</option>
+												<option th:value="false">Inactive</option>
+											</select>
+										</div>
+									</div>
+									
+									 <div class="col-lg-6">
+										<div class="form-group ">
+											<label>DOB</label> <input type="text"
+												class="form-control datepickerforthis dob"
+												th:field="*{dateofbirth_m}"  value="">
+			
+										</div>
+									</div>
+									
+									<div class="col-lg-2">
+										<div class="form-group" style="display: none;">
+											<label>User Type</label> <select class="form-control"
+												th:field="*{userType}">
+												<option th:each="c:${UTypedata}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+											</select>
+										</div>
+									</div>
+
+									<div class="col-lg-2">
+										<div class="form-group" style="display: none;">
+											<label>IMEI</label> <input type="text" class="form-control"
+												value="" th:field="*{imei_m}">
+										</div>
+									</div>
+									
+									<div class="col-lg-2">
+										<input type="button" style="text-align: right;" id="addDepbtn"
+											value="Add Dependent!" class="btn btn-success"
+											onclick="addDependentBtn();" />
+									</div>
+								</div>
+
+								<div style="clear: both;"></div>
+							<!--</div>-->
+							<div id="dep_parent_class" class="dependent_parent_cls" style="display: none;">
+
+								<div class=" dependent_cls" id="dep_1" >
+
+									<div class="row card-title">
+										<h4  class="number">Dependent Details-1</h4>
+
+									</div>
+
+									<div class="row">
+
+										<input type="hidden" id="name_0" name="name_"
+											class="form-control nameCls">
+
+										<div class="col-lg-6">
+											<div class="form-group">
+												<label>First Name</label> <input type="text" id="first_0"
+													name="first_" class="form-control firstCls">
+											</div>
+										</div>
+
+										<div class="col-lg-6">
+											<div class="form-group">
+												<label>Last Name</label> <input type="text" id="last_0"
+													name="last_" class="form-control last">
+											</div>
+										</div>
+
+										<div class="col-lg-6">
+											<div class="form-group">
+												<label>Mobile No.</label> <input type="text" id="mobile_0"
+													name="mobile_" class="form-control mobile">
+											</div>
+										</div>
+
+										<div class="col-lg-6">
+											<div class="form-group">
+												<label>Email.</label> <input type="text" id="email_0"
+													name="email_" class="form-control email">
+											</div>
+										</div>
+
+										<div class="col-lg-6">
+											<div class="form-group password">
+												<label>Password</label> <input type="text" id="password_0"
+													name="password_" class="form-control password">
+											</div>
+										</div>
+
+										<div class="col-lg-6">
+											<div class="form-group pin">
+												<label>PIN</label> <input type="text"
+													class="form-control pin" id="pin_0" name="pin_">
+											</div>
+										</div>
+
+										<div class="col-lg-6">
+											<div class="form-group ">
+												<label>Relation</label> <select
+													class="form-control relation" id="relation_0"
+													name="relation_">
+													<option th:value="NULL">---Select---</option>
+													<option th:each="c:${relationData}" th:value='${c.key}'
+														th:text="${c.name}"></option>
+												</select>
+											</div>
+										</div>
+
+										<div class="col-lg-6">
+											<div class="form-group ">
+												<label>DOB</label> <input type="text"
+													class="form-control datepickerforthis dob"
+													id="dateofbirth_0" name="dateofbirth_" value="">
+
+											</div>
+										</div>
+										
+										<div class="col-lg-6">
+											<div class="form-group">
+												<label>Status</label> <select class="form-control status"
+													id="status_0" name="dstatus_">
+													<option th:value="NULL">---Select---</option>
+													<option th:value="true">Active</option>
+													<option th:value="false">Inactive</option>
+												</select>
+											</div>
+										</div>
+
+										<div class="col-lg-6">
+											<div class="form-group" style="display: none;">
+												<label>IMEI</label> <input th:field="*{imei_}" type="text"
+													class="form-control imei" value="">
+											</div>
+										</div>
+
+										<div class="col-md-12 buttoncontainer" align="right">
+											<button type="button" class="btn btn-warning rmv"
+												value="value" onClick="RemoveDependent(this)">
+												<span class="ti-minus"></span>
+											</button>
+											
+											<button type="button" class="btn btn-success addmore"
+												value="value" onClick="AddMoreDependent(this)">
+												<span class="ti-plus"></span>
+											</button>
+										</div>
+									</div>
+
+									<div class="basic-elements"></div>
+
+								</div>
+
+							</div>
+							<div class="row">
+								<div class="col-md-12 form-group">
+
+								<input type="submit" id="sbmtdata" value="Submit"
+									class="btn btn-success" />&nbsp; <input type="reset"
+									value="Cancel" class="btn btn-warning"
+									onclick="window.location.reload();" />
+							</div>		
+							</div>
+						</form>
+					</div>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

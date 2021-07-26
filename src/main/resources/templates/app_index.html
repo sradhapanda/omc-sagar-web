@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+      <meta name="description" content="Soft Themez - Software Landing Page Template">
+      <meta name="keywords" content="Software, Bootstrap4, modern, flat style, responsive, business, mobile, blog, bootstrap 4, html5, css3, jquery, js, gallery, slider, touch, creative, clean">
+      <meta name="author" content="Askbootstrap">
+      <title>Atithya Software</title>
+      <!-- Favicon Icon -->
+      <!-- Favicon Icon -->
+      <!-- Bootstrap core CSS -->
+      <link href="../assets/index_css/bootstrap.css" rel="stylesheet">
+      <!-- Font Awesome -->
+     <!--  <link href="css/fontawesome-all.css" rel="stylesheet"> -->
+      <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+
+      
+      <!-- Owl Stylesheets -->
+      <link rel="stylesheet" href="../assets/index_css/owl_002.css">
+      <link rel="stylesheet" href="assets/index_css/owl.css">
+      <!-- Animate CSS  -->
+      <link href="../assets/index_css/animate.css" rel="stylesheet">
+      <!-- Custom styles for this template -->
+      <link href="assets/index_css/style.css" rel="stylesheet">
+      <!-- Custom styles for this template -->
+      <link href="assets/index_css/multi-page.css" rel="stylesheet">
+  </head>
+
+   <body id="page-top">
+      <!-- Modal -->
+      <div class="modal fade" id="login" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+         <div class="modal-dialog" role="document">
+            <div class="modal-content">
+               <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">SIGN IN</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                  </button>
+               </div>
+               <div class="modal-body">
+               <form th:action="@{/login}" method="post">
+                            	<fieldset>
+				                <div style="color:red;" th:if="${loginMessage}"  class="alert alert-error">    
+				                    <span th:text="${loginMessage}">Invalid message and password.</span>
+				                </div>
+				                <!--<div th:if="${param.logout}" class="alert alert-success"> 
+				                    You have been logged out.
+				                </div>-->
+                                <div class="form-group">
+                                    <!--<label>Email address</label>-->
+                                    <input type="text" id="username" name="username" class="form-control" placeholder="Email">
+                                </div>
+                                <div class="form-group">
+                                    <!--<label>Password</label>-->
+                                    <input type="password" id="password" name="password" class="form-control" placeholder="Password">
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> Remember Me
+                                    </label> &nbsp; 
+                                    <label class="pull-right">
+                                        <a href="#">Forgotten Password?</a>
+                                    </label>
+
+                                </div>
+                                
+                                <button type="submit" class="btn btn-primary btn-block">Sign in</button>
+                               
+                                    <!--<div class="social-button row">
+                                       <div class="col-md-6"><button type="button" class="btn btn-social bg-facebook btn-flat btn-addon m-b-10"><i class="ti-facebook"></i>Facebook</button></div> 
+                                        <div class="col-md-6"><button type="button" class="btn btn-social bg-twitter btn-flat btn-addon m-t-10"><i class="ti-twitter"></i>Twitter</button></div> 
+                                    </div>-->
+                                
+                                <div class="register-link m-t-15 text-center">
+                                    <p>Don't have account ? <a href="register"> Sign Up Here</a></p>
+                                </div>
+                                </fieldset> 
+                            </form>
+               
+                  <!--<form th:action="@{/login}" method="post">
+                     <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                     </div>
+                     <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                     </div>
+                     <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                  </form>-->
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="navbar-top">
+         <div class="container">
+            <div class="row">
+               <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6 text-left">
+                  
+               </div>
+               <div class="col-lg-6 col-sm-6 col-xs-6 col-md-6 text-right">
+                  <ul class="list-inline">
+                     <li class="list-inline-item">
+                        <a href="#"><i class="fa fa-mobile"></i> +91 674-2747047</a>
+                     </li>
+                     <li class="list-inline-item">
+                        <a href="#"><i class="fa fa-headphones"></i> Contact Us</a>
+                     </li>
+                     <li class="list-inline-item">
+                        <span>Download App</span> &nbsp;
+                        <a href="#"><i class="fab fa-windows"></i></a>
+                        <a href="#"><i class="fab fa-apple"></i></a>
+                        <a href="#"><i class="fab fa-android"></i></a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div class="homebanner" data-ride="carousel">
+      <header class=" text-white">
+         <nav class="navbar navbar-expand-lg" id="mainNav">
+            <div class="container">
+               <a class="navbar-brand" href="index.html">
+                  <img class="img-fluid" src="assets/images/logoatithya.png" alt="">
+               </a>
+               <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+               <span class="navbar-toggler-icon"></span>
+               </button>
+               <div class="collapse navbar-collapse" id="navbarResponsive">
+                  <ul class="navbar-nav ml-auto">
+                     <li class="nav-item">
+                        <a class="nav-link active" href="index.html"><i class="fas fa-home"></i> Home</a>
+                     </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="#features">
+                        Features
+                        </a>
+                        
+                     </li>
+
+                     <li class="nav-item">
+                         <a class="nav-link" href="#about">
+                        About PMS
+                        </a>
+                        
+                     </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="#testimonials">
+                        Testimonials
+                        </a>
+                       
+                     </li>
+                     <!-- <li class="nav-item">
+                        <a class="menu-btn btn-warning" href="#"><i class="fa fa-file"></i> Hotel Audit Report</a>
+                     </li> -->
+                      <li class="nav-item">
+                        <a class="menu-btn btn-success" href="#"><i class="fa fa-user-circle"></i> Free Trail</a>
+                     </li>
+                     <li class="nav-item">
+                        <a class="menu-btn btn-primary" data-toggle="modal" data-target="#login" href="#"><i class="fa fa-user-circle"></i> Sign In</a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </nav>
+      </header>
+
+    <div class="container">
+      <!--search section-->
+      <div class="searchsection">
+         <div class="search">
+         <input type="text" class="searchTerm" placeholder="What are you looking for?">
+         <button type="submit" class="searchButton">
+           <i class="fa fa-search"></i>
+         </button>
+         </div>
+      </div>   
+
+      <div class="bannerheading"><h3>An Integrated PMS Empowered by Innovation To Mange All Your Hotel Operations Effortlessly</h3></div>
+         <!--search section-->   
+         <!-- Features Section -->
+ 
+         <div class="row">
+            <div class="col-md-2 col-sm-6 col-xs-12">
+               <div class="hexagonbig" align="center">
+                  <a href="#">
+                      <div class="hexagon1">
+                        <img src="../assets/images/reservation.png">
+                         <div class="text">Reservation Center</div>
+                      </div>
+                  </a>
+               </div>
+            </div>
+            <div class="col-md-2 col-sm-6 col-xs-12 stylebtm">
+               <div class="hexagonbig" align="center">
+                  <a href="#">
+                   <div class="hexagon2">
+                      <img src="../assets/images/reception.png">
+                      <div class="text">Front Office Operations</div>
+                   </div>
+                  </a>
+               </div>
+            </div>
+            <div class="col-md-2 col-sm-6 col-xs-12">
+               <div class="hexagonbig" align="center">
+                  <a href="#">
+                      <div class="hexagon3">
+                        <img src="../assets/images/invoicing.png">
+                        <div class="text">Invoicing & Billing</div>
+                      </div>
+                 </a>
+               </div>
+            </div>
+            <div class="col-md-2 col-sm-6 col-xs-12 stylebtm">
+               <div class="hexagonbig" align="center">
+                  <a href="#">
+                      <div class="hexagon4">
+                        <img src="../assets/images/audit.png">
+                        <div class="text">Trouble-free Audit Trails</div>
+                      </div>
+                 </a>
+               </div>
+            </div>
+            <div class="col-md-2 col-sm-6 col-xs-12">
+               <div class="hexagonbig" align="center">
+                  <a href="#">
+                     <div class="hexagon5">
+                        <img src="../assets/images/profile.png">
+                        <div class="text">Profile Management</div>
+                     </div>
+                  </a>
+               </div>
+            </div>
+            <div class="col-md-2 col-sm-6 col-xs-12 stylebtm">
+               <a href="#">
+                  <div class="hexagonbig" align="center">
+                     <div class="hexagon6">
+                        <img src="../assets/images/housekeeping.png">
+                     <div class="text">Housekeeping & laundry</div>
+                     </div>
+                  </div>
+               </a>
+            </div>
+         </div>
+         <div class="clearfix"></div>    
+         <div class="smallheading">To run your hotel business smoothly</div>
+
+         <div align="center" class="mrt_20"><button class="btn btn-success">Get Your Free Trail Instantly!</button></div>
+         
+     </div>    
+      </div>
+      <section class="features-block" id="features">
+         <div class="container">
+            <div class="section-title text-center">
+               <span class="badge badge-primary">Features</span>
+               <h2>Best Features Ever</h2>
+               <span class="section-title-line"></span>
+            </div>
+            <div class="row">
+               <div class="col-md-4 servicebox">
+                  <div class="features-item text-center">
+                     <img class="img-fluid mb-4" src="../assets/images/01.png" alt="" >
+                     <h5 class="mb-4">Reservation Center</h5>
+                     <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                  </div>
+               </div>
+               <div class="col-md-4 servicebox">
+                  <div class="features-item text-center">
+                     <img class="img-fluid mb-4" src="../assets/images/03.png" alt="">
+                     <h5 class="mb-4">Front Office Operations</h5>
+                     <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                  </div>
+               </div>
+               <div class="col-md-4 servicebox">
+                  <div class="features-item text-center">
+                     <img class="img-fluid mb-4" src="../assets/images/dashboard.png" alt="">
+                     <h5 class="mb-4">Dashboard</h5>
+                     <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                  </div>
+               </div>
+           
+           
+               <div class="col-md-4 servicebox">
+                  <div class="features-item text-center">
+                     <img class="img-fluid mb-4" src="../assets/images/master.png" alt="">
+                     <h5 class="mb-4">Master</h5>
+                     <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                  </div>
+               </div>
+               <div class="col-md-4 servicebox">
+                  <div class="features-item text-center">
+                     <img class="img-fluid mb-4" src="../assets/images/user_img.png" alt="">
+                     <h5 class="mb-4">User</h5>
+                     <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                  </div>
+               </div>
+               <div class="col-md-4 servicebox">
+                  <div class="features-item text-center">
+                     <img class="img-fluid mb-4" src="../assets/images/10.png" alt="">
+                     <h5 class="mb-4">Property</h5>
+                     <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                  </div>
+               </div>
+               <div class="col-md-4 servicebox">
+                  <div class="features-item text-center">
+                     <img class="img-fluid mb-4" src="../assets/images/13.png" alt="">
+                     <h5 class="mb-4">Material And Purchase</h5>
+                     <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                  </div>
+               </div>
+               <div class="col-md-4 servicebox">
+                  <div class="features-item text-center">
+                     <img class="img-fluid mb-4" src="../assets/images/laundry.png" alt="">
+                     <h5 class="mb-4">Laundry</h5>
+                     <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                  </div>
+               </div>
+               <div class="col-md-4 servicebox">
+                  <div class="features-item text-center">
+                     <img class="img-fluid mb-4" src="../assets/images/11.png" alt="">
+                     <h5 class="mb-4">Maintenance</h5>
+                     <p>It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+
+      <section class="features-mid-block" id="about">
+         <div class="container">
+            <div class="section-title text-center">
+               <h2>A Hotel PMS for your daily operations</h2>
+               <span class="section-title-line"></span>
+            </div>
+            <div class="row">
+               <div class="col-md-5">
+                  <div class="features-mid-right text-left">
+                     <img class="img-fluid" src="../assets/images/service.png" alt="">
+                  </div>
+               </div>
+               <div class="col-md-7">
+                 
+                     <div class="row">
+                     <div class="col-md-6 mrb_10">
+                        <div class="dailyoprticon"><img src="../assets/images/arrival-deparature.png"></div>
+                        <h6 class="subheading">Quick arrivals, departures</h6>
+                        <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...</div>
+                     </div>
+                     <div class="col-md-6 mrb_10">
+                        <div class="dailyoprticon"><img src="../assets/images/reservation1.png"></div>
+                        <h6 class="subheading">Reservations and offline bookings</h6>
+                        <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...</div>
+                     </div>
+                     <div class="col-md-6 mrb_10">
+                        <div class="dailyoprticon"><img src="../assets/images/credit-card.png"></div>
+                        <h6 class="subheading">Credit card verification</h6>
+                        <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...</div>
+                     </div>
+                     <div class="col-md-6 mrb_10">
+                        <div class="dailyoprticon"><img src="../assets/images/user-role.png"></div>
+                        <h6 class="subheading">User roles and privileges</h6>
+                        <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...</div>
+                     </div>
+                     <div class="col-md-6 mrb_10">
+                        <div class="dailyoprticon"><img src="../assets/images/house-keeping.png"></div>
+                        <h6 class="subheading">Housekeeping management</h6>
+                        <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...</div>
+                     </div>
+                     <div class="col-md-6 mrb_10">
+                        <div class="dailyoprticon"><img src="../assets/images/travel-management1.png"></div>
+                        <h6 class="subheading">Travel agents management</h6>
+                        <div>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do...</div>
+                     </div>
+                     </div>
+                     <button type="button" class="btn btn-primary">Create Your Account</button>
+                  
+               </div>
+            </div>
+         </div>
+      </section>
+
+      
+      <section class="blog-block" id="testimonials">
+         <div class="container">
+            <div class="section-title text-center">
+               <span class="badge badge-primary">Testimonial</span>
+               <h2>What Client Says</h2>
+               <span class="section-title-line"></span>
+            </div>
+            <div class="row">
+               <div class="blogs-slider owl-carousel owl-theme">
+                  <div class="item">
+                     <div class="card theme-card blog-card">
+                        <div class="card-body">                            
+                              <div class="custom-card testimonials-item text-center">
+                                 <img class="img-fluid mb-4" src="../assets/images/professional.png" alt="">
+                                 <p class="mb-4">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.</p>
+                                 <h6 class="mb-0 text-primary">- Devil Jhon</h6>
+                                 <small>Web Designer</small>
+                              </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="item">
+                     <div class="card theme-card blog-card">
+                        <div class="card-body">
+                              <div class="custom-card testimonials-item text-center">
+                                 <img class="img-fluid mb-4" src="../assets/images/professional.png" alt="">
+                                 <p class="mb-4">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.</p>
+                                 <h6 class="mb-0 text-primary">- Devil Jhon</h6>
+                                 <small>Web Designer</small>
+                              </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="item">
+                     <div class="card theme-card blog-card">
+                      
+                        <div class="card-body">
+                              <div class="custom-card testimonials-item text-center">
+                                 <img class="img-fluid mb-4" src="../assets/images/professional.png" alt="">
+                                 <p class="mb-4">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.</p>
+                                 <h6 class="mb-0 text-primary">- Devil Jhon</h6>
+                                 <small>Web Designer</small>
+                              </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="item">
+                     <div class="card theme-card blog-card">
+                        <div class="card-body">
+                              <div class="custom-card testimonials-item text-center">
+                                 <img class="img-fluid mb-4" src="../assets/images/professional.png" alt="">
+                                 <p class="mb-4">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been.</p>
+                                 <h6 class="mb-0 text-primary">- Devil Jhon</h6>
+                                 <small>Web Designer</small>
+                              </div>                          
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+      <section class="sign-up-block" id="sign-up">
+         <div class="container">
+            <div class="section-title text-center">
+               <span class="badge badge-danger">Let’s Start</span>
+               <h2>Sign Up For Free Trial</h2>
+               <span class="section-title-line"></span>
+            </div>
+            <div class="row">
+               <div class="col-md-8 mx-auto">
+                  <div class="sign-up-form">
+                     <form>
+                        <div class="input-group">
+                           <input placeholder="Your Name" type="text" class="form-control">
+                           <input placeholder="Your Email" type="text" class="form-control">
+                           <div class="input-group-prepend">
+                              <button class="btn btn-primary" type="button">Start Your Free Trial</button>
+                           </div>
+                        </div>
+                     </form>
+                     <p class="mt-3 text-center">Create Your <a class="text-primary" href="#">FREE</a> Account Now & Get 30 days <a class="text-primary" href="#">FREE</a> trial. No credit card required</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </section>
+     <!--  <section class="section footer">
+         <div class="container">
+            <div class="row">
+               <div class="col-md-6 col-lg-3 col-sm-6 col-xs-6">
+                  <h6>Solutions</h6>
+                  <ul>
+                     <li><a href="#">Property management</a></li>
+                     <li><a href="#">PMS on Mobile</a></li>
+                     <li><a href="#">Hotel Website Booking Engine</a></li>
+                     <li><a href="#">Hotel Chanel Manager</a></li>
+                     <li><a href="#">Central Reservation System</a></li>
+                     <li><a href="#">Reputation Management System</a></li>
+                     
+                  </ul>
+               </div>
+               <div class="col-md-6 col-lg-3 col-sm-6 col-xs-6">
+                  <h6>Property</h6>
+                  <ul>
+                     <li><a href="#">Hotel</a></li>
+                     <li><a href="#">Resort</a></li>
+                     <li><a href="#">Resturant</a></li>
+                     <li><a href="#">Serviced Apartment</a></li>
+                     <li><a href="#">Guest Houses</a></li>
+                     <li><a href="#">B & Bs</a></li>
+                  </ul>
+               </div>
+               <div class="col-md-6 col-lg-3 col-sm-6 col-xs-6">
+                  <h6>Company</h6>
+                  <ul>
+                     <li><a href="#">About Us</a></li>
+                     <li><a href="#">Why Choose Atithya</a></li>
+                     <li><a href="#">Our Blog</a></li>
+                     <li><a href="#">Term Condition</a></li>
+                     <li><a href="#">Privacy policy</a></li>
+                     <li><a href="#">Contact Us</a></li>
+                  </ul>
+               </div>
+               <div class="col-md-6 col-lg-3 col-sm-6 col-xs-6 contact-footer">
+                  <h6>Contact Us</h6>
+                  <ul>
+                     <li><a href="#"><i class="fa fa-compass "></i>Bhubaneswar, Odisha, INDIA</a></li>
+                     <li><a href="#"><i class="fa fa-mobile"></i> +91 12345-67890</a></li>
+                     <li><a href="#"><i class="fa fa-envelope-open"></i>info@atithya.com</a></li>
+                     <li><a href="#"><i class="fa fa-print"></i> +91 12345-67890</a></li>
+                     <li><a href="#"><i class="fa fa-globe"></i> www.atithya.com</a></li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+      </section> -->
+      <footer class="py-5 text-center">
+         <div class="container">
+            <div class="social-icons mb-3">
+            
+               <a href="#"><i class="fab fa-facebook"></i></a>
+               <a href="#"><i class="fab fa-google-plus"></i></a>
+               <a href="#"><i class="fab fa-instagram"></i></a>
+               
+            </div>
+            <p class="mt-0 mb-0">&copy; Copyright 2019 Atithya. All Rights Reserved</p>
+            <p class="mt-0 mb-0">Powered by :
+            <a class="text-primary"  target="_blank" href="#">Nirmalya Labs Pvt. Ltd.</a>
+            </p>
+         </div>
+      </footer>
+     <!-- Bootstrap core JavaScript -->
+      <script src="assets/index_js/jquery_002.js"></script>
+      <script src="assets/index_js/bootstrap.js"></script>
+      <!-- Plugin JavaScript -->
+      <script src="assets/index_js/jquery.js"></script>
+      <!-- Scrolling Nav JavaScript -->
+      <script src="assets/index_js/scrolling-nav.js"></script>
+      <!-- Contact Form JavaScript -->
+      <script src="assets/index_js/jqBootstrapValidation.js"></script>
+      <script src="assets/index_js/contact_me.js"></script>
+      <!-- Owl Carousel javascript -->
+      <script src="assets/index_js/owl.js"></script>
+      <!-- WOW JavaScript -->
+      <script src="assets/index_js/wow.js"></script>
+      <!-- Custom JavaScript -->
+      <script src="assets/index_js/custom.js"></script>
+
+   
+   </body>
+</html>
+

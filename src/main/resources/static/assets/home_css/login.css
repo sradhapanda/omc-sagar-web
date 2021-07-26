@@ -1,0 +1,139 @@
+	/* Coded with love by Mutiullah Samim */
+		body,
+		html {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+			
+			background: url('../assets/home_img/banner_18.jpg');
+		}
+		.user_card {
+			height: 300px;
+			width: 350px;
+			margin-top: 200px;
+			margin-bottom: auto;
+
+			background: #e0e0e0;
+			position: relative;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			padding: 10px;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			border-radius: 5px;
+
+		}
+		.brand_logo_container {
+			position: absolute;
+			height: 140px;
+			width: 140px;
+			top: -75px;
+			border-radius: 50%;
+			background: #ffcc33;
+			padding: 10px;
+			text-align: center;
+			margin-left:-70px;
+			left:50%;
+		}
+		.brand_logo {
+			height: 120px;
+			width: 120px;
+			border-radius: 50%;
+			border: 2px solid white;
+			background:#e0e0e0; 
+		}
+		.form_container {
+			margin-top:20px;
+		}
+		.login_btn {
+		    width: auto;
+		    background: #c0392b !important;
+		    color: white !important;
+		    margin: 0px 10px;
+		}
+		.login_submit {
+		    width: auto;
+		    background: #106436 !important;
+		    color: white !important;
+		    margin: 0px 10px;
+		    padding:8px 40px;
+		 }		
+		.login_btn:focus {
+			box-shadow: none !important;
+			outline: 0px !important;
+		}
+		.login_container {
+			padding: 0 .5rem;
+		}
+		.form-control {
+		    display: block;
+		    width: 100%;
+		    height: calc(2.25rem + 2px);
+		    padding: .375rem 1rem;
+		    font-size: 1rem;
+		    font-weight: 400;
+		    line-height: 1.5;
+		    color: #495057;
+		    background-color: #fff;
+		    background-clip: padding-box;
+		    border: 1px solid #ced4da;
+		    border-radius: .25rem;
+		    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+		}
+		.input-group-text {
+			background: #c0392b !important;
+			color: white !important;
+			border: 0 !important;
+			border-radius: 0.25rem 0 0 0.25rem !important;
+		}
+		.input_user,
+		.input_pass:focus {
+			box-shadow: none !important;
+			outline: 0px !important;
+		}
+		.custom-checkbox .custom-control-input:checked~.custom-control-label::before {
+			background-color: #c0392b !important;
+		}
+		.header
+		{
+			background: rgba(255,255,255,0.7);
+    padding: 10px;
+    text-align: center;
+    color: #931b1e;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    font-size: 48px;
+    font-weight: bold;
+    border-bottom: 5px solid #106436;
+		}
+
+		.footer
+		{
+			background: #242424;
+			padding:5px;
+			text-align: center;
+			color:#666666;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			font-size:12px; 
+		}
+		
+		/*Bikash OMC*/
+		.forgotpassword:hover
+		{
+		color:#c0392b!important;
+		text-decoration:none;
+		cursor:pointer;		
+		}
+		.forgotpassword
+		{
+		color:#38cec0;
+		text-decoration:none;
+		cursor:pointer;
+		}

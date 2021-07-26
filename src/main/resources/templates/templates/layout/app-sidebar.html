@@ -1,0 +1,48 @@
+<html xmlns:th="http://www.thymeleaf.org" th:fragment="sidebar">
+<div class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures">
+	<div class="nano">
+		<div class="nano-content">
+			<ul>
+				<li id="dash" class="active">
+				<a href="/index-dashboard"><i class="ti-home"></i>Dashboard</a></li>
+			</ul>
+			<ul>
+				<li th:if="${ #lists.contains(session.USER_ROLES, 'rol021')   }" class="moDule" th:each="module,abm :  ${session.MENU}"
+					th:id="${#strings.replace(module.name,' ','')}
+					+${abm.count}">
+					<a class="sidebar-sub-toggle pclass">  
+						<img th:src="${'/document/module/thumb/' + module.moduleLogoName}" /> 
+					 	<span class="modList" th:text="${module.name}"></span>
+					 	<span class="sidebar-collapse-icon ti-angle-down"></span>
+					</a>
+					<ul>
+						<li class="funTion" th:each="function,func : ${module.module}"
+							th:id="${#strings.replace(module.name,' ','')}
+							+${#strings.replace(function.name,' ','')}
+							+${func.count}">
+							<a class="sidebar-sub-toggle cclass"> 
+								<span class="ti-control-forward"></span> 
+								<span th:text="${function.name}" class="funclist"></span>
+	                            <span class="sidebar-collapse-icon ti-angle-down"></span>
+                            </a>
+							<ul>
+								<li class="acTivity"
+									th:each="activity,act : ${function.function}"
+									th:id="${#strings.replace(module.name,' ','')}
+									+${#strings.replace(function.name,' ','')}
+									+${#strings.replace(activity.name,' ','')}
+									+'1'"><!-- +${act.count}"> -->
+									<a class="activityClass" th:href="${activity.activity}">
+	 									<span th:text="${activity.name}" class="actlist"></span>
+	 								</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- /# sidebar -->
+</html>

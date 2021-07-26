@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script src="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<style>
+
+	.pdf
+{
+color:#F00;
+}
+.excel
+{
+color:#027d39;
+}
+.word
+{
+color:#024a7d;
+}
+.main-div{
+display:block;
+width:100%;
+}
+.sec-1 {
+float: left;
+    margin: 5px 10px;
+    /* margin-left: 31px; */
+    background-color: #f7f7f7;
+    border: 1px solid #e5e5e5;
+    /* margin-bottom: 15px; */
+    padding: 12px;
+    width: 157px;
+}
+
+.ui-autocomplete-loading {
+	background: white url("/static/images/ui-anim_basic_16x16.gif") right
+		center no-repeat;
+}
+</style>
+
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+		<div class="col-md-12">
+			<ol class="breadcrumb breadcrumb-arrow">
+				<li><a href="/index-dashboard">Home</a></li>
+				<!-- <li><a href="add-section-master">Upload Documents</a></li> -->
+			</ol>
+		</div>
+		</div>
+		<div class="card-title">
+			<h4>Uploaded Documents</h4>
+		</div>
+		<div class="container-fluid">
+
+			<div class="card">
+				
+			<div class="row">
+		<div th:each="c,iter:${auditReport}">			
+	<div class="sec-1" th:if="${c.docName!=null && c.docName!=''}" >
+      <div class="img-xl" >
+        <img   th:utext="${c.key}" class="image-fluid">
+      </div>
+      <div class="txt"  th:text="${'('+c.docName+')'}">suprabha.png</div>
+         <div  class="txt" th:text="${c.name }">suprabha.png</div>
+         
+    </div>
+			</div>		
+						</div>
+					
+			</div>
+			
+		</div>
+
+	
+		<!-- Modal End-->
+		<!-- /# row -->
+	</div>
+</div>
+</html>

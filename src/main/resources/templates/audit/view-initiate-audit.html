@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script
+	src="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<style type="text/css">
+textarea {
+	overflow: auto;
+	resize: vertical;
+	width: 350px;
+}
+
+.zoombox3 {
+	position: relative;
+	background: #f00;
+	height: 28px;
+	width: 18px;
+	color: #fff;
+	padding: 5px;
+	top: -35px;
+	right: -331px;
+	border-radius: 2px;
+}
+</style>
+
+<script type="text/javascript">
+//Deleting the Item
+
+function deleteAudit(id){
+	swal.fire({
+		  title: "Are you sure want to Delete?",
+		  text: "Once Deleted,Can't revert back !",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: '#d33',
+		  cancelButtonColor: '#e7b63a',
+		  confirmButtonText: 'Yes',
+		  showLoaderOnConfirm		: true,
+		reverseButtons 			: true,
+		  preConfirm: () => {
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						console.log("Doing async operation");
+						resolve()
+					}, 3000)
+				})
+			}
+		}).then((result) => {
+			if(result.value){
+			 $.ajax({
+				    type: "GET",
+				    url:"/audit/view-initiated-audit-delete?id="+ id,
+				    success: function(response) {
+				        if (response.message == "success") {
+				        	swal({
+				        		title: "Record Deleted Successfully.",
+				        		type: "success"
+				        	}).then(function(){
+				        		 location.reload();
+				        	})
+				        
+				        	
+				        } else {
+				            swal({
+				                title: 'Unsuccess',
+				                text: response.code
+				            })
+				        }
+				    },
+				    error: function(data) {
+			       
+				    }
+				})
+			}
+		  
+		});
+}
+	$(function () {  
+		CKEDITOR.replace('commentNote')
+		CKEDITOR.replace('viewQues')
+	})
+	 
+	$(document).ready(function() {
+		
+		$('#tblTheme').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-initiated-audit-ThroughAjax',
+				'data' : function(d) {
+					d.param1 = $('#param1').val();
+					d.param2 = $('#param2').val();
+					d.param3 = $('#param3').val();
+					d.param4 = $('#param4').val();
+				}
+			},
+			'dataSrc' : "",
+			'columns' : [ {
+				'data' : 'auditInitiate'
+			}, {
+				'data' : 'auditType'
+			}, {
+				'data' : 'financialYear'
+			}, {
+				'data' : 'status'
+			}, {
+				'data' : 'initiatedDate'
+			/* }, {
+				'data' : 'summary' */
+		/* 	}, {
+				'data' : 'document' */
+			}, {
+				'data' : 'action'
+			} ]
+		});
+		
+		
+		
+		$("#saveNotes").click(function(){
+			 var obj={};
+			 obj.auditInitiate=$("#id").val();
+			 obj.summary= CKEDITOR.instances.commentNote.getData();
+			 console.log(obj);
+			$.ajax({
+				type : 'POST',
+				url : 'view-initiated-audit-saveNotes',
+				contentType: 'application/json; charset=utf-8',
+				data : JSON.stringify(obj),
+				success : function(response) {
+					if (response.message == "success") {
+						
+					}
+
+				},
+				error : function(e) {
+					console.log("error");
+				}
+			});
+		});
+		
+	});
+
+	function searchData() {
+		$('#tblTheme').DataTable().draw();
+	}
+	
+	// approve Accept 
+	function approveAccept(id){		
+		swal.fire({
+			  title: "Are you sure want to Accept?",
+			  text: "Once accept, can't revert back !",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonColor: '#d33',
+			  cancelButtonColor: '#e7b63a',
+			  confirmButtonText: 'accept',
+			  showLoaderOnConfirm		: true,
+			  //closeOnConfirm: false,
+			  reverseButtons : true,
+			  preConfirm: () => {
+					return new Promise((resolve) => {
+						setTimeout(() => {
+							console.log("Doing async operation");
+							resolve()
+						}, 3000)
+					})
+				}
+			}).then((result) => {
+				if(result.value){
+				 $.ajax({
+					 	type		:	"GET",
+					 	url			:	"approve-accept-action?id="+id,
+						dataType	:	"json",
+						contentType	:   "application/json",
+						//data		:   JSON.stringify(obj),						    
+					    success: function(response) {
+					    	console.log(response);
+					        if (response.message == "success") {
+					        	swal({
+					        		title: "Accept Successfully.",
+					        		type: "success"
+					        	}).then(function(){
+					        		 location.reload();
+					        	})
+					        
+					        } else {
+					            swal({
+					                title: 'Unsuccess',
+					                text: response.code
+					            })
+					        }
+					    },
+					    error: function(data) {
+				       
+					    }
+					})
+				}
+			  
+			});
+		
+	}
+	function detailsOfAudit(id,auditType,audit){
+		var id = window.atob(id);
+		var auditType1 = window.atob(auditType);
+		$("#id").val(id);
+		$("#auditType").val(auditType1);
+		$("#audit").val(audit);
+		$("#commentNote").empty();
+		$.ajax({
+			type : 'POST',
+			url : 'view-initiated-audit-getNotes',
+			contentType: 'application/json; charset=utf-8',
+			data : id,
+			success : function(response) {
+				console.log(response);
+				if (response.message == "Success") {
+					
+					CKEDITOR.instances['commentNote'].setData(response.body.name);	
+				}
+
+			},
+			error : function(e) {
+				console.log("error");
+			}
+		});
+		
+		
+		$("#details").modal('show');
+	}
+	
+	
+	// Send Details
+	function sendDetails(){	
+		 var obj={};
+		 obj.auditInitiate=$("#id").val();
+		 obj.summary= CKEDITOR.instances.commentNote.getData();
+		 obj.auditType=$("#auditType").val();
+		 obj.audit=$("#audit").val();
+		console.log(obj);
+		swal.fire({
+			  title: "Are you sure want to Send?",
+			  text: "Once send, can't revert back !",
+			  type: "warning",
+			  showCancelButton: true,
+			  confirmButtonColor: '#d33',
+			  cancelButtonColor: '#e7b63a',
+			  confirmButtonText: 'Yes',
+			  showLoaderOnConfirm		: true,
+			  //closeOnConfirm: false,
+			  reverseButtons : true,
+			  preConfirm: () => {
+					return new Promise((resolve) => {
+						setTimeout(() => {
+							console.log("Doing async operation");
+							resolve()
+						}, 3000)
+					})
+				}
+			}).then((result) => {
+				if(result.value){
+				 $.ajax({
+					 	type		:	"POST",
+					 	url			:	"view-initiated-audit-details",
+						dataType	:	"json",
+						contentType: 'application/json; charset=utf-8',
+						data : JSON.stringify(obj),				    
+					    success: function(response) {
+					    	console.log(response);
+					        if (response.message == "success") {
+					        	swal({
+					        		title: "Send Successfully.",
+					        		type: "success"
+					        	}).then(function(){
+					        		 location.reload();
+					        	})
+					        
+					        } else {
+					            swal({
+					                title: 'Unsuccess',
+					                text: response.code
+					            })
+					        }
+					    },
+					    error: function(data) {
+				       
+					    }
+					})
+				}
+			  
+			});
+		
+	}
+	function saveFileReq() {
+		$("#upload_prev").empty();
+		var uFile = $('#fileUploadReq')[0].files[0];
+		var fileName = $('#fileUploadReq').val();
+
+		var lastIndex = fileName.lastIndexOf("\\");
+		if (lastIndex >= 0) {
+			fileName = fileName.substring(lastIndex + 1);
+		}
+		var iURL = URL.createObjectURL(uFile);
+		$("#uploadedImgDivReq").html("");
+		var LightImg = "<a class='example-image-link' href='"+iURL+"' title='"+fileName+"' target='_blank'>Preview</a>";
+		$("#uploadedImgDivReq").html(LightImg);
+
+		var fileData = new FormData();
+		fileData.append('file', uFile);
+		fileData.append('path', 'none');
+
+		$.ajax({
+			type : "POST",
+			url : "view-initiated-audit-uploadFile",
+			enctype : "multipart/form-data",
+			contentType : false,
+			data : fileData,
+			processData : false,
+			cache : false,
+			success : function(response) {
+
+			},
+			error : function(e) {
+
+			}
+		});
+	}
+	function viewDetails(id) {	
+		var id1=window.atob(id);
+	    $('#viewNotes').empty();
+	    $.ajax({
+	        type: 'GET',
+	        url: 'view-initiated-audit-viewDetails?id=' + id1,
+	        contentType: false,
+	        //data : id,
+	        success: function(response) {
+	            console.log(response);
+	            $('#viewDetails').modal('show');
+	            if (response.message == "Success") {
+	                table2 = '<tr></th><th><b>Document</b></th><th><b>Comment</b></th><th><b>Date</b></th></tr>';
+	                var data1 = [];
+	                var data2 = [];
+	                $('#viewNotes').append(table2);
+	                for(var i = 0; i < response.body.length; i++) {
+	                	var html = response.body[i].comment;
+	                	html = html.replace(/<style([\s\S]*?)<\/style>/gi, '');
+	                	html = html.replace(/<script([\s\S]*?)<\/script>/gi, '');
+	                	html = html.replace(/<\/div>/ig, '\n');
+	                	html = html.replace(/<\/li>/ig, '\n');
+	                	html = html.replace(/<li>/ig, ' * ');
+	                	html = html.replace(/<\/ul>/ig, '\n');
+	                	html = html.replace(/<\/p>/ig, '\n');
+	                	html = html.replace(/<br\s*[\/]?>/gi, "\n");
+	                	html = html.replace(/<[^>]+>/ig, '');
+	                	console.log(html);
+	                	//var data=html.substr(0, 25);
+	                	
+	                	
+	                	if(response.body[i].document == null){
+							response.body[i].document="N/A"
+						}
+	                	  
+	                    data1.push('<tr><td><a href="/document/audit/excel/' + response.body[i].document + '" target="_blank">' +
+	                        response.body[i].document +
+	                        '</a></td><td><textarea id="comId_'+i+'">' + 
+	                        html +
+	                        '</textarea><div class="zoombox3"><a  id="commentId_'+i+'" href=javascript:void(0) onclick="viewComment(event)"><i class="fa fa-expand"></i></a></div></td><td>' +
+	                        response.body[i].createdOn +
+	                        '</td></tr>');
+	                  }
+	                $('#viewNotes').append(data1);
+	            }
+	           
+	        },
+	        error: function(e) {
+	            console.log("error");
+	        }
+	    });
+	   
+	}
+	
+	function itemAutoComplete() {
+		var obj={};
+    	obj.key=$("#item").val();
+    	obj.name=$("#param2").val();
+    	console.log(obj);
+	    $.ajax({
+	        type: "POST",
+	        url: "view-initiated-audit-getAuditNameAutocompleteList",
+	        
+	        /* contentType: 'application/json; charset=utf-8',
+	        data : JSON.stringify(obj), */
+	        
+	        dataType: 'json',
+	        contentType: 'application/json', 
+	        data : JSON.stringify(obj),
+	        //data: $("#item").val(),
+	        success: function(res) {
+	            if (res.message == "success") {
+	                console.log(res);
+	                if (res.body.length != 0) {
+	                    console.log("if: " + res);
+	                    $("#item").css("background", "#FFF");
+	                    var content = '<ul id="autocomplete-list">';
+	                    for (var i = 0; i < res.body.length; i++) {
+	                        content += '<li onClick="selectAutocompleteValue(\'' + res.body[i].key + '\')">' + res.body[i].key + '</li>';
+	                    }
+	                    content += '</ul>';
+	                    $("#suggesstion-box").show();
+	                    $("#suggesstion-box").html(content);
+
+	                } else {
+	                    console.log("else: " + res);
+	                    $("#item").css("background", "#FFF");
+	                    var content = '<ul id="autocomplete-list">';
+	                    content += '<li onClick="selectAutocompleteValue(\'' + '' + '\',\'' + '' + '\')">' + "No Data Found" + '</li>';
+	                    content += '</ul>';
+	                    $("#suggesstion-box").show();
+	                    $("#suggesstion-box").html(content);
+	                }
+	            }
+	        },
+	        error: function(data) {
+	            console.log(data);
+	            $("#item").css("background", "#FFF");
+	            var content = '<ul id="autocomplete-list">';
+	            content += '<li onClick="selectAutocompleteValue(\'' + '' + '\',\'' + '' + '\')">' + "No Data Found" + '</li>';
+	            content += '</ul>';
+	            $("#suggesstion-box").show();
+	            $("#suggesstion-box").html(content);
+	        }
+	    })
+	}
+
+	function selectAutocompleteValue(key) {
+	    if (key) {
+	        $("#param1").val(key);
+	        $("#item").val(key);
+	        $("#param1").attr('data-procat', key);
+	        $("#suggesstion-box").hide();
+	    } else {
+	        $("#param1").val("");
+	        $("#item").val("");
+	        $("#param1").attr('data-procat', "");
+	        $("#suggesstion-box").hide();
+	    }
+	}
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<!--  <li ><a href="/audit/view-initiated-audit">Back To Previous page</a></li> -->
+					<li class="active"><span>Manage Audit </span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Manage Audit</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+					<div id="demo">
+						<div class="search-field">
+							<div class="row">
+								<div class="col-md-2">
+									<div class="org-name">Audit No</div>
+								</div>
+								<div class="col-md-3">
+									<input type="hidden" id="param1"> <input id="item"
+										class="form-control" type="text" placeholder="" name=""
+										onkeyup="itemAutoComplete();">
+									<div id="suggesstion-box"></div>
+
+									<input id="param2" class="form-control" type="hidden"
+										th:value="${auditType}"> <input id="param3"
+										class="form-control" type="hidden" th:value="${currentDate}">
+									<input id="param4" class="form-control" type="hidden"
+										th:value="${abc}">
+								</div>
+								<div class="col-md-2">
+									<div class="form-group">
+										<button class="btn btn-primary" onclick="searchData()">Search</button>
+									</div>
+								</div>
+								<!-- <div class="col-md-2">
+									<div class="org-name">Audit Type</div>
+								</div>
+								<div class="col-md-3">
+									<input id="param2" class="form-control" type="text"
+										placeholder="" name=""  >
+								</div>
+								 -->
+
+							</div>
+
+
+						</div>
+					</div>
+					<!-- <a data-toggle="collapse" data-target="#demo"
+						class="showhideangelbg"><i class="fa fa-angle-double-down"></i>
+					</a> -->
+					<div class="row">
+						<div class="table-responsive" style="width: 100%;">
+							<table id="tblTheme" class="table table-bordered">
+								<thead>
+									<tr>
+										<th>Audit No</th>
+										<th>Audit Type</th>
+										<th>Financial Year</th>
+										<th>Status</th>
+										<th>Initiated Date</th>
+										<!-- <th>Summary</th> -->
+										<!-- 	<th>Documents</th> -->
+										<th align="center">Action</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div style="clear: both;"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content" style="width: 750px;">
+					<div class="modal-header">
+						<h4 class="modal-title">Commencement Of Audit Details</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<table style="width: 100%; border: 0;" id="table1">
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="details" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">Notes</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+
+					<div class="modal-body">
+						<input type="hidden" id="id" /> <input type="hidden"
+							id="auditType" /> <input type="hidden" id="audit" /> <label>Upload
+							Document :</label> <input type="file" id="fileUploadReq"
+							style="display: block;" onchange="saveFileReq()">
+						<div id="uploadedImgDivReq"></div>
+
+						<div class="form-group">
+							<label>Comment :</label>
+							<div class="box-body pad">
+
+								<textarea id="commentNote" class="form-control textarea"
+									name="commentNote" rows="10" cols="80">
+								
+								</textarea>
+
+							</div>
+						</div>
+
+					</div>
+
+					<div class="modal-footer">
+						<button type="button" class="btn btn-danger" id="saveNotes">Save</button>
+						<button type="button" class="btn btn-danger"
+							onclick="sendDetails();">Send</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div id="viewDetails" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="modal-title-id">View Notes</h4>
+						<button type="button" class="close" data-dismiss="modal">
+							<i class="fa fa-close fa-2x"></i>
+						</button>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" id="id" />
+						<div class="modal-body">
+							<table width="100%" border="0" id="viewNotes">
+							</table>
+
+
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+	</div>
+</div>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script type="text/javascript">
+
+$(document).ready(function() {			
+	$('#table').DataTable({
+		'processing' : true,
+		'serverSide' : true,
+		'searching' : false,
+		'ordering' : false,
+		"ajax" : {
+			'url' : 'view-auditparty-master-through-ajax',
+			'data' : function(d) {
+				d.param1 = $('#param1').val();
+			}
+		},
+		'dataSrc' : "",
+		'columns' : [
+			{'data' : 'auditPartyId'},
+			{'data' : 'auditPartyFirstName'},
+			{'data' : 'auditPartyLastName'},
+			{'data' : 'auditPartyDesc'},
+			{'data' : 'createdBy'},
+		]	
+	});
+});
+
+function searchData() {
+	$('#table').DataTable().draw();
+}
+
+function viewInModelData(index) {
+	var audit = '';
+	var desc = '';
+	var sta ='';
+	
+	$("#regOffiTble").find('tbody > tr').each(function() {
+		$(this).find("td").eq(1).remove();
+	})
+	$.ajax({
+		type : "POST",
+		url : "view-auditparty-master-model",
+		dataType : 'json',
+		contentType : 'application/json',
+		data : index,
+		success : function(response) {
+			if (response.message == "success") {
+				console.log(response.body.status);
+
+				var status = "";
+				if (response.body.auditPartyActive) {
+					status = "Active";
+				} else {
+					status = "InActive";
+				}
+				
+				audit = '<td>' + response.body.auditPartyName+ '</td>'
+				desc = '<td>' + response.body.auditPartyDesc + '</td>'
+				sta = '<td>' + status + '</td>'
+				
+				$(".audit").append(audit);
+				$(".desc").append(desc);
+				$(".status").append(sta);
+			}
+		},
+		error : function(data) {
+			console.log(data);
+		}
+	})
+	
+}
+
+function deleteItem(id){
+	swal.fire({
+		  title: "Are you sure want to Delete?",
+		  text: "Once Deleted,Can't revert back !",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: '#d33',
+		  cancelButtonColor: '#e7b63a',
+		  confirmButtonText: 'Yes',
+		  reverseButtons : true
+		  
+		}).then((result) => {
+			if(result.value){
+			 $.ajax({
+				    type: "GET",
+				   	url : "/recruitment/view-auditparty-master-delete?id=" + id,
+				    success: function(response) {
+				        if (response.message == "Success") {
+				        	swal({
+				        		title: "Record Deleted Successfully.",
+				        		type: "success"
+				        	}).then(function(){
+				        		 location.reload();
+				        	})
+				              } else {
+				            swal({
+				                title: 'Unsuccess',
+				                text: response.code
+				            })
+				        }
+				    },
+				    error: function(data) {
+   					    }
+				})
+			}
+	});
+}
+
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li><a th:href="@{/recruitment/add-auditparty-master}">Add Audit Party</a></li>
+					<li class="active"><span>Manage Audit Party</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Manage Audit Party</h4>
+			</div>
+			<div class="container-fluid">
+
+			<div class="card">
+				<div class="search-field">
+						<!-- <div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary" href="add-auditparty-master">Create</a>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div> -->
+						<div class="row">
+						<div class="col-lg-2">
+								<div class="org-name">Audit Party Name</div>
+								<input id="param1" class="form-control" type="text"
+									   placeholder="" name="" autocomplete="off" onkeyup="searchData();">
+								</div>
+							
+							<!-- <div class="col-md-2 mrt_10">
+								<div class="form-group filtersearch">
+									<button class="btn btn-info" onclick="searchData()">Search</button>
+								</div>
+							</div> -->
+						</div>
+					</div>
+				<div class="row">
+					<div class="table-responsive" style="width: 100%;">
+						<table id="table" class="table  table-bordered">
+							<thead>
+								<tr>
+									<th>Audit Party</th>
+									<th>Audit Party Name</th>
+									<th>Address</th>
+									<th>Email</th>	
+									<th align="center">Phone Number</th>
+								</tr>
+							</thead>
+							</tbody>
+						</table>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content" style="width: auto;">
+					<div class="modal-header">
+						<h4 class="modal-title">View Details of Audit Party</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<table width="100%" border="0" id="regOffiTble">
+							<tbody>
+								<tr class="audit">
+									<td><b>Audit Party Name:</b></td>
+								</tr>
+								<tr class="desc">
+									<td><b>Description:</b></td>
+								</tr>
+								<tr class="status">
+									<td><b>Status :</b></td>
+								</tr>
+							</tbody>
+							<tbody id="tModelBody"></tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+		<!-- /# row -->
+		</div>
+	</div>
+</div>
+</html>

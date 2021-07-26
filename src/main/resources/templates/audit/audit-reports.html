@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+
+<style>
+body
+{
+font-family: 'Tahoma';
+font-size:12px;
+}
+	/* .head{
+		margin-left:auto;
+		margin-right:auto;
+		width:50%;
+	} */
+	.mytable{
+		margin-left:auto;
+		margin-right:auto;
+		margin-top:30px;
+		/* width:1200px; */
+		border:1px solid;
+		font-size:12px;
+	}
+	.mytable tr{
+		border:1px solid;
+	}
+	.mytableIn tr{
+	text-align:center;	
+	border:0px solid;
+	}
+	.mytable tr td{
+		border:1px solid;
+		text-align:left;
+		padding:4px;
+		
+	}
+	.mytable tr th{
+		border:1px solid;
+		font-size:smaller;
+	}
+	.pdf
+{
+color:#F00;
+}
+.excel
+{
+color:#027d39;
+}
+.word
+{
+color:#024a7d;
+}
+.txtarea
+{
+width:94%;
+height:100vh;
+}
+</style>
+
+</head>
+<body>
+	<div class="head">
+		<div style="text-align:center;width:100%;"><h3>ODISHA MINING CORPORATION LIMITED</h3></div>
+		<div style="text-align:center;width:100%;"><h3>AUDIT SUMMARY REPORT</h3></div>
+		<div style="text-align:center;width:100%;">
+			
+		</div>
+	</div>
+		
+	<div class="container">       
+  <table class="mytable" cellpadding="0" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <th>SL No#</th>
+        <th>Audit#</th>
+        <th>Audit Name</th>
+        <th>From Date</th>
+        <th>To Date</th>
+        <th>Summry</th>
+        <th>Status</th>
+        <th>Document Name</th>
+        <th>Attachment</th>
+        <th width="300">Comment</th>
+      </tr>
+    </thead>
+    <tbody>
+  <tr th:each="c,iter:${auditReport}">
+     <td th:text="${iter.index+1}" valign="top">A001</td>
+     <td th:text="${c.auditInitiate}" valign="top">A001</td>
+        <td  th:text="${c.auditType}" valign="top">Salary</td>
+        <td th:text="${c.auditFromDate}" valign="top">1/10/2020</td>
+        <td th:text="${c.auidtToDate}"  valign="top">30/10/2020</td>
+        <td valign="top">
+          <textarea cols="20" placeholder="Enter Text here" th:utext="${c.summary}"  class="txtarea">                 
+          </textarea>
+        </td>
+        <td valign="top">
+         Open
+        </td>
+        <td valign="top">
+        <table  border='0' cellpadding='0' cellspacing='0' width="100%">
+        <tr th:each="a,iter:${c.documents}" >
+        <td th:text="${a.documentName}" style="height:100px;overflow-y:scroll;">
+          Guide Lines
+        </td>
+       
+        </tr>
+      
+        </table>
+        <td align="center" valign="top">
+        
+          <table class="" cellpadding='0' cellspacing='0' align="center">
+        <tr   th:each="a,iter:${c.documents}" >
+     
+         <td  th:utext="${a.document}" align="center" style="height:98px;border:none;">
+         <i class="fa fa-file-pdf-o fa-5x"  style="color:#ff2f1c;"></i>
+        </td>
+       
+        </tr>
+      
+        </table>
+       
+        </td>
+        <td valign="top">
+
+                <table   cellpadding='0' cellspacing='0' width="100%">
+        <tr th:each="a,iter:${c.documents}" >
+        <td th:text="${a.comment}" style="height:100px;overflow-y:scroll;">
+          After you get up and running, you can place Font Awesome
+        </td>
+       
+        </tr>
+      
+        </table>
+      
+
+        </td>
+       
+  </tr>
+ 
+        
+    
+        
+       
+ 
+   
+    </tbody>
+  </table>
+</div>
+	
+</body>
+</html>

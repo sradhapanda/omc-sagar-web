@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$('#tblRegionalOfficer').DataTable({
+		'processing' : true,
+		'serverSide' : true,
+		'searching' : false,
+		'ordering' : false,
+		"ajax" : {
+			'url' : 'view-region-auditparty-master-throughAjax',
+			'data' : function(d) {
+				d.param1 = $('#param1').val();
+				d.param2 = $('#param2').val();
+			}
+		},
+		'dataSrc' : "",
+		'columns' : [
+
+		{
+			'data' : 'regionName'
+		}, {
+			'data' : 'auditor'
+		}, {
+			'data' : 'desc'
+		}, {
+			'data' : 'statusName'
+		}, {
+			'data' : 'action'
+		} ]
+	});
+});
+function searchData() {
+	$('#tblRegionalOfficer').DataTable().draw();
+}
+
+function deleteItem(id){
+	swal.fire({
+		  title: "Are you sure want to Delete?",
+		  text: "Once Deleted,Can't revert back !",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: '#d33',
+		  cancelButtonColor: '#e7b63a',
+		  confirmButtonText: 'Yes',
+		  reverseButtons : true
+		  
+		}).then((result) => {
+			if(result.value){
+			 $.ajax({
+				    type: "GET",
+				   	url : "/master/view-region-auditparty-master-delete?id=" + id,
+				    success: function(response) {
+				        if (response.message == "Success") {
+				        	swal({
+				        		title: "Record Deleted Successfully.",
+				        		type: "success"
+				        	}).then(function(){
+				        		 location.reload();
+				        	})
+				              } else {
+				            swal({
+				                title: 'Unsuccess',
+				                text: response.code
+				            })
+				        }
+				    },
+				    error: function(data) {
+   					    }
+				})
+			}
+	});
+}
+
+function viewInModelData(index) {
+	var region = '';
+	var auditor = '';
+	var desc = '';
+	var sta = '';
+	
+	$("#regOffiTble").find('tbody > tr').each(function() {
+		$(this).find("td").eq(1).remove();
+	})
+	$.ajax({
+		type : "POST",
+		url : "view-region-auditparty-master-model",
+		dataType : 'json',
+		contentType : 'application/json',
+		data : index,
+		success : function(response) {
+			if (response.message == "success") {
+				console.log(response.body.status);
+
+				var status = "";
+				if (response.body.status) {
+					status = "Active";
+				} else {
+					status = "InActive";
+				}
+				region = '<td>' + response.body.regionName + '</td>'
+				auditor = '<td>' + response.body.auditor + '</td>'
+				desc = '<td>' + response.body.desc + '</td>'
+				sta = '<td>' + status + '</td>'
+				
+				$(".region").append(region);
+				$(".auditor").append(auditor);
+				$(".desc").append(desc);
+				$(".status").append(sta);
+			}
+		},
+		error : function(data) {
+			console.log(data);
+		}
+	})
+	
+}
+
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+	    <div class="col-md-12">
+			<ol class="breadcrumb breadcrumb-arrow">
+				<li><a href="/index-dashboard">Home</a></li>
+				<li><a href="add-region-auditparty-master">Add Regional Audit Party</a></li>
+				<li class="active"><span>View Regional Audit Party</span></li>
+			</ol>
+		</div>
+		</div>
+		<div class="card-title">
+			<h4>View Regional Audit Party</h4>
+		</div>
+		<div class="container-fluid">
+
+			<div class="card">
+				<div class="search-field">
+					<!-- 	<div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary" href="add-region-auditparty-master">Create</a>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div> -->
+						<div class="row">
+						<div class="col-lg-2">
+								<label>Region Name</label> 
+									<select class="form-control" id="param1" >
+						                            <option th:value="NULL">Select</option>
+												    <option th:each="c:${regionList}" th:value='${c.key}'
+													 th:text="${c.name}"></option>
+						                          </select>
+							</div>
+							<div class="col-lg-2">
+								<label>Auditor Name</label> 
+									<select class="form-control" id="param2">
+						                          <option th:value="NULL">Select</option>
+												 <option th:each="c:${auditorList}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+									</select>
+							</div>
+							
+							<div class="col-md-2 mrt_10">
+								<div class="form-group filtersearch">
+									<button class="btn btn-info" onclick="searchData()">Search</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				<div class="row">
+					<div class="table-responsive" style="width: 100%;">
+						<table id="tblRegionalOfficer" class="table  table-bordered">
+							<thead>
+								<tr>
+									
+									<th>Region</th>
+									<th>Auditor</th>
+									<th>Description</th>
+									<th>Status</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							</tbody>
+						</table>
+					</div>
+					<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content" style="width: auto;">
+					<div class="modal-header">
+						<h4 class="modal-title">View Details of Regional Audit Party</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<table width="100%" border="0" id="regOffiTble">
+							<tbody>
+								<tr class="region">
+									<td><b>Region Name:</b></td>
+								</tr>
+								<tr class="auditor">
+									<td><b>Auditor Name :</b></td>
+								</tr>
+								<tr class="desc">
+									<td><b>Description :</b></td>
+								</tr>
+								<tr class="status">
+									<td><b>Status :</b></td>
+								</tr>
+							</tbody>
+							<tbody id="tModelBody"></tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+		<!-- /# row -->
+	</div>
+</div>
+</html>

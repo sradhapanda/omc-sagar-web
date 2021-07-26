@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script type="text/javascript">
+
+function createPdf() {
+
+	window.open("user-download-staff-report-list?param1="
+			+ window.btoa($('#param1').val()) + "&param2="
+			+ window.btoa($('#param2').val()) + "&param3="
+			+ window.btoa($('#param3').val()), '_blank');
+
+}
+
+/* VIEW IN MODEL USER DATA */
+ function viewInModel(index) {
+	var id = window.atob(index);
+		$('#table1').empty();
+		$.ajax({
+			type : "POST",
+			url : "view-user-modal",
+			dataType : 'json',
+			contentType : 'application/json',
+			data : id,
+			success : function(response) {
+				if (response.message == "success") {
+					console.log(response.body.userStatus);
+					var status = "";
+					if (response.body.userStatus) {
+						status = "Active";
+					} else {
+						status = "InActive";
+					}
+					table = '<tr><td>User Name :</td>' + '<td align="left">'
+							+ response.body.userName + '</td>'
+							+ '</tr><tr><td>User Role :</td>' + '<td align="left">'
+							+ response.body.userRoleName + '</td>'
+							+ '</tr><tr><td>IMEI Number</td><td align="left">'
+							+ response.body.userIMEI
+							+ '</td></tr><tr><td>Mobile Number</td><td align="left">'
+							+ response.body.userMobile
+							+ '</td></tr><tr><td>Email</td><td align="left">'
+							+ response.body.userEmail
+							+ '</td></tr><tr><td>Country</td><td align="left">'
+							+ response.body.userCountry
+							+ '</td></tr><tr><td>State</td><td align="left">'
+							+ response.body.userStateName
+							+ '</td></tr><tr><td>District</td><td align="left">'
+							+ response.body.userDistName
+							+ '</td></tr><tr><td>Zip</td><td align="left">'
+							+ response.body.userPin
+							+ '</td></tr><tr><td>Status</td><td align="left">'
+							+ status
+							+ '</td></tr>';
+					$('#myModal').modal('show');
+					$('#table1').append(table);
+				}
+			},
+			error : function(data) {
+				console.log(data);
+			}
+		})
+
+	}
+	
+</script>
+<script type="text/javascript">	
+/* Datatable Ajax call */
+
+/* AJAX CODE FOR DATA TABLE */
+$(function() {
+	$('#udata').DataTable({
+		'processing' : true,
+		'serverSide' : true,
+		'searching' : false,
+		'ordering' : false,
+		'paging' : true,
+		"ajax" : {
+			'url' : 'view-user-through-ajax',
+			'data' : function(d) {
+				d.param1 = $('#param1').val();
+				d.param2 = $('#param2').val();
+				d.param3 = $('#param3').val();
+			}
+		},
+		'dataSrc' : "",
+		'columns' : [ {
+			'data' : 'userName'
+		}, {
+			'data' : 'userType'
+		}, {	
+			'data' : 'userIMEI'
+		}, {	
+			'data' : 'userMobile'
+		}, {
+			'data' : 'userEmail'
+		}, {
+			'data' : 'userCountry'
+		}, {
+			'data' : 'userStateName'
+		}, {
+			'data' : 'userDistName'
+		}, {
+			'data' : 'userPin'
+		}, {
+			'data' : 'statusName'
+		}, {
+			'data' : 'action'
+		} ]
+	});
+});
+
+
+
+function searchData() {
+	$('#udata').DataTable().draw();
+}
+</script>
+
+
+<script>
+	const ipAPI = 'https://api.ipify.org?format=json'; 
+	function DeleteItem(index){
+	 //alert(index);
+	swal({
+	title	: "Are you sure want to Delete?",
+	text	: "Once Deleted,Can't revert back !",
+	type : "warning",
+	showCancelButton	: true,
+	confirmButtonColor	: "#DD6BB5",
+	confirmButtonText	:"Yes",
+	showLoaderOnConfirm	: true,
+	reverseButtons : true,
+	confirmButtonAriaLabel : 'Thumbs up, great!',
+	cancelButtonText : '<i class="fa fa-thumbs-down">cancel</i>',
+	cancelButtonAriaLabel : 'Thumbs down',
+	preConfirm: () => {
+	    return fetch(ipAPI)
+	      .then(response => response.json())
+	      .then(data => Swal.insertQueueStep(data.ip))
+	      .catch(() => {
+	        Swal.insertQueueStep({
+	          type: 'error',
+	          title: 'Unable to get your public IP'
+	        })
+	      })
+	} 
+	}).then((result) => {
+	if(result.value){
+	$.ajax({
+	type	: "GET",
+	url : "view-user-delete?id="+index,
+	dataType	: "json",
+	contentType	: "application/json",
+	data	: JSON.stringify(index),
+	success	: function(response){
+	console.log(response);
+	if(response.message=="Success"){
+	swal({
+	title:"Data Deleted Successfully.",
+	type: "success",
+	}).then(function(){
+	location.reload();
+	})
+	}else{
+	console.log('i m in unsuccess');
+	swal({
+	title:response.code,
+	text: response.message,
+	type:"warning"
+	})
+	}
+	},error	: function(response){
+	swal(response.code);
+	}
+	}) //ajax ends
+	}
+	})//swal function block ends
+	
+	
+	}
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="main mrt_20 col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li class="active"><a href="/user/add-user"><span>Add User</span></a></li>
+					<li class="active"><span>View User Management</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>View User Management</h4>
+			</div>
+			<div class="container-fluid">
+
+				<div class="card">
+						<div class="search-field">
+				<!-- 		<div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary"
+										href="add-user">Create</a>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div> -->
+							<div class="row">
+
+								<div class="col-md-2">
+									<label>User Name</label>
+								
+									<input class="form-control" type="text" id="param1">
+								</div>
+								
+								<div class="col-md-2">
+									<label>Mobile</label>
+								
+									<input class="form-control" type="text" id="param2">
+								</div>
+								
+								<div class="col-md-2">
+									<label>Email</label>
+								
+									<input class="form-control" type="text" id="param3">
+								</div>
+								<div class="col-md-2 mrt_10">
+									<div class="form-group filtersearch">
+										<input type="button" class="btn btn-info" value="Search"
+											onclick="searchData()" />
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="table-responsive" style="width: 100%;">
+							<table id="udata" class="table table-bordered">
+								<thead>
+								<tr>
+									<th>User Name</th>
+									<th>User Type</th>
+									<th>IMEI No</th>
+									<th>Mobile No</th>
+									<th>Email</th>
+									<th>Country</th>
+									<th>State</th>
+									<th>District</th>
+									<th>ZipCode</th>
+									<th>Status</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							</table>
+						</div>
+						<div style="clear: both;"></div>
+					
+				</div>
+			</div>
+		</div>
+		<!-- Modal Start-->
+		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+				<!-- Modal content-->
+				<div class="modal-content" style="width: 750px;">
+					<div class="modal-header">
+						<h4 class="modal-title">View Details of User Management</h4>
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body">
+						<table id="table1"
+							class="table table-striped table-bordered" width="100%"
+							border="0">
+							<thead>
+								<tr>
+									<th>User Name</th>
+									<th>Mobile No</th>
+									<th>Email</th>
+									<!-- <th>User Role</th> -->
+									<th>Country</th>
+									<th>State</th>
+									<th>District</th>
+									<th>PIN</th>
+									<th>Status</th>
+								</tr>
+							</thead>
+							<tbody>
+								
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal End-->
+
+	</div>
+</div>
+</html>

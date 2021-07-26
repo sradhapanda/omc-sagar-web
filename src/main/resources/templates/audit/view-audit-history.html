@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+		$('#tblTheme222').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-audit-history-ThroughAjaxData',
+				'data' : function(d) {
+					d.param1 = $('#param1').val();
+					
+				}
+			},
+			'dataSrc' : "",
+			'columns' : [ {
+				'data' : 'auditId'
+			}, {
+				'data' : 'createdBy'
+			}, {
+				'data' : 'createdOn'
+			}, {
+				'data' : 'time'
+			}, {
+				'data' : 'action'
+			} ]
+		});
+		
+		
+	});
+
+	function searchData() {
+		$('#tblTheme222').DataTable().draw();
+	}
+	
+
+</script>
+
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+				<!-- 	<li><a th:href="@{/employee/add-employee}">Add Employee</a></li> -->
+					<li class="active"><span>Audit Trail </span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Audit Trail</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+						<div class="search-field">
+				
+							
+								<div class="col-md-2">
+										<input id="param1" class="form-control" type="hidden"
+										placeholder="" name="" th:value="${param1}" >
+								</div>
+
+							
+						</div>
+						<div class="table-responsive" style="width: 100%;">
+							<table id="tblTheme222" class="table table-bordered">
+								<thead>
+									<tr>
+										<th>Audit Id</th>
+										<th>Action Performed By</th>
+										<th>Action Date</th>
+										<th>Action Time</th>
+										<th>Action</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+						<div style="clear: both;"></div>
+				</div>
+			</div>
+		</div>
+				
+	</div>
+</div>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>OMC</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="" name="keywords">
+<meta content="" name="description">
+<script src="../assets/js/lib/jquery-3.4.1.min.js"></script>
+<script src="../assets/js/lib/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="../assets/css/sweetalert2.min.css">
+
+<!-- Favicons -->
+<link href="assets/home_img/apple-touch-icon.png" rel="apple-touch-icon">
+<!-- Google Fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Montserrat:300,400,500,700"
+	rel="stylesheet">
+<!-- Bootstrap CSS File -->
+<link href="assets/home_lib/bootstrap/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<!--<link href="assets/home_lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">-->
+<link href="assets/home_lib/animate/animate.min.css" rel="stylesheet">
+<link href="assets/home_lib/ionicons/css/ionicons.min.css"
+	rel="stylesheet">
+<link href="assets/home_lib/owlcarousel/assets/owl.carousel.min.css"
+	rel="stylesheet">
+<link href="assets/home_lib/lightbox/css/lightbox.min.css"
+	rel="stylesheet">
+
+<!-- Main Stylesheet File -->
+<link href="assets/home_css/style.css" rel="stylesheet">
+<link href="style-responsive.css" rel="stylesheet">
+
+<!-- Favicons -->
+<link href="assets/home_img/apple-touch-icon.png" rel="apple-touch-icon">
+<!-- Google Fonts -->
+<link
+	href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Montserrat:300,400,500,700"
+	rel="stylesheet">
+<!-- Bootstrap CSS File -->
+<link href="assets/home_lib//bootstrap/css/bootstrap.min.css"
+	rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link
+	href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+	rel="stylesheet">
+<!--<link href="assets/home_lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">-->
+<link href="assets/home_lib/animate/animate.min.css" rel="stylesheet">
+<link href="assets/home_lib/ionicons/css/ionicons.min.css"
+	rel="stylesheet">
+<link href="assets/home_lib/owlcarousel/assets/owl.carousel.min.css"
+	rel="stylesheet">
+<link href="assets/home_lib/lightbox/css/lightbox.min.css"
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="assets/home_css/login.css">
+<!-- Main Stylesheet File -->
+<link href="assets/home_css/style.css" rel="stylesheet">
+<link href="style-responsive.css" rel="stylesheet">
+<!-- Slider css -->
+<style type="text/css">
+.newlogo {
+	padding-top: 8px;
+	border-bottom: 2px solid #ccc;
+	padding-bottom: 10px;
+}
+.input-group1{
+width:78%!important;
+margin :0 auto;
+}
+.eyeicon{
+position: absolute;
+right: 10px;
+top: 10px;
+}
+input
+{
+border-radius:5px;
+}
+</style>
+
+<!-- Slider Css -->
+</head>
+<script src="../assets/js/sweetalert2.all.min.js"></script>
+<script>
+	$(document).ready(function() {
+		$("#username").val('');
+		$("#password").val('');
+		$("#femail").val('');
+		$("#fotp").val('');
+		$("#fpass").val('');
+		$("#fcpass").val('');
+		$("#div2").hide();
+		$("#div3").hide();
+
+	});
+	function forgetpassword() {
+		$("#div1").hide();
+		$("#div2").show();
+		$("#div3").hide();
+	}
+	function Cancle() {
+		$("#div1").show();
+		$("#div2").hide();
+		$("#div3").hide();
+	}
+	function submit3() {
+		$("#div1").hide();
+		$("#div2").hide();
+		$("#div3").show();
+	}
+	
+	function submit4() {
+
+		var femail = $('#femail').val();
+		
+		//alert(femail);
+
+		if (femail == "" || femail == null) {
+			swal({
+				title : "Enter the email",
+				type : "warning",
+			})
+		}
+
+		if (femail != "") {
+			$.ajax({
+				type : "GET",
+				url : "/forget?emailid="+femail,
+				dataType : 'json',
+				contentType : 'application/json', 
+				success : function(response) {
+					if (response.message == "success") {
+						swal({
+							title : "OTP Send to Your Mail Address ",
+							type : "success",
+						}).then(function() {
+							submit3();
+						})
+					} else {
+						//alert("hi5 "+femail);
+						window.location.href = "/login";
+					}
+				},
+				error : function(data) {
+					//alert("hi2"+femail);
+					//console.log(data);
+					window.location.href = "/login";
+				}
+			});
+
+		}
+	}
+	
+	
+	function submit6() {
+
+		var femail = $('#femail').val();
+		var fotp = $('#fotp').val();
+		var fpass = $('#fpass').val();
+		var fcpass = $('#fcpass').val();
+
+		if (fotp == "" || fotp == null) {
+			swal({
+				title : "Enter The OTP",
+				type : "warning",
+			})
+		}
+		if (fpass == "" || fpass == null) {
+			swal({
+				title : "Enter the New Password",
+				type : "warning",
+			})
+		}
+		if (fcpass == "" || fcpass == null) {
+			swal({
+				title : "Enter The Confirm Password",
+				type : "warning",
+			})
+		}
+		if (fpass != "" && fcpass != "") {
+			if (fpass != fcpass) {
+				swal({
+					title : "Password Don't Match",
+					type : "warning",
+				})
+				return false;
+			} else {
+				obj = {};
+				obj.key = femail;
+				obj.name = fotp;
+				obj.docName = fpass;
+				$.ajax({
+					type : "POST",
+					url : "/forgetpass",
+					dataType : 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(obj),
+					success : function(response) {
+						if (response.message == "success") {
+							swal({
+								title : "Your Password is successfully Changed ",
+								type : "success",
+							}).then(function() {
+								//alert("hi3 " + femail);
+								window.location.href = "/login";
+							})
+						} else {
+							//alert("hi5 " + femail);
+							window.location.href = "/login";
+						}
+					},
+					error : function(data) {
+						//alert("hi2" + femail);
+						//console.log(data);
+						window.location.href = "/login";
+					}
+				});
+
+			}
+		}
+	}
+</script>
+<script>
+$(document).ready(function(){
+	/* $('#show_password').on("click", function functionName() {
+		var value = $(this).attr("value");
+		if(value=="0") {
+			$(this).attr("value","1");
+			$('#password').attr('type', 'text');
+		    $('.glyphicon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+		} else {
+			$(this).attr("value","0");
+			$('#password').attr('type', 'password');
+		    $('.glyphicon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+		}
+	    
+	}) */
+	$('#show_password').on("mousedown", function functionName() {
+	    $('#password').attr('type', 'text');
+	    $('.glyphicon').removeClass('fa fa-eye').addClass('fa fa-eye-slash');
+	}).on("mouseup", function () {
+	    //Change the attribute back to password
+	    $('#password').attr('type', 'password');
+	    $('.glyphicon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+	})
+})
+/* .on("mouseup", function () {
+	alert("helooooo");
+	console.log("dhcdshcshdc");
+    $('#password').attr('type', 'password');
+    $('.glyphicon').removeClass('fa fa-eye-slash').addClass('fa fa-eye');
+}
+); */
+
+var isIE = /*@cc_on!@*/false || !!document.documentMode;
+var isEdge = !isIE && !!window.StyleMedia;
+var showButton = !(isIE || isEdge)
+if (!showButton) {
+    document.getElementById("show_password").style.visibility = "hidden";
+}
+
+</script>
+<body style="background: url('../assets/home_img/banner_18.jpg')">
+	<!--==========================
+    Header element.style {
+    position: absolute;
+    top: 150px;
+    left: 47%;
+    color: #FFF;
+    font-size: 52px;
+    margin-left: -252px;
+}
+  ============================-->
+	<div style="position: fixed; z-index: 2; top: 10px; left: 10px;">
+		<img src="../assets/images/logo_heading.png" alt="Logo" height="50"
+			width="250">
+	</div>
+	<div class="header">Odisha Mining Corporation</div>
+	<div
+		style="position: absolute; top: 120px; left: 50%; color: #FFF; font-size: 52px; margin-left: -376px;">Audit
+		Tool Management System</div>
+	<div class="container h-100">
+		<div style="position: absolute; right: 10px; top: 10px;">
+			<button class="btn btn-warning" data-toggle="collapse"
+				data-target="#login">Login</button>
+		</div>
+		<div class="alert alert-danger alert-dismissible"
+			th:if="${loginMessage != null}">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<span th:text="${loginMessage}"></span>
+		</div>
+		<div class="d-flex justify-content-center h-100">
+			<div class="collapse" id="login">
+				<div class="user_card">
+
+					<div class="d-flex justify-content-center">
+						<!-- 	<div class="brand_logo_container">
+						<img src="assets/home_img/logo.png" class="brand_logo" alt="Logo">
+					</div> -->
+						<div class="newlogo">
+							<img src="../assets/images/logo_heading.png" alt="Logo"
+								height="50" width="250">
+						</div>
+
+
+					</div>
+					<div class="d-flex justify-content-center form_container">
+						<form id="div1" th:action="@{/login}" method="post"
+							autocomplete="off">
+							<div class="input-group mb-3">
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fa fa-user"></i></span>
+								</div>
+								<input type="text" class="form-control" id="username"
+									name="username" aria-describedby="emailHelp"
+									placeholder="Enter email">
+							</div>
+							<div class="input-group mb-2">
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fa fa-key"></i></span>
+								</div>
+								<input type="password" class="form-control" id="password"
+									name="password" placeholder="Password">
+									<!-- <button id="show_password"  value="0" style="padding:9px; background:#e8f0fe; border:none;"> -->
+									<i class="glyphicon fa fa-eye eyeicon" id="show_password"  ></i><!-- </button> -->
+									
+							</div>
+							<div class="form-group">
+								<div class="custom-control custom-checkbox">
+									<input type="checkbox" class="custom-control-input"
+										id="customControlInline"> <label
+										class="custom-control-label" for="customControlInline">Remember
+										me</label> &nbsp &nbsp 
+										<a onclick="forgetpassword();" class="forgotpassword">Forgot
+										Password</a>
+								</div>
+							</div>
+							<div class="d-flex justify-content-center mt-3 login_container">
+								<button type="submit" name="button" class="btn login_submit">Login</button>
+								<!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+							</div>
+						</form>
+
+						<div id="div2">
+							<div class="input-group mb-3" >
+								<div class="input-group-append">
+									<span class="input-group-text"><i class="fa fa-user"></i></span>
+								</div>
+								<input type="email" class="form-control" id="femail" placeholder="Enter email">
+							</div>
+							<div id="div2" 	class="d-flex justify-content-center mt-3 login_container">
+								<button type="button" class="btn login_btn" onclick="Cancle();">Cancel</button>&nbsp &nbsp 
+								<button type="submit" class="btn login_btn" id="submitemail" onclick="submit4();">Submit</button>
+							</div>
+						</div>
+						<div id="div3">
+							<div class="input-group mb-3 input-group1" >
+								<div class="input-group mb-2">
+									<div class="input-group-append">
+										<span class="input-group-text"><i class="fa fa-key"></i></span>
+									</div>
+									<input type="text" class="form-control" id="fotp" placeholder="Enter otp ">
+								</div>
+								<div class="input-group mb-2">
+									<div class="input-group-append">
+										<span class="input-group-text"><i class="fa fa-user"></i></span>
+									</div>
+									<input type="password" class="form-control" id="fpass" placeholder="Enter new password">
+								</div>
+								<div class="input-group mb-3">
+									<div class="input-group-append">
+										<span class="input-group-text"><i class="fa fa-user"></i></span>
+									</div>
+									<input type="password" class="form-control" id="fcpass" placeholder="Enter confirm password">
+								</div>						
+								
+							</div>
+							<div id="div2" 	class="d-flex justify-content-center mt-3 login_container">
+								<button type="button" class="btn login_btn" onclick="Cancle();">Cancle</button>&nbsp &nbsp 
+								<button type="submit" class="btn login_btn" onclick="submit6();">Submit</button>
+							</div>
+						</div>
+						
+					</div>
+				</div>
+				<!-- <div class="mt-4">
+					<div class="d-flex justify-content-center links">
+						Don't have an account? <a href="#" class="ml-2">Sign Up</a>
+					</div>
+					<div class="d-flex justify-content-center links">
+						<a href="#">Forgot your password?</a>
+					</div>
+				</div> -->
+			</div>
+		</div>
+		<div class="footer">Copyright 2020 Odisha Mining Corporation
+			Ltd.</div>
+	</div>
+
+
+</body>
+</html>

@@ -1,0 +1,519 @@
+<div id="responseReply" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modal-title-id">Response</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<i class="fa fa-close fa-2x" style="color: #FFF; cursor: pointer;"></i>
+					</button>
+				</div>
+				<div class="row">
+				<div class="col-md-6">
+					<span id="buttonName"></span>
+					<button type="submit" class="btn btn-success" id="saveResponse"
+						value="Save">Save</button>
+					<button
+						th:if="${#lists.contains(session.USER_ROLES, 'rol023')|| #lists.contains(session.USER_ROLES, 'rol032')} "
+						type="button" class="btn btn-secondary"
+						onclick="reqForwardBysec()">Send</button>
+					<button
+						th:if="${#lists.contains(session.USER_ROLES, 'rol031')||#lists.contains(session.USER_ROLES, 'rol033')} "
+						type="button" class="btn btn-secondary"
+						onclick="responseReqReply()">Send</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+
+				</div>
+				
+				<div class="col-md-6">
+				<div class="row">
+					<div class="col-md-6" align="right">Priority: </div>
+					<div class="col-md-6">
+						<select id="priorityReply" class="form-control">
+							<option th:each="c,iter:${getPriorityList}" th:value='${c.key}'
+								th:text="${c.name}"></option>
+						</select>
+				</div>
+				</div>
+				</div>
+				
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-6">
+
+							<div>To:</div>
+							<select id="autocomplete-select21" multiple>
+								<option th:each="c,iter:${empList}" th:value='${c.key}'
+									th:text="${c.name}"></option>
+
+							</select> <input type="hidden" id="toHiddenId1">
+						</div>
+						<div class="col-md-6">
+							<div>Cc:</div>
+							<select id="autocomplete-select22" multiple>
+								<option th:each="c,iter:${empList}" th:value='${c.key}'
+									th:text="${c.name}"></option>
+
+							</select> <input type="hidden" id="CcHiddenId1">
+
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div>Subject:</div>
+							<input type="text" id="subjectReply" class="form-control"
+								placeholder="Write Your Subject Here....."
+								style="width: 100%; height: 40px">
+
+
+						</div>
+					</div>
+					<input type="hidden" id="reqResponse" /> <input type="hidden"
+						id="identifierRes" /> <input type="hidden" id="reqSection" />
+					<table class="tbllResponse tblls" id="myTableRes" width="100%"
+						border="0" cellspacing="1" cellpadding="5">
+						<thead>
+							<tr>
+								<th width="120" align="left">Document Name</th>
+								<th width="520" align="left">Upload</th>
+								<th width="520" align="left">Comment</th>
+								<th align="right">Action</th>
+							</tr>
+						</thead>
+						<tbody id="tbodyDataRes">
+							<tr class="tr_clone" id="row">
+								<td width="300"><input type="text"
+									class="form-control resDocNameCls" id="resDocName_0">
+								</td>
+								<td width="320">
+
+
+									<div class="row" id="rowId_0">
+										<div id="row2_0" style="text-align: right;">
+											<div class="text replyHoCls" id="replyHo_0"></div>
+										</div>
+
+										<div class="upload-btn-wrapper">
+											<label class="custom-file-upload" for="mulDocAtta"><i
+												class="fa fa-cloud-upload"></i>Document</label> <input type="file"
+												class="mulDocRes" id="docRes_0" style="display: block;"
+												onchange="saveFileAssign(event);checkImageFormat(this);">
+
+
+										</div>
+
+									</div>
+
+
+								</td>
+								<td width="300"><textarea
+										class="form-control resCommentCls" id="resComment_0"
+										autocomplete="on"></textarea></td>
+								<td align="Right" width="200">
+									<button type="button" class="btn btn-primary tr_clone_add"
+										name="add" onclick="moreResponseCheck();">
+										<span class="ti-plus"></span>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="form-group">
+						<label>Comment :</label>
+						<div class="box-body pad">
+							<textarea id="commentRes" class="form-control textarea"
+								name="commentRes" rows="10" cols="80" autocomplete="on">
+                                             </textarea>
+						</div>
+					</div>
+				</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+
+
+<div id="requisition" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modal-title-id">Request</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<i class="fa fa-close fa-2x" style="color: #FFF; cursor: pointer;"></i>
+					</button>
+				</div>
+				<div class="row">
+				<div class="col-md-6">
+					<button type="button" class="btn btn-success" id="save">Save</button>
+					<button type="button" class="btn btn-secondary"
+						onclick="requisition()">Send</button>
+					<!-- <button type="button" class="btn btn-primary" id="sendDoc">Send</button> -->
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+				
+				<div class="col-md-6">
+				<div class="row">
+					<div class="col-md-6" align="right">Priority: </div>
+					<div class="col-md-6">
+						<select id="priority" class="form-control">
+							<option th:each="c,iter:${getPriorityList}" th:value='${c.key}'
+								th:text="${c.name}"></option>
+						</select>
+				</div>
+				</div>
+				</div>
+				
+				<input type="hidden" id="id"> <input type="hidden"
+					id="identifier">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div>To:</div>
+							<select id="autocomplete-select" multiple>
+								<option th:each="c,iter:${empList}" th:value='${c.key}'
+									th:text="${c.name}"></option>
+
+							</select> <input type="hidden" id="toHiddenId">
+
+						</div>
+						<div class="col-md-6">
+							<div>Cc:</div>
+							<select id="autocomplete-select1" multiple>
+								<option th:each="c,iter:${empList}" th:value='${c.key}'
+									th:text="${c.name}"></option>
+
+							</select> <input type="hidden" id="CcHiddenId">
+
+
+						</div>
+
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							<div>Subject:</div>
+							<input type="text" id="subjectCoRequisition" class="form-control"
+								placeholder="Write Your Subject Here....."
+								style="width: 100%; height: 40px">
+
+
+						</div>
+					</div>
+
+					<div style="overflow-y: scroll; height: 100px;">
+						<table class="tbll tblls" id="myTable" width="100%" border="0"
+							cellspacing="0" cellpadding="0">
+							<thead>
+								<tr>
+									<th width="120" align="left">Document Name</th>
+									<th width="520" align="left">Upload</th>
+									<th width="520" align="left">Comment</th>
+									<th align="right">Action</th>
+								</tr>
+							</thead>
+							<tbody id="tbodyData">
+								<tr class="tr_clone" id="row">
+									<td width="300"><input type="text"
+										class="form-control reqDocNameCls" id="reqDocName_">
+									</td>
+									<td width="320">
+
+
+										<div class="row" id="rowId_0">
+											<div id="row2_0"
+												style="text-align: right; padding-left: 50px; padding-top: 10px;">
+												<div class="text coReqFileCls" id="coReqFile_0"></div>
+											</div>
+
+											<div class="upload-btn-wrapper">
+												<label class="custom-file-upload" for="mulDocAtta"><i
+													class="fa fa-cloud-upload"></i>Document</label> <input type="file"
+													class="mulDoc" id="doc_0" style="display: block;"
+													onchange="saveFileAssign(event);checkImageFormat(this);">
+
+
+											</div>
+
+										</div>
+
+									</td>
+									<td width="300"><textarea
+											class="form-control reqCommentCls" id="reqComment_0"
+											autocomplete="on"></textarea></td>
+									<td align="Right" width="200">
+										<button type="button" class="btn btn-primary tr_clone_add"
+											name="add" onclick="addMoreCheck();">
+											<span class="ti-plus"></span>
+										</button>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class="form-group">
+						<div>
+							<strong>Comment :</strong>
+						</div>
+						<div>
+							<textarea id="comment" name="editor1" rows="10" cols="80"
+								autocomplete="on">
+                                            
+                                             </textarea>
+						</div>
+					</div>
+				</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+<script>
+
+
+function requisition() {
+		var comment = CKEDITOR.instances.comment.getData();
+		 var dataset = [];
+			var personTo = "";
+     		var personCC ="";
+     		 	
+				$("#toHiddenId").each(function () {
+					personTo=$(this).val();
+				});
+				$("#CcHiddenId").each(function () {			
+					personCC=$(this).val();
+				});
+				if(personTo==null || personTo==''){
+					swal("Please select at least one person whom you want to send..");
+					return false;
+				}
+			/* 	console.log(personTo);
+				console.log(personCC); */
+		 $("#tbodyData > tr").each(function(i) {
+			    
+		      /*  console.log($(this).find(".mulDoc").val()); */
+		    	    var uFile = $(this).find(".mulDoc")[0].files[0];
+
+		    	   var fileName = $(this).find(".mulDoc").val();
+
+		        if (fileName != '' && fileName != 'undefined' && fileName != null) {
+		            var lastIndex = fileName.lastIndexOf("\\");
+		            if (lastIndex >= 0) {
+		                fileName = fileName.substring(lastIndex + 1);
+		            }
+		            var data = '';
+		            var x = [];
+
+		            var reader = new FileReader();
+		            reader.readAsDataURL(uFile);
+
+		            reader.onload = function() {
+
+		                data = reader.result.split(",");
+
+		                x.push(data[1]);
+		            };
+		        } else {
+		            var x = [];
+		            x.push('empty');
+		        }
+		        audit = {};   
+		        audit['document'] = fileName;
+		        audit['personTo'] = personTo;
+		        audit['personCc'] = personCC;
+		        audit['auditId'] = $("#id").val();
+		        audit['identifier'] = $("#identifier").val();
+		        audit['subject'] = $("#subjectCoRequisition").val();
+		        audit['documentName'] = $(this).find(".reqDocNameCls").val();
+		        audit['documentComment'] = $(this).find(".reqCommentCls").val();
+		        audit['comment'] = comment;
+		        audit['file'] = x;
+		        audit['priority'] = $("#priority").val();
+
+		        dataset.push(audit);
+		    });
+		//console.log(dataset)
+	    swal.fire({
+	        title: "Are you sure want to send?",
+	        text: "Once sent ,Can't revert back !",
+	        type: "warning",
+	        showCancelButton: true,
+	        confirmButtonColor: '#ef5920',
+	        cancelButtonColor: '#e7b63a',
+	        confirmButtonText: 'Yes',
+	        showLoaderOnConfirm: false,
+	        //closeOnConfirm: false,
+	        reverseButtons: true,
+	    /*     preConfirm: () => {
+	            return new Promise((resolve) => {
+	                setTimeout(() => {
+	                    console.log("Doing async operation");
+	                    resolve()
+	                }, 3000)
+	            })
+	        } */
+	    }).then((result) => {
+	        if (result.value) {
+	        	document.getElementById("loader").style.display = "block";
+	            $.ajax({
+	                type: "POST",
+	                url: "view-statutary-audit-master-sendRequest",
+	                dataType: "json",
+	                contentType: 'application/json; charset=utf-8',
+					data : JSON.stringify(dataset),
+	                success: function(response) {
+	                	
+	                    if(response.message=="Success"){
+	                    	document.getElementById("loader").style.display = "none";
+							swal({
+								title:"Sent Successfully.",
+								type: "success",
+							}).then(function(){
+								 location.reload();
+							})
+						}else{
+							document.getElementById("loader").style.display = "none";
+							swal({
+								title:response.code,
+								text: response.message,
+								type:"warning"
+							})
+						}
+	                },
+	                error: function(data) {
+
+	                }
+	            })
+	        }
+
+	    });
+	}
+
+
+
+// requisition Forward Bysection head 
+	function reqForwardBysec(){
+	
+		var comment = CKEDITOR.instances.commentRes.getData();
+			var datasetRes = [];
+			var personTo = "";
+			var personCC ="";
+			
+			$("#toHiddenId1").each(function () {
+				personTo=$(this).val();
+			});
+			$("#CcHiddenId1").each(function () {	
+				personCC=$(this).val();
+			});
+			if(personTo==null || personTo==''){
+				swal("Please select at least one person whom you want to send..");
+				return false;
+			}
+		 $("#tbodyDataRes > tr").each(function(i) {
+		       console.log($(this).find(".mulDocRes").val());
+		    	    var uFile = $(this).find(".mulDocRes")[0].files[0];
+
+		    	   var fileName = $(this).find(".mulDocRes").val();
+
+		        if (fileName != '' && fileName != 'undefined' && fileName != null) {
+		            var lastIndex = fileName.lastIndexOf("\\");
+		            if (lastIndex >= 0) {
+		                fileName = fileName.substring(lastIndex + 1);
+		            }
+		            var data = '';
+		            var x = [];
+
+		            var reader = new FileReader();
+		            reader.readAsDataURL(uFile);
+
+		            reader.onload = function() {
+
+		                data = reader.result.split(",");
+
+		                x.push(data[1]);
+		            };
+		        } else {
+		            var x = [];
+		            x.push('empty');
+		        }
+		        audit = {};   
+		        audit['document'] = fileName;	
+		        audit['personTo'] = personTo;
+		        audit['personCc'] = personCC;
+		        audit['auditId'] = $("#reqResponse").val();
+		        audit['identifier'] = $("#identifierRes").val();
+		        audit['subject'] = $("#subjectReply").val();
+		        audit['comment'] = comment;
+		        audit['documentName'] = $(this).find(".resDocNameCls").val();
+		        audit['documentComment'] = $(this).find(".resCommentCls").val();
+		        audit['file'] = x;
+				//audit['priority'] = $("#priorityReply").val();
+
+		        datasetRes.push(audit);
+		       // console.log(datasetRes);
+		    });
+				swal.fire({
+				  title: "Are you sure want to send",
+				  text: "Once sent ,can't revert back !",
+				  type: "warning",
+				  showCancelButton: true,
+				  confirmButtonColor: '#d33',
+				  cancelButtonColor: '#e7b63a',
+				  showLoaderOnConfirm		: false,
+				  confirmButtonText: 'Yes',
+				  //closeOnConfirm: false,
+				  reverseButtons : true,
+				  /* preConfirm: () => {
+						return new Promise((resolve) => {
+							setTimeout(() => {
+								console.log("Doing async operation");
+								resolve()
+							}, 3000)
+						})
+					} */
+				})
+				.then((result) => {
+					if(result.value){
+						document.getElementById("loader").style.display = "block";
+					 $.ajax({
+						 	type		:	"POST",
+						 	url			:	"view-statutary-audit-master-reqForwardBysec",
+							dataType	:	"json",
+							contentType: 'application/json; charset=utf-8',
+							data : JSON.stringify(datasetRes),						    
+						    success: function(response) {
+						    
+						        if (response.message == "success") {
+						        	document.getElementById("loader").style.display = "none";
+						        	swal({
+						        		title: "Sent Successfully.",
+						        		type: "success"
+						        	}).then(function(){
+						        		 location.reload();
+						        	})
+						        
+						        } else {
+						        	document.getElementById("loader").style.display = "none";
+						            swal({
+						                title: 'Unsuccess',
+						                text: response.code
+						            })
+						        }
+						    },
+						    error: function(data) {
+					       
+						    }
+						})
+					 }else{
+						swal("view comments to forward");
+					} 
+				  
+				});	
+		}
+
+
+
+</script>

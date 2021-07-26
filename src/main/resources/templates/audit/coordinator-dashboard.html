@@ -1,0 +1,3088 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script
+	src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"
+	type="text/javascript"></script>
+<script src="../assets/chart/chart.js"></script>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
+<script
+	src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script
+	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+
+
+
+<!-- Chart Section Start -->
+<style>
+.boxheader {
+	background: #f7ea90;
+	padding: 3px 10px;
+	font-size: 14px;
+	color: #333;
+}
+
+.mrg-l {
+	margin-left: 20px;
+}
+
+p {
+	margin-top: 0;
+	margin-bottom: 0px;
+	color: #05359e;
+	font-size: 14px;
+}
+
+.newdshbrdbox {
+	background: #FFF;
+	padding: 7px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	height: auto;
+}
+
+.newdshbrdbox-chart {
+	background: #FFF;
+	padding: 7px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	height: 367px;
+}
+
+.no {
+	font-size: 24px;
+	color: #FFF;
+	text-align: left;
+	margin-top: -20px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	padding-top: 20px;
+}
+/* .small-box:hover{
+	opacity:1;
+ transform: scale(1.2);
+} */
+.small-box:hover {
+	opacity: 0.3;
+}
+
+.bg-red
+,
+.bg-aqua
+,
+.bg-green
+,
+.bg-deepgreen
+>
+{
+padding
+:
+10px
+ 
+7
+px
+;
+
+
+height
+:
+30px;
+
+
+}
+.small-box {
+	margin-right: 10px;
+	padding: 10px;
+	border-radius: 2px;
+	position: relative;
+	display: block;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+	height: 97px;
+}
+
+/* .bg-aqua {
+background-color: #00c0ef !important;
+} */
+.small-box {
+	border-radius: 2px;
+	width: 168px;
+	position: relative;
+	display: block;
+	margin-top: 5px;
+	margin-bottom: 1px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+}
+
+.small-box-div {
+	margin-right: 10px;
+}
+
+.small-box-div:first-child {
+	margin-left: 27px;
+}
+
+.paddingmin-bgcolor {
+	background-color: #dcddf5;
+}
+
+/* .bg-aqua {
+background-color: #00c0ef !important;
+} */
+.bg-aqua {
+	background-color: #58cdea !important;
+	border-radius: 8px;
+	text-align: left;
+	margin-right: 30px;
+	opacity: 0.8;
+	transition: 0.3s;
+	height: 90px;
+}
+
+.bg-green {
+	background-color: #3fbf85 !important;
+	border-radius: 8px;
+	text-align: left;
+	margin-right: 30px;
+	opacity: 0.8;
+	transition: 0.3s;
+	height: 90px;
+}
+
+.bg-yellow {
+	background-color: #f1b908 !important;
+	border-radius: 8px;
+	text-align: left;
+	margin-right: 30px;
+	opacity: 0.8;
+	transition: 0.3s;
+	height: 90px;
+}
+
+.bg-red {
+	background-color: #e61037 !important;
+	border-radius: 8px;
+	text-align: left;
+	margin-right: 30px;
+	opacity: 0.8;
+	transition: 0.3s;
+	height: 90px;
+}
+
+.bg-blue {
+	background-color: #688fe4 !important;
+	border-radius: 8px;
+	text-align: left;
+	margin-right: 30px;
+	opacity: 0.8;
+	transition: 0.3s;
+	height: 90px;
+}
+
+.bg-orange {
+	background-color: #dc8002 !important;
+	border-radius: 8px;
+	margin-right: 30px;
+	text-align: left;
+	opacity: 0.8;
+	transition: 0.3s;
+	height: 90px;
+}
+
+.bg-purple {
+	background-color: #a04bbf !important;
+	border-radius: 8px;
+	text-align: left;
+	margin-right: 30px;
+	opacity: 0.8;
+	transition: 0.3s;
+	height: 90px;
+}
+
+.bg-pink {
+	background-color: #d23ed1 !important;
+	border-radius: 8px;
+	text-align: left;
+	margin-right: 30px;
+	opacity: 0.8;
+	transition: 0.3s;
+	height: 90px;
+}
+
+.bg-deepgreen {
+	background-color: #65ad9f !important;
+	border-radius: 8px;
+	text-align: left;
+	margin-right: 30px;
+	opacity: 0.8;
+	transition: 0.3s;
+	height: 90px;
+}
+
+.bg-white {
+	background-color: #FFFFFF !important;
+	border-radius: 8px;
+	text-align: left;
+	opacity: 0.8;
+	margin-right: 30px;
+	transition: 0.3s;
+	height: 90px;
+}
+
+.small-box>.small-box-footer {
+	/* position: absolute; */
+	text-align: center;
+	padding: 3px 0;
+	color: #fff;
+	color: rgba(255, 255, 255, 0.8);
+	display: block;
+	z-index: 10;
+	text-decoration: none;
+	bottom: 15px;
+	width: 100px;
+	left: 50%;
+	margin-left: -50px;
+}
+
+.small-box p {
+	font-size: 13px;
+	color: #fff;
+	height: 14px;
+}
+
+.small-box>.small-box-footer {
+	/* position: absolute; */
+	text-align: center;
+	padding: 3px 0;
+	color: #fff;
+	color: rgb(66 61 61/ 80%);
+	display: block;
+	z-index: 10;
+	text-decoration: none;
+	bottom: 13px;
+	width: 100px;
+	left: 50%;
+	margin-left: -50px;
+}
+
+.small-box p {
+	font-size: 14px;
+	color: #fff;
+	height: 14px;
+	/*  #1f1f1f*/
+}
+
+.small-box>.inner>p {
+	/*padding: 70px;*/
+	min-height: 100%;
+	padding: 0;
+}
+
+.small-box>.inner>h3 {
+	color: #FFF;
+}
+
+.viewbtn {
+	text-align: right;
+}
+
+.dashboardbox {
+	background: #FFF;
+	border-radius: 5px;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
+		rgba(0, 0, 0, 0.19);
+}
+
+.dashboardbox h4 {
+	padding: 10px 15px;
+	font-size: 16px;
+}
+
+.SimpleChart {
+	position: relative;
+}
+
+.SimpleChart #tip {
+	background-color: #f0f0f0;
+	border: 1px solid #d0d0d0;
+	position: absolute;
+	left: -200px;
+	top: 30px;
+}
+
+.down-triangle {
+	width: 0;
+	height: 0;
+	border-top: 10px solid #d0d0d0;
+	border-left: 6px solid transparent;
+	border-right: 6px solid transparent;
+	position: absolute;
+	left: -200px;
+}
+
+.SimpleChart #highlighter {
+	position: absolute;
+	left: -200px;
+}
+
+.-simple-chart-holder {
+	/* float: left;*/
+	position: relative;
+	width: 100%;
+	background-color: #fff;
+	border: 1px solid #cecece;
+	/*padding: 6px;*/
+}
+
+.SimpleChart .legendsli {
+	list-style: none;
+}
+
+.SimpleChart .legendsli span {
+	float: left;
+	vertical-align: middle;
+}
+
+.SimpleChart .legendsli span.legendindicator {
+	position: relative;
+	top: 5px;
+	display: none;
+}
+
+.SimpleChart .legendsli span.legendindicator .line {
+	width: 12px;
+	/*height: 3px;*/
+	display: none;
+}
+
+.SimpleChart .legendsli span.legendindicator .circle {
+	width: 12px;
+	height: 12px;
+	border-radius: 20px;
+	position: relative;
+	top: 3px;
+	right: 0px;
+}
+
+/******Starts::Horizontal Alignment of Legends******/
+.simple-chart-legends {
+	/* background: #E7E7E7;*/
+	border-bottom: 3px solid #d6d7dd;
+	padding: 5px;
+	margin: 2px 0px;
+	font-weight: bold;
+	font-size: 11px;
+	display: none;
+}
+
+.simple-chart-legends ul {
+	
+}
+
+.simple-chart-legends ul li {
+	display: inline;
+	border-right: 1px solid #d6d7dd;
+	float: left;
+	padding: 3px;
+	margin-bottom: 3px;
+}
+
+.simple-chart-legends ul li:last-child {
+	border-right: 0px;
+}
+
+.simple-chart-legends.vertical {
+	margin: 0px 10px;
+}
+
+.simple-chart-legends.vertical ul li {
+	display: none;
+	border: 0px;
+	border-bottom: 1px solid #d6d7dd;
+}
+
+.simple-chart-legends.vertical ul li:last-child {
+	border-bottom: 0px;
+}
+
+.simple-chart-legends .legendvalue {
+	padding-left: 2px;
+	background: #fff;
+}
+
+/******Starts::Horizontal Alignment of Legends******/
+.simple-chart-Header {
+	position: absolute;
+	font-size: 16px;
+}
+
+.sidebar.sidebar-shrink ~.content-wrap>.small-box>.inner>p {
+	min-height: 100%;
+	padding: 10%;
+}
+
+.button-back {
+	display: none;
+}
+
+#myTable th {
+	padding: 3px;
+}
+
+#myTable td:nth-child(4) {
+	text-align: center;
+}
+
+#myTable td:nth-child(5) {
+	text-align: center;
+}
+
+#myTable td:nth-child(6) {
+	text-align: center;
+}
+#myTable1 th {
+	padding: 3px;
+}
+
+#myTable1 td:nth-child(4) {
+	text-align: center;
+}
+
+#myTable1 td:nth-child(5) {
+	text-align: center;
+}
+
+#myTable1 td:nth-child(6) {
+	text-align: center;
+}
+</style>
+
+<!-- Chart Section End -->
+<script type="text/javascript">
+var role = "";
+var type = "";
+$(document).ready(function() {
+	
+	role = $("#userRole").val();
+	
+	if(role == "ORG001"){
+		$("#cagAudit").hide();
+		$("#internalAudit").hide();
+		type= "Auditor";
+	} if(role == "ORG002"){
+		$("#statutoryAudit").hide();
+		$("#internalAudit").hide();
+		type= "Auditor";
+	}if(role == "AUDP001"){
+		$("#cagAudit").hide();
+		$("#statutoryAudit").hide();
+		type= "Auditor";
+	}
+	
+	//pieChart();
+	$("#myTable1").hide();
+	transactionObservation();
+	getReqPie();
+	getPomPie();
+	//getPomNewPie();
+	getObsPie();
+	
+var initData = {};
+	$.ajax({
+		type : 'GET',
+		url : 'index-dashboard-audit-InitData?financialYear='+financialYear,
+		contentType : 'application/json',
+		async:false,
+		success : function(response) {
+			console.log(response)
+			initData = response;
+		},
+		error:function(err){
+			console.log(err)
+		}
+	});
+	
+/* 	var repliedData = {};
+	$.ajax({
+		type : 'GET',
+		url : 'index-dashboard-audit-repliedData?financialYear='+financialYear,
+		contentType : 'application/json',
+		async:false,
+		success : function(response) {
+			console.log(response)
+			repliedData = response;
+		},
+		error:function(err){
+			console.log(err)
+		}
+	}); */
+	/* 
+	var pendingData = {};
+	$.ajax({
+		type : 'GET',
+		url : 'index-dashboard-audit-pendingData?financialYear='+financialYear,
+		contentType : 'application/json',
+		async:false,
+		success : function(response) {
+			console.log(response)
+			pendingData = response;
+		},
+		error:function(err){
+			console.log(err)
+		}
+	}); */
+	
+	var auditTypes = [];
+	var data = [];
+	$.ajax({
+		url:"index-dashboard-audit-getAuditTypes",
+		contetType:"application/json",
+		async:false,
+		success:function(res){
+			if(res.body.length > 0){
+				for(var i = 0;i<res.body.length;i++){
+					data.push(res.body[i].name);
+					auditTypes.push(res.body[i].key);
+				}
+			}else{
+				for(var i = 0;i<res.body.length;i++){
+					data.push(0);
+				}
+			}
+			setAuditTypes(auditTypes,data);
+			setRaisedData(auditTypes,initData);
+			setPendingData(auditTypes,pendingData);
+			setRepliedData(auditTypes,repliedData);
+		},
+		error:function(err){
+			console.log(err);
+		}
+	})
+
+	getAnnualData();
+	
+});
+
+
+var auditType = [];
+var auditTypeName = [];
+function setAuditTypes(data,d){
+auditType = data;	
+auditTypeName = d;
+//console.log("aa"+auditType)
+}
+
+var raised = [0,0,0,0,0,0,0];
+function setRaisedData(res,myres){
+
+for(var i = 0;i<res.length;i++){
+	for(var j = 0;j<myres.body.length;j++){
+		if(res[i] == myres.body[j].key){
+			raised[i] = (parseInt(myres.body[j].name));
+		}
+	}
+}
+
+}
+
+var repliedData = [0,0,0,0,0,0,0];
+function setRepliedData(res,myres){
+	for(var i = 0;i<res.length;i++){
+		for(var j = 0;j<myres.body.length;j++){
+			if(res[i] == myres.body[j].key){
+				repliedData[i] = (parseInt(myres.body[j].name));
+			}
+		}
+	}
+}
+
+var pendingData = [0,0,0,0,0,0,0];
+function setPendingData(res,myres){
+	console.log(res)
+	console.log(myres)
+	for(var i = 0;i<res.length;i++){
+		for(var j = 0;j<myres.body.length;j++){
+			if(res[i] == myres.body[j].key){
+				pendingData[i] = (parseInt(myres.body[j].name));
+			}
+		}
+	}
+}
+/*****************************************************************************************/
+function getAnnualData(){
+
+	var barChartData = {
+		  labels:auditTypeName,
+		  datasets: [
+		    {
+		      label: "Raised",
+		      backgroundColor: "yellow",
+		      borderColor: "yellow",
+		      borderWidth: 1,
+		      data: raised
+		    },
+		    {
+		      label: "Replied",
+		      backgroundColor: "limegreen",
+		      borderColor: "green",
+		      borderWidth: 1,
+		      data: repliedData
+		    },
+		    {
+		      label: "Pending",
+		      backgroundColor: "pink",
+		      borderColor: "red",
+		      borderWidth: 1,
+		      data: pendingData
+		    }
+		  ]
+		};
+		
+		window.onload = function() {
+		  var ctx = document.getElementById("line-chart").getContext("2d");
+		  window.myBar = new Chart(ctx, {
+		    type: "bar",
+		    data: barChartData,
+		    options: {
+			      responsive: true,
+		          legend:{
+		        	  position:'bottom',
+		        	  usePointStyle:true,
+		        	  labels:{
+		        		  boxWidth:15
+		        	  }
+		          },
+		          scales: {
+					    yAxes: [{
+					      ticks: {
+					        beginAtZero: true,
+					        userCallback: function(label) {
+			                     // when the floored value is the same as the value we have a whole number
+			                     if (Math.floor(label) === label) {
+			                         return label;
+			                     }
+					        },
+					        max:3
+					      },
+					      
+					    }]
+				},
+		         maintainAspectRatio: true,
+		          plugins: {
+		            labels: {
+		              render: 'value',
+		             // fontColor: ['green', 'white', 'red'],
+		              precision: 2
+		            }
+		          },
+		        }
+		  });
+		};
+}
+
+function getObsPie(){
+	
+	totalraised = 0;
+	totalReplied = 0;
+	totalPending = 0;
+	var financialYear=$("#financialYear").val(); 
+
+	var auditType='CAG'; 
+	  $.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=OBS'+'&auditType='+auditType,
+			contentType : 'application/json',
+			success : function(response) {
+				console.log("33333")
+				console.log(response)
+				if(response.body.length>0){
+					
+					totalraised =response.body[0].totalOpen;
+					totalReplied = response.body[0].replied;
+					totalPending =response.body[0].totalPending;
+					
+				}
+				var ctx = document.getElementById('myChartObsCag').getContext('2d');
+				
+				var myChartObsCag = new Chart(ctx,{
+				      type: 'pie',
+				      data: {
+				        datasets: [{
+				          data: [totalraised,totalReplied,totalPending],
+				          backgroundColor: [
+					        	'#58cdea',
+						        'limegreen',
+						  		'#f1b908'
+					  			],
+				          id: [1,2,3,4],
+				          label: 'Pie Chart'
+				        }],
+				        labels: [ 'Raised', 'Replied' , 'Pending']
+				      },
+				      options: {
+				          responsive: true,
+				          legend:{
+				        	  position:'bottom',
+				        	  usePointStyle:true,
+				        	  labels:{
+				        		  boxWidth:12
+				        	  }
+				          },
+				          maintainAspectRatio: true,
+				          plugins: {
+				            labels: {
+				              render: 'value',
+				             // fontColor: ['green', 'white', 'red'],
+				              precision: 2
+				            }
+				          },
+				        }
+				   });
+							    
+				 $('#myChartObsCag').click(function(evt) {  
+					   
+					 getAllOBSPie();
+			    });
+				
+			},
+			error:function(err){
+				console.log(err);
+			}
+	  });
+}
+
+
+function searchData(){ 
+	$('#myTable').hide();
+	getReqPie();
+	getPomPie();
+	getObsPie();
+	//getPomNewPie
+} 
+
+function getReqPie(){
+	
+	var totalraised = 0;
+	var totalReplied = 0;
+	var totalPending = 0;
+	var financialYear=$("#financialYear").val(); 
+	var auditType='STAT'; 
+
+ 	$.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=REQ'+'&auditType='+auditType+'&auditor='+type,
+			contentType : 'application/json',
+			success : function(response) {
+				console.log("statutary")
+				console.log(response)
+				if(response.body.length>0){
+					
+					totalraised = response.body[0].totalOpen;
+					totalReplied = response.body[0].auditSectionStatus;
+					totalPending = response.body[0].totalPending;
+				}
+				
+				var ctx = document.getElementById('myChart').getContext('2d');
+				
+				var myChart = new Chart(ctx,{
+				      type: 'pie',
+				      data: {
+				        datasets: [{
+				          data: [totalraised,totalReplied, totalPending],
+				          backgroundColor: [
+				        	'#58cdea',
+					        'limegreen',
+					  		'#f1b908'
+				  			],
+				          id: [1,2,3,4],
+				          label: 'Pie Chart'
+				        }],
+				        labels: [ 'Raised', 'Replied' , 'Pending']
+				      },
+				      options: {
+				          responsive: true,
+				          legend:{
+				        	  position:'bottom',
+				        	  usePointStyle:true,
+				        	  labels:{
+				        		  boxWidth:12
+				        	  }
+				          },
+				        maintainAspectRatio: true,
+				          plugins: {
+				            labels: {
+				              render: 'value',
+				             // fontColor: ['green', 'white', 'red'],
+				              precision: 2
+				            }
+				          },
+				          
+				        }
+				      
+				   });
+				
+							    
+				 $("#myChart").click(function(evt) {  
+				    	var activePoints = myChart.getElementsAtEvent(evt);
+						//console.log(activePoints)
+						var label = activePoints[0]['_model'].label;
+						showDataTable('REQ','STAT');
+				  });
+		},
+		error:function(err){
+			console.log(err);
+		}
+  });
+ 	// INTERNAL PIE CHART 
+ 	var auditType='INT';
+ 	var totalraisedInt = 0;
+	var totalRepliedInt = 0;
+	var totalPendingInt = 0;
+	$.ajax({
+		type : 'GET',
+		url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=REQ'+'&auditType='+auditType+'&auditor='+type,
+		contentType : 'application/json',
+		success : function(response) {
+			console.log(response)
+			if(response.body.length>0){
+				totalraisedInt =response.body[0].totalOpen;
+				totalRepliedInt = response.body[0].auditSectionStatus;
+				totalPendingInt =response.body[0].totalPending;
+			}
+			
+			var ctx = document.getElementById('myChartInt').getContext('2d');
+			
+			var myChartInt = new Chart(ctx,{
+			      type: 'pie',
+			      data: {
+			        datasets: [{
+			          data: [totalraisedInt,totalRepliedInt, totalPendingInt],
+			          backgroundColor: [
+			        	'#58cdea',
+				        'limegreen',
+				  		'#f1b908'
+			  			],
+			          id: [1,2,3,4],
+			          label: 'Pie Chart'
+			        }],
+			        labels: [ 'Raised', 'Replied' , 'Pending']
+			      },
+			      options: {
+			          responsive: true,
+			          legend:{
+			        	  position:'bottom',
+			        	  usePointStyle:true,
+			        	  labels:{
+			        		  boxWidth:12
+			        	  }
+			          },
+			          maintainAspectRatio: true,
+			          plugins: {
+			            labels: {
+			              render: 'value',
+			             // fontColor: ['green', 'white', 'red'],
+			              precision: 2
+			            }
+			          },
+			          
+			        }
+			      
+			   });
+			
+						    
+			 $("#myChartInt").click(function(evt) {  
+			    	var activePoints = myChartInt.getElementsAtEvent(evt);
+					//console.log(activePoints)
+					var label = activePoints[0]['_model'].label;
+					showDataTable('REQ','INT');
+			  });
+	},
+	error:function(err){
+		console.log(err);
+	}
+});
+ 	// C & AG Audit
+  
+ 	var auditType='CAG'; 
+ 	var totalraisedCag = 0;
+	var totalRepliedCag = 0;
+	var totalPendingCag= 0;
+ 	$.ajax({
+		type : 'GET',
+		url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=REQ'+'&auditType='+auditType+'&auditor='+type,
+		contentType : 'application/json',
+		success : function(response) {
+			console.log(response)
+			if(response.body.length>0){
+				totalraisedCag = response.body[0].totalOpen;
+				totalRepliedCag = response.body[0].auditSectionStatus;
+				totalPendingCag = response.body[0].totalPending;
+				
+			}
+			
+			var ctx = document.getElementById('myChartCag').getContext('2d');
+			
+			var myChartCag = new Chart(ctx,{
+			      type: 'pie',
+			      data: {
+			        datasets: [{
+			          data: [totalraisedCag,totalRepliedCag, totalPendingCag],
+			          backgroundColor: [
+			        	'#58cdea',
+				        'limegreen',
+				  		'#f1b908'
+			  			],
+			          id: [1,2,3,4],
+			          label: 'Pie Chart'
+			        }],
+			        labels: [ 'Raised', 'Replied' , 'Pending']
+			      },
+			      options: {
+			          responsive: true,
+			          legend:{
+			        	  position:'bottom',
+			        	  usePointStyle:true,
+			        	  labels:{
+			        		  boxWidth:12
+			        	  }
+			          },
+			          maintainAspectRatio: true,
+			          plugins: {
+			            labels: {
+			              render: 'value',
+			             // fontColor: ['green', 'white', 'red'],
+			              precision: 2
+			            }
+			          },
+			          
+			        }
+			      
+			   });
+			
+						    
+			$('#myChartCag').click(function(evt) {  
+				$('#myTable').hide(); 
+				getAllCagPie();
+		    });
+	},
+	error:function(err){
+		console.log(err);
+	}
+});
+}
+function getPomPie(){
+	var totalraised = 0;
+	var totalReplied = 0;
+	var totalPending = 0;
+	var financialYear=$("#financialYear").val(); 
+	var auditType='STAT'; 
+ 	$.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=POM'+'&auditType='+auditType+'&auditor='+type,
+			
+			contentType : 'application/json',
+			success : function(response) {
+				if(response.body.length>0){
+					totalraised =response.body[0].totalOpen;
+					totalReplied = response.body[0].auditSectionStatus;
+					totalPending =response.body[0].totalPending;
+				}
+				
+				var ctx = document.getElementById('myChartone').getContext('2d');
+				
+				var myChartPomSTAT = new Chart(ctx,{
+				      type: 'pie',
+				      data: {
+				        datasets: [{
+				          data: [totalraised,totalReplied, totalPending],
+				          backgroundColor: [
+				        	'#58cdea',
+					        'limegreen',
+					  		'#f1b908'
+				  			],
+				          id: [1,2,3,4],
+				          label: 'Pie Chart'
+				        }],
+				        labels: [ 'Raised', 'Replied' , 'Pending']
+				      },
+				      options: {
+				          responsive: true,
+				          legend:{
+				        	  position:'bottom',
+				        	  usePointStyle:true,
+				        	  labels:{
+				        		  boxWidth:12
+				        	  }
+				          },
+				          maintainAspectRatio: true,
+				          plugins: {
+				            labels: {
+				              render: 'value',
+				             // fontColor: ['green', 'white', 'red'],
+				              precision: 2
+				            }
+				          },
+				        }
+				   });
+							    
+				 $("#myChartone").click(function(evt) {  
+				    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+						console.log("activePoints"+activePoints);
+						var label = activePoints[0]['_model'].label;
+						showDataTable('POM','STAT');
+				  });
+		},
+		error:function(err){
+			console.log(err);
+		}
+  });
+ 	var auditType='INT'; 
+ 	var totalraisedInt = 0;
+	var totalRepliedInt = 0;
+	var totalPendingInt = 0;
+ 	$.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=POM'+'&auditType='+auditType+'&auditor='+type,
+			
+			contentType : 'application/json',
+			success : function(response) {
+				if(response.body.length>0){
+					totalraisedInt =response.body[0].totalOpen;
+					totalRepliedInt=response.body[0].auditSectionStatus;
+					totalPendingInt = response.body[0].totalPending;
+				}
+				
+				var ctx = document.getElementById('myChartoneInt').getContext('2d');
+				
+				var myChartPomInt = new Chart(ctx,{
+				      type: 'pie',
+				      data: {
+				        datasets: [{
+				          data: [totalraisedInt,totalRepliedInt, totalPendingInt],
+				          backgroundColor: [
+				        	'#58cdea',
+					        'limegreen',
+					  		'#f1b908'
+				  			],
+				          id: [1,2,3,4],
+				          label: 'Pie Chart'
+				        }],
+				        labels: [ 'Raised', 'Replied' , 'Pending']
+				      },
+				      options: {
+				          responsive: true,
+				          legend:{
+				        	  position:'bottom',
+				        	  usePointStyle:true,
+				        	  labels:{
+				        		  boxWidth:12
+				        	  }
+				          },
+				          maintainAspectRatio: true,
+				          plugins: {
+				            labels: {
+				              render: 'value',
+				             // fontColor: ['green', 'white', 'red'],
+				              precision: 2
+				            }
+				          },
+				        }
+				   });
+							    
+				 $("#myChartoneInt").click(function(evt) {  
+				    	var activePoints = myChartPomInt.getElementsAtEvent(evt);
+						//console.log(activePoints)
+						var label = activePoints[0]['_model'].label;
+						showDataTable('POM','INT');
+				  });
+		},
+		error:function(err){
+			console.log(err);
+		}
+  });
+ 	var auditType='CAG';
+ 	var totalraisedCag = 0;
+	var totalRepliedCag = 0;
+	var totalPendingCag = 0;
+ 	$.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=POM'+'&auditType='+auditType+'&auditor='+type,
+			
+			contentType : 'application/json',
+			success : function(response) {
+				if(response.body.length>0){
+					totalraisedCag =response.body[0].totalOpen;
+					totalRepliedCag =response.body[0].auditSectionStatus;
+					totalPendingCag = response.body[0].totalPending;
+				}
+				
+				var ctx = document.getElementById('myChartoneCag').getContext('2d');
+				
+				var myChartPomCag = new Chart(ctx,{
+				      type: 'pie',
+				      data: {
+				        datasets: [{
+				          data: [totalraisedCag,totalRepliedCag, totalPendingCag],
+				          backgroundColor: [
+				        	'#58cdea',
+					        'limegreen',
+					  		'#f1b908'
+				  			],
+				          id: [1,2,3,4],
+				          label: 'Pie Chart'
+				        }],
+				        labels: [ 'Raised', 'Replied' , 'Pending']
+				      },
+				      options: {
+				          responsive: true,
+				          legend:{
+				        	  position:'bottom',
+				        	  usePointStyle:true,
+				        	  labels:{
+				        		  boxWidth:12
+				        	  }
+				          },
+				          maintainAspectRatio: true,
+				          plugins: {
+				            labels: {
+				              render: 'value',
+				             // fontColor: ['green', 'white', 'red'],
+				              precision: 2
+				            }
+				          },
+				        }
+				   });
+				
+				 $('#myChartoneCag').click(function(evt) {
+					 $('#myTable').hide();
+					 getAllPOMPie(); 
+			    });
+		},
+		error:function(err){
+			console.log(err);
+		}
+  });
+ 
+}
+function getObsPie(){
+	var totalraised = 0;
+	var totalReplied = 0;
+	var totalPending = 0;
+	var financialYear=$("#financialYear").val(); 
+	var auditType='STAT'; 
+ 	$.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=OBS'+'&auditType='+auditType+'&auditor='+type,
+			
+			contentType : 'application/json',
+			success : function(response) {
+				if(response.body.length>0){
+					totalraised =response.body[0].totalOpen;
+					totalReplied = response.body[0].auditSectionStatus;
+					totalPending =response.body[0].totalPending;
+				}
+				
+				var ctx = document.getElementById('myChartCagStat').getContext('2d');
+				
+				var myChartPomSTAT = new Chart(ctx,{
+				      type: 'pie',
+				      data: {
+				        datasets: [{
+				          data: [totalraised,totalReplied, totalPending],
+				          backgroundColor: [
+				        	'#58cdea',
+					        'limegreen',
+					  		'#f1b908'
+				  			],
+				          id: [1,2,3,4],
+				          label: 'Pie Chart'
+				        }],
+				        labels: [ 'Raised', 'Replied' , 'Pending']
+				      },
+				      options: {
+				          responsive: true,
+				          legend:{
+				        	  position:'bottom',
+				        	  usePointStyle:true,
+				        	  labels:{
+				        		  boxWidth:12
+				        	  }
+				          },
+				          maintainAspectRatio: true,
+				          plugins: {
+				            labels: {
+				              render: 'value',
+				             // fontColor: ['green', 'white', 'red'],
+				              precision: 2
+				            }
+				          },
+				        }
+				   });
+							    
+				 $("#myChartCagStat").click(function(evt) {  
+				    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+						//console.log(activePoints)
+						var label = activePoints[0]['_model'].label;
+						showDataTable('OBS','STAT');
+				  });
+		},
+		error:function(err){
+			console.log(err);
+		}
+  });
+ 	var auditType='INT'; 
+ 	var totalraisedInt = 0;
+	var totalRepliedInt = 0;
+	var totalPendingInt = 0;
+ 	$.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=OBS'+'&auditType='+auditType+'&auditor='+type,
+			
+			contentType : 'application/json',
+			success : function(response) {
+				if(response.body.length>0){
+					totalraisedInt =response.body[0].totalOpen;
+					totalRepliedInt=response.body[0].auditSectionStatus;
+					totalPendingInt = response.body[0].totalPending;
+				}
+				
+				var ctx = document.getElementById('myChartCagInt').getContext('2d');
+				
+				var myChartCagInt = new Chart(ctx,{
+				      type: 'pie',
+				      data: {
+				        datasets: [{
+				          data: [totalraisedInt,totalRepliedInt, totalPendingInt],
+				          backgroundColor: [
+				        	'#58cdea',
+					        'limegreen',
+					  		'#f1b908'
+				  			],
+				          id: [1,2,3,4],
+				          label: 'Pie Chart'
+				        }],
+				        labels: [ 'Raised', 'Replied' , 'Pending']
+				      },
+				      options: {
+				          responsive: true,
+				          legend:{
+				        	  position:'bottom',
+				        	  usePointStyle:true,
+				        	  labels:{
+				        		  boxWidth:12
+				        	  }
+				          },
+				          maintainAspectRatio: true,
+				          plugins: {
+				            labels: {
+				              render: 'value',
+				             // fontColor: ['green', 'white', 'red'],
+				              precision: 2
+				            }
+				          },
+				        }
+				   });
+							    
+				 $("#myChartCagInt").click(function(evt) {  
+				    	var activePoints = myChartCagInt.getElementsAtEvent(evt);
+						//console.log(activePoints)
+						var label = activePoints[0]['_model'].label;
+						showDataTable('OBS','INT');
+				  });
+		},
+		error:function(err){
+			console.log(err);
+		}
+  });
+ 	var auditType='CAG';
+ 	var totalraisedCag = 0;
+	var totalRepliedCag = 0;
+	var totalPendingCag = 0;
+ 	$.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=OBS'+'&auditType='+auditType+'&auditor='+type,
+			
+			contentType : 'application/json',
+			success : function(response) {
+				if(response.body.length>0){
+					totalraisedCag =response.body[0].totalOpen;
+					totalRepliedCag =response.body[0].auditSectionStatus;
+					totalPendingCag = response.body[0].totalPending;
+				}
+				/* console.log("response.body[0].totalOpen"+response.body[0].totalOpen);
+				console.log("response.body[0].totalOpen"+response.body[0].auditSectionStatus);
+				console.log("response.body[0].totalOpen"+response.body[0].totalPending); */
+				var ctx = document.getElementById('myChartCagAll').getContext('2d');
+				
+				var myChartCagAll = new Chart(ctx,{
+				      type: 'pie',
+				      data: {
+				        datasets: [{
+				          data: [totalraisedCag,totalRepliedCag, totalPendingCag],
+				          backgroundColor: [
+				        	'#58cdea',
+					        'limegreen',
+					  		'#f1b908'
+				  			],
+				          id: [1,2,3,4],
+				          label: 'Pie Chart'
+				        }],
+				        labels: [ 'Raised', 'Replied' , 'Pending']
+				      },
+				      options: {
+				          responsive: true,
+				          legend:{
+				        	  position:'bottom',
+				        	  usePointStyle:true,
+				        	  labels:{
+				        		  boxWidth:12
+				        	  }
+				          },
+				          maintainAspectRatio: true,
+				          plugins: {
+				            labels: {
+				              render: 'value',
+				             // fontColor: ['green', 'white', 'red'],
+				              precision: 2
+				            }
+				          },
+				        }
+				   });
+				
+				 $('#myChartCagAll').click(function(evt) {
+					 $('#myTable').hide();
+					 getAllOBSPie(); 
+			    });
+		},
+		error:function(err){
+			console.log(err);
+		}
+  });
+ 
+}
+function getAllCagPie(){
+	var totalraised = 0;
+	var totalReplied = 0;
+	var totalPending = 0;
+	var financialYear=$("#financialYear").val(); 
+	var auditType='CAGAudit'; 
+ 	$.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=REQ'+'&auditType='+auditType+'&auditor='+type,
+			dataType	: "json",
+			contentType : 'application/json',
+			success : function(response) {
+				$("#chartAllCag").show();
+				console.log(response.body);
+				 for(var i = 0; i < response.body.length; i++) {
+					 	totalraised =response.body[i].totalOpen;
+						totalReplied = response.body[i].auditSectionStatus;
+						totalPending =response.body[i].totalPending;
+						//auditType=response.body[i].totalImprovement
+						
+						
+						var auditType1=response.body[i].totalImprovement;
+						if(auditType1=='Transaction Audit'){
+							auditType="TRANS";
+							$("#auditTypeTrans").html(auditType1);
+							
+						}
+						if(auditType1=='Thematic Audit'){
+							auditType="THEMA";
+							$("#auditTypeThema").html(auditType1);
+						}
+						if(auditType1=='Performance Audit'){
+							auditType="PERF";
+							$("#auditTypePerf").html(auditType1);
+						}
+						if(auditType1=='Supplementary Audit'){
+							auditType="SUPL";
+							$("#auditTypeSupl").html(auditType1);
+						}
+						
+						var ctx = document.getElementById("myChartoneAll_"+i).getContext("2d");
+						
+						var myChartPomSTAT = new Chart(ctx,{
+						      type: 'pie',
+						      data: {
+						        datasets: [{
+						          data: [totalraised,totalReplied, totalPending],
+						          backgroundColor: [
+						        	'#58cdea',
+							        'limegreen',
+							  		'#f1b908'
+						  			],
+						          id: [1,2,3,4],
+						          label: 'Pie Chart'
+						        }],
+						        labels: [ 'Raised', 'Replied' , 'Pending']
+						      },
+						      options: {
+						          responsive: true,
+						          legend:{
+						        	  position:'bottom',
+						        	  usePointStyle:true,
+						        	  labels:{
+						        		  boxWidth:12
+						        	  }
+						          },
+						          maintainAspectRatio: true,
+						          plugins: {
+						            labels: {
+						              render: 'value',
+						             // fontColor: ['green', 'white', 'red'],
+						              precision: 2
+						            }
+						          },
+						        }
+						   });
+						 $('#myChartoneAll_0').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								var label = activePoints[0]['_model'].label;
+								$("#chartAllCag").hide();
+								showDataTable('REQ',auditType);
+						  });
+						 $('#myChartoneAll_1').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								var label = activePoints[0]['_model'].label;
+								$("#chartAllCag").hide();
+								showDataTable('REQ','TRANS');
+						  });
+						 $('#myChartoneAll_2').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								var label = activePoints[0]['_model'].label;
+								$("#chartAllCag").hide();
+								showDataTable('REQ','PERF');
+						  });
+						 $('#myChartoneAll_3').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								var label = activePoints[0]['_model'].label;
+								$("#chartAllCag").hide();
+								showDataTable('REQ','THEMA');
+						  });
+				 }
+				
+							    
+				 
+		},
+		error:function(err){
+			console.log(err);
+		}
+  });
+
+ 
+ 
+}
+
+ function getAllOBSPie(){
+	var totalraised = 0;
+	var totalReplied = 0;
+	var totalPending = 0;
+	var financialYear=$("#financialYear").val(); 
+	var auditType='CAGAudit'; 
+ 	$.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=OBS'+'&auditType='+auditType+'&auditor='+type,
+			
+			contentType : 'application/json',
+			success : function(response) {
+				$("#chartAllCag").show();
+				console.log(response.body);
+				 for(var i = 0; i < response.body.length; i++) {
+					
+					 	totalraised =response.body[i].totalOpen;
+						totalReplied = response.body[i].auditSectionStatus;
+						totalPending =response.body[i].totalPending;
+						//auditType=response.body[i].totalImprovement
+						//alert(auditType);
+						//console.log("myChartoneAll_"+i);
+						$("#auditTypeGraph").html(response.body[i].totalImprovement);
+						var auditType=response.body[i].totalImprovement;
+						console.log("response.body[i].totalImprovement"+response.body[i].totalImprovement);
+						if(auditType=='Transaction Audit'){
+							auditType="TRANS"
+						}
+						if(auditType=='Thematic Audit'){
+							auditType="THEMA"
+						}
+						if(auditType=='Performance Audit'){
+							auditType="PERF"
+						}
+						if(auditType=='Supplementary Audit'){
+							auditType="SUPL"
+						}
+						var ctx = document.getElementById("myChartoneAll_"+i).getContext("2d");
+						
+						var myChartPomSTAT = new Chart(ctx,{
+						      type: 'pie',
+						      data: {
+						        datasets: [{
+						          data: [totalraised,totalReplied, totalPending],
+						          backgroundColor: [
+						        	'#58cdea',
+							        'limegreen',
+							  		'#f1b908'
+						  			],
+						          id: [1,2,3,4],
+						          label: 'Pie Chart'
+						        }],
+						        labels: [ 'Raised', 'Replied' , 'Pending']
+						      },
+						      options: {
+						          responsive: true,
+						          legend:{
+						        	  position:'bottom',
+						        	  usePointStyle:true,
+						        	  labels:{
+						        		  boxWidth:12
+						        	  }
+						          },
+						          maintainAspectRatio: true,
+						          plugins: {
+						            labels: {
+						              render: 'value',
+						             // fontColor: ['green', 'white', 'red'],
+						              precision: 2
+						            }
+						          },
+						        }
+						   });
+						 $('#myChartoneAll_0').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								$("#chartAllCag").hide();
+								var label = activePoints[0]['_model'].label;
+								showDataTable('OBS',auditType);
+						  });
+						 $('#myChartoneAll_1').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								$("#chartAllCag").hide();
+								var label = activePoints[0]['_model'].label;
+								showDataTable('OBS',auditType);
+						  });
+						 $('#myChartoneAll_2').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								$("#chartAllCag").hide();
+								var label = activePoints[0]['_model'].label;
+								showDataTable('OBS',auditType);
+						  });
+						 $('#myChartoneAll_3').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								$("#chartAllCag").hide();
+								
+								var label = activePoints[0]['_model'].label;
+								showDataTable('OBS',auditType);
+						  });
+				 }
+				
+							    
+				 
+		},
+		error:function(err){
+			console.log(err);
+		}
+  });
+
+ 
+ 
+} 
+function getAllPOMPie(){
+	var totalraised = 0;
+	var totalReplied = 0;
+	var totalPending = 0;
+	var financialYear=$("#financialYear").val(); 
+	var auditType='CAGAudit'; 
+ 	$.ajax({
+			type : 'GET',
+			url : 'index-dashboard-audit-pieData?financialYear='+financialYear+'&type=POM'+'&auditType='+auditType+'&auditor='+type,
+			
+			contentType : 'application/json',
+			success : function(response) {
+				$("#chartAllCag").show();
+				console.log(response.body);
+				 for(var i = 0; i < response.body.length; i++) {
+					$("#myChartoneAll_"+i).val('');
+					 	totalraised =response.body[i].totalOpen;
+						totalReplied = response.body[i].auditSectionStatus;
+						totalPending =response.body[i].totalPending;
+						//auditType=response.body[i].totalImprovement
+						//alert(auditType);
+						//console.log("myChartoneAll_"+i);
+						$("#auditTypeGraph").html(response.body[i].totalImprovement);
+						var auditType=response.body[i].totalImprovement;
+						if(auditType=='Transaction Audit'){
+							auditType="TRANS"
+						}
+						if(auditType=='Thematic Audit'){
+							auditType="THEMA"
+						}
+						if(auditType=='Performance Audit'){
+							auditType="PERF"
+						}
+						if(auditType=='Supplementary Audit'){
+							auditType="SUPL"
+						}
+						
+						var ctx = document.getElementById("myChartoneAll_"+i).getContext("2d");
+						
+						var myChartPomSTAT = new Chart(ctx,{
+						      type: 'pie',
+						      data: {
+						        datasets: [{
+						          data: [totalraised,totalReplied, totalPending],
+						          backgroundColor: [
+						        	'#58cdea',
+							        'limegreen',
+							  		'#f1b908'
+						  			],
+						          id: [1,2,3,4],
+						          label: 'Pie Chart'
+						        }],
+						        labels: [ 'Raised', 'Replied' , 'Pending']
+						      },
+						      options: {
+						          responsive: true,
+						          legend:{
+						        	  position:'bottom',
+						        	  usePointStyle:true,
+						        	  labels:{
+						        		  boxWidth:12
+						        	  }
+						          },
+						          maintainAspectRatio: true,
+						          plugins: {
+						            labels: {
+						              render: 'value',
+						             // fontColor: ['green', 'white', 'red'],
+						              precision: 2
+						            }
+						          },
+						        }
+						   });
+						 $('#myChartoneAll_0').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								var label = activePoints[0]['_model'].label;
+								$("#chartAllCag").hide();
+								showDataTable('POM',auditType);
+						  });
+						 $('#myChartoneAll_1').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								var label = activePoints[0]['_model'].label;
+								$("#chartAllCag").hide();
+								showDataTable('POM','TRANS');
+						  });
+						 $('#myChartoneAll_2').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								var label = activePoints[0]['_model'].label;
+								$("#chartAllCag").hide();
+								showDataTable('POM','PERF');
+						  });
+						 $('#myChartoneAll_3').click(function(evt) {  
+						    	var activePoints = myChartPomSTAT.getElementsAtEvent(evt);
+								//console.log(activePoints)
+								var label = activePoints[0]['_model'].label;
+								$("#chartAllCag").hide();
+								showDataTable('POM','THEMA');
+						  });
+				 }
+				
+							    
+				 
+		},
+		error:function(err){
+			console.log(err);
+		}
+  });
+
+ 
+ 
+}  
+function showAuditWiseBar(type,id,label,color,financialYear){
+	var req = [];
+	var pom = [];
+	var obs = [];
+	var result = {}; 
+	 $.ajax({
+			type : 'GET',
+			url : 'index-dashboard-get-bar-from-pie-throughAjax?label='+label+"&financialYear="+financialYear+"&type="+type,
+			contentType : false,
+			async:false,
+			success:function(res){
+				console.log(res)
+				result = res;
+			},
+			error:function(err){
+				console.log(err)
+			}
+	 });
+	 var newAuditType = auditType.filter( type => type != 'ADTM005');
+	 var newAuditType = newAuditType.filter( type => type != 'ADTM006');
+	 console.log("newAuditType--"+newAuditType)
+	 var newAuditTypeName = auditTypeName.filter(name => name!="Statutory Audit");
+	 var newAuditTypeName = newAuditTypeName.filter(name => name!="Internal Audit");
+	 console.log("newAuditTypeName--"+newAuditTypeName)
+	 for(var i = 0;i<newAuditType.length;i++){
+			 req.push(0);
+			 pom.push(0);
+			 obs.push(0);
+	 }
+	
+	 for(var i = 0;i<newAuditType.length;i++){
+		 for(var j = 0;j<result.body.length;j++){
+			 if(result.body[j].auditType == newAuditType[i]){
+				 req[i] = result.body[j].pendingRequistion;
+				 pom[i] = result.body[j].totalPom;
+				 obs[i] = result.body[j].pendingObservation;
+			 }
+		 }
+	 }
+	 
+	 $("#secondBar").show();
+	 
+		var barChartData1 = {
+				  labels:newAuditTypeName,
+				  datasets: [
+					    {
+					      label: "Requisition",
+					      backgroundColor: "rgba(0,56,26,1)",
+						//borderColor: "yellow",
+					      borderWidth: 1,
+					      data: req
+					    },
+					    {
+					      label: "POM",
+					      backgroundColor: "#25c0cb",
+					      //borderColor: "green",
+					      borderWidth: 1,
+					      data: pom
+					    },
+					    {
+					      label: "Observation",
+					      backgroundColor: "rgba(255, 224, 3,1)",
+					      //borderColor: "red",
+					      borderWidth: 1,
+					      data: obs
+					    }
+					  ]
+				};
+				
+			var ctx = document.getElementById("barcharttwo").getContext("2d");
+				 
+			  window.myBar = new Chart(ctx, {
+			    type: "bar",
+			    data: barChartData1,
+			    options: {
+			          responsive: true,
+			          legend:{
+			        	  position:'bottom',
+			        	  usePointStyle:true,
+			        	  labels:{
+			        		  boxWidth:15
+			        	  }
+			          },
+			          scales: {
+						    yAxes: [{
+						      ticks: {
+						        beginAtZero: true,
+						        stepValue: 10,
+						        max:3
+						      },
+						      
+						    }]
+					},
+			         maintainAspectRatio: true,
+			          plugins: {
+			            labels: {
+			              render: 'value',
+			              precision: 2
+			            }
+			          },
+			        }
+			  });
+
+}
+
+var deptData = {};
+function showOfficeWisePie(type,id,label,color,financialYear,identifier){
+	
+	console.log(label+"--"+type+"--"+id+"--"+financialYear)
+	//url : 'index-dashboard-get-bar-from-pie-throughAjax?label='+label+"&financialYear="+financialYear+"&type="+type,
+	var result = {};
+	var raised = [];
+	var replied = [];
+	var pending = [];
+	  $.ajax({
+			type : 'GET',
+			url : "index-dashboard-audit-pieToBarData?financialYear="+financialYear+"&type="+type+"&label="+identifier,
+			contentType : false,
+			async:false,
+			success:function(res){
+				console.log("department")
+				result = res;
+			},
+			error:function(err){
+				
+			}
+	  });
+	  console.log(result)
+	  console.log("data"+auditTypeName)
+	  var status = false;
+	  for(var i = 0;i<auditType.length;i++){
+			 for(var j = 0;j<result.body.length;j++){
+				 if(result.body[j].auditType == auditType[i]){
+					 if(result.body[j].replied == null){
+						 result.body[j].replied = 0;
+					 }if( result.body[j].replied == null){
+						 result.body[j].replied = 0;
+					 }if(result.body[j].totalPending == null){
+						 result.body[j].totalPending = 0;
+					 }
+					 raised[i] = parseInt(result.body[j].replied) + parseInt(result.body[j].totalPending);
+					 replied[i] = result.body[j].replied;
+					 pending[i] = result.body[j].totalPending;
+					 status = true;
+				 }
+			 }
+			 if(!status){
+				 raised[i] = 0;
+				 replied[i] = 0;
+				 pending[i] = 0;
+			 }
+			 status = false;
+		 }
+	
+	var maxVal = 0;
+	maxVal = raised.filter(data => data > maxVal);
+	console.log("raised"+raised);
+	console.log("raised"+replied);
+	console.log("raised"+pending);
+	console.log("max---"+maxVal)
+	$('#myTable').hide();
+	$("#secondBar").show();
+	var barChartData = {
+			  labels:auditTypeName,
+			  datasets: [
+			    {
+			      label: "Raised",
+			      backgroundColor: "#58cdea",
+			      borderColor: "#58cdea",
+			      borderWidth: 1,
+			      data: raised
+			    },
+			    {
+			      label: "Replied",
+			      backgroundColor: "limegreen",
+			      borderColor: "green",
+			      borderWidth: 1,
+			      data: replied
+			    },
+			    {
+			      label: "Pending",
+			      backgroundColor: "#f1b908",
+			      borderColor: "#f1b908",
+			      borderWidth: 1,
+			      data: pending
+			    }
+			  ]
+			};
+			
+			 var ctx = document.getElementById("barcharttwo").getContext("2d");
+			 var barcharttwo = new Chart(ctx, {
+			    type: "bar",
+			    data: barChartData,
+			    options: {
+				      responsive: true,
+			          legend:{
+			        	  position:'bottom',
+			        	  usePointStyle:true,
+			        	  labels:{
+			        		  boxWidth:15
+			        	  }
+			          },
+			          scales: {
+						    yAxes: [{
+						      ticks: {
+						        beginAtZero: true,
+						        userCallback: function(label) {
+				                     // when the floored value is the same as the value we have a whole number
+				                     if (Math.floor(label) === label) {
+				                         return label;
+				                     }
+						        },
+						        max:(parseInt(maxVal)+1)
+						      },
+						      
+						    }]
+					},
+			         maintainAspectRatio: true,
+			          plugins: {
+			            labels: {
+			              render: 'value',
+			             // fontColor: ['green', 'white', 'red'],
+			              precision: 2
+			            }
+			          },
+			        }
+			  });
+			
+		 $("#barcharttwo").click(function(evt) {  
+		    	console.log("clicked--"+type)
+		    	var activePoints = barcharttwo.getElementsAtEvent(evt);
+				//console.log(activePoints)
+				var label = activePoints[0]['_model'].label;
+				showDataTable('REQ','CAG');
+		  });
+ 
+}
+
+function showDataTable(label,type){
+	var auditId='';
+	for(var i = 0;i<auditTypeName.length;i++){
+		if(label == auditTypeName[i]){
+			auditId = auditType[i];
+		}
+	}
+	console.log(auditId+"---"+type)
+	var result = {};
+	var financialYear=$("#financialYear").val();
+	$.ajax({
+		type : 'GET',
+		url : "index-dashboard-get-tableData?label="+label+"&financialYear="+financialYear+"&type="+type,
+		contentType : false,
+		async:false,
+		success:function(res){
+			result = res;
+		},
+		error:function(err){
+			console.log(err)
+		}
+  	});
+
+	$("#tableBody").html('');
+	for(var i = 0;i<result.body.length;i++){
+		var section =result.body[i].totalImprovement;
+		
+		 if(result.body[i].totalOpen == null){
+			 result.body[i].totalOpen = 0;
+		 }if( result.body[i].replied == null){
+			 result.body[i].replied = 0;
+		 }if(result.body[i].totalPending == null){
+			 result.body[i].totalPending = 0;
+		 }
+		 result.body[i].totalOpen = parseInt(result.body[i].replied)+parseInt(result.body[i].totalPending);
+		 var tr = '<tr><td>'+result.body[i].auditId+'</td>'+
+		 			'<td>'+result.body[i].section+'</td>'+
+		 			'<td>'+result.body[i].department+'</td>'+
+		 			'<td><a href="javascript:void(0)" onclick=showModal("'+type.trim()+'","raised","'+result.body[i].auditId+'","'+section+'","'+result.body[i].department+'","'+label+'")>'+result.body[i].totalOpen+'</a></td>'+
+		 			'<td><a href="javascript:void(0)" onclick=showModal("'+type.trim()+'","replied","'+result.body[i].auditId+'","'+section+'","'+result.body[i].department+'","'+label+'")>'+result.body[i].replied+'</a></td>'+
+		 			'<td><a href="javascript:void(0)" onclick=showModal("'+type.trim()+'","pending","'+result.body[i].auditId+'","'+section+'","'+result.body[i].department+'","'+label+'")>'+result.body[i].totalPending+'</a></td>'+
+		 			
+		 			'</tr>';
+		$("#tableBody").append(tr);
+	 }
+	$("#secondBar").hide();
+	$('#myTable').show();
+}
+
+function showModal(type,status,auditType,section,department,label){
+	if(status == 'replied'){
+		$("#modalTable th:last-child").html('Replied To');
+		$("#modalTable th:nth-child(3)").html('Replied By');
+	}
+	if(status == 'raised'){
+		$("#modalTable th:last-child").html('Raised To');
+		$("#modalTable th:nth-child(3)").html('Raised By');
+	}
+	if(status == 'pending'){
+		$("#modalTable th:last-child").html('Pending At');
+		$("#modalTable th:nth-child(3)").html('Pending  By');
+	}
+	var financialYear=$("#financialYear").val();
+	var result = {};
+	 $.ajax({
+			type : 'GET',
+			url : "index-dashboard-audit-getModalData?financialYear="+financialYear+"&type="+type+"&status="+status+"&auditId="+auditType+"&section="+section+"&department="+department+"&label="+label,
+			contentType : false,
+			async:false,
+			success:function(res){
+				console.log("1234"+res);
+				result = res;
+				console.log(result)
+				
+			},
+			error:function(err){
+				
+			}
+	  });
+	 $("#mtableBody").empty();
+	 for(var i = 0;i<result.body.length;i++){
+		 if(result.body[i].reqNo > 0){
+		 var tr = '<tr><td>'+result.body[i].auditId+'</td>'+
+		 			'<td>'+result.body[i].reqNo+'</td>'+
+		 			'<td>'+result.body[i].raisedBy+'</td>'+
+		 			'<td>'+result.body[i].date+'</td>'+
+		 			'<td>'+result.body[i].raisedTo+'</td>'+
+		 			'</tr>';
+		$("#mtableBody").append(tr);
+	 }
+	 }
+	$("#myModal").modal('show');
+}
+
+function returnToPie(){
+	$("#secondBar").hide();
+	$("#financialYear").attr('disabled', false);		
+}
+
+function transactionObservation(){
+	/*Chart one*/
+	/* var TraPOM =$('#TraPOM').val();
+	var TrapendingObs = $('#TrapendingObs').val();
+	var TrapendingReq = $('#TrapendingReq').val();
+	
+	var ctxRex = document.getElementById('myChartone').getContext('2d');
+	var data =  [ TrapendingReq, TraPOM, TrapendingObs]; */
+	//var data = [1,3,4,6,7,3];
+/* 	var myChartOne = new Chart(ctxRex, {
+			type: 'pie',
+	      	data: {
+		        datasets: [{
+		       	  data:data,
+		          backgroundColor: [
+		  			'rgba(0,56,26,1)',
+		  			'#25c0cb',
+		  			'rgba(255, 224, 3,1)'
+		  			],
+		  			
+		  		 //  borderWidth: 1,
+		          id: [1,2,3,4,5],
+		          label: 'Doughnut Chart'
+		        }],
+	        labels: [ 'Requisition', 'POM', 'Observation']
+	      },
+	      options: {
+	          responsive: true,
+	          legend:{
+	        	  position:'bottom',
+	        	  usePointStyle:true,
+	        	  labels:{
+	        		  boxWidth:12
+	        	  }
+	          },
+	          maintainAspectRatio: true,
+	          plugins: {
+	            labels: {
+	              render: 'value',
+	             // fontColor: ['green', 'white', 'red'],
+	              precision: 2
+	            }
+	          },
+	        }
+	});
+
+	$('#myChartone').click(function(evt) {  
+	
+		 var financialYear=$("#financialYear").val();
+		 var activePoints = myChartOne.getElementsAtEvent(evt);
+		
+		 if (activePoints[0]) {
+		   var chartData = activePoints[0]['_chart'].config.data;
+		   var idx = activePoints[0]['_index'];
+		
+		   var label = chartData.labels[idx];
+		   var id = chartData.datasets[0].id[idx];
+		   var value = chartData.datasets[0].data[idx];
+		   var color = chartData.datasets[0].backgroundColor[idx];  
+		
+		   showOfficeWisePie('INT',id,label,color,financialYear);
+		 }  
+	});  */	
+}
+
+function rowClicked(value) {
+   location.href = value;
+}
+
+</script>
+
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-12">
+						<div class="row" style="margin-top: 10px; padding-left: 0px; margin-right: 7px;">
+							<!-- <span class="icon-position"> <img
+																src="../assets/images/bell.png" class="bell-icon" /> <span
+																class="label number-span">10</span>
+															</span> -->
+							<div class="col-lg-2 col-xs-4"
+								th:if="${session.USER_ID=='ORG001'}">
+								<!-- small box -->
+								<div class="small-box bg-yellow"
+									th:attr="onclick=|rowClicked('${'/index-dashboard-audit-link?id='+ auditTypeList[0].key+'&name='+auditTypeList[0].name}')|">
+
+
+									<p th:text="${auditTypeList[0].docName}"
+										th:value='${auditTypeList[0].key}'>Initiate Audit</p>
+
+									<div class="no" th:if="${#lists.size(auditTypeNo)>0}"
+										th:text="${auditTypeNo[0].totalImprovement}">8</div>
+									<div class="no" th:unless="${#lists.size(auditTypeNo)>0}">
+
+										0</div>
+									<!-- <a th:href="${'/index-dashboard-audit-link?id='+ auditTypeList[0].key+'&name='+auditTypeList[0].name}" class="small-box-footer">Click
+Here <i class="fa fa-arrow-circle-right"></i>
+</a> -->
+									<!-- <a th:if='${auditTypeList1[0].key}==ADTM001' href="/index-dashboard-supplementary-link" class="small-box-footer">Click
+Here <i class="fa fa-arrow-circle-right"></i>
+</a> -->
+								</div>
+							</div>
+
+							<div class="col-lg-2 col-xs-4"
+								th:if="${ ! #strings.startsWith(session.USER_ID,'AUDP') && session.USER_ID!='ORG001' && session.USER_ID!='ORG002'}">
+								<!-- small box -->
+								<div class="small-box bg-yellow"
+									th:attr="onclick=|rowClicked('${'/index-dashboard-audit-link?id='+ auditTypeList[0].key+'&name='+auditTypeList[0].name}')|">
+
+
+									<p th:text="${auditTypeList[0].docName}"
+										th:value='${auditTypeList[0].key}'>Initiate Audit</p>
+
+									<div class="no" th:if="${#lists.size(auditTypeNo)>0}"
+										th:text="${auditTypeNo[0].totalImprovement}">8</div>
+									<div class="no" th:unless="${#lists.size(auditTypeNo)>0}">
+
+										0</div>
+									<!-- <a th:href="${'/index-dashboard-audit-link?id='+ auditTypeList[0].key+'&name='+auditTypeList[0].name}" class="small-box-footer">Click
+Here <i class="fa fa-arrow-circle-right"></i>
+</a> -->
+									<!-- <a th:if='${auditTypeList1[0].key}==ADTM001' href="/index-dashboard-supplementary-link" class="small-box-footer">Click
+Here <i class="fa fa-arrow-circle-right"></i>
+</a> -->
+								</div>
+							</div>
+
+
+							<div class="col-lg-2 col-xs-4"
+								th:if="${session.USER_ID!='ORG001' && session.USER_ID!='ORG002'}">
+								<!-- small box -->
+								<div class="small-box bg-red"
+									th:attr="onclick=|rowClicked('${'/index-dashboard-audit-link?id='+ auditTypeList[1].key+'&name='+auditTypeList[1].name}')|">
+
+
+									<p th:text="${auditTypeList[1].docName}"
+										th:value='${auditTypeList[1].key}'>Initiate Audit</p>
+
+									<div class="no" th:if="${#lists.size(auditTypeNo)>0}"
+										th:text="${auditTypeNo[0].totalPom}">8</div>
+									<div class="no" th:unless="${#lists.size(auditTypeNo)>0}">
+
+										0</div>
+									<!-- <a th:href="${'/index-dashboard-audit-link?id='+ auditTypeList[1].key+'&name='+auditTypeList[1].name}" class="small-box-footer">Click
+Here <i class="fa fa-arrow-circle-right"></i>
+</a> -->
+
+								</div>
+							</div>
+
+
+							<div class="col-lg-2 col-xs-4"
+								th:if="${session.USER_ID=='ORG002'}">
+								<!-- small box -->
+								<div class="small-box bg-green"
+									th:attr="onclick=|rowClicked('/index-dashboard-supplementary-link')|">
+
+
+									<p>C & AG Audit</p>
+
+									<div class="no" th:if="${#lists.size(auditTypeNo)>0}"
+										th:text="${auditTypeNo[0].pendingRequistion}">8</div>
+									<div class="no" th:unless="${#lists.size(auditTypeNo)>0}">
+
+										0</div>
+
+									<!-- <a href="/index-dashboard-supplementary-link" class="small-box-footer">Click
+Here <i class="fa fa-arrow-circle-right"></i>
+</a> -->
+								</div>
+							</div>
+							<div class="col-lg-2 col-xs-4"
+								th:if="${session.USER_ID!='ORG002' && session.USER_ID!='ORG001'&& !#strings.startsWith(session.USER_ID,'AUDP')}">
+								<!-- small box -->
+								<div class="small-box bg-green"
+									th:attr="onclick=|rowClicked('/index-dashboard-supplementary-link')|">
+
+
+									<p>C & AG Audit</p>
+
+									<div class="no" th:if="${#lists.size(auditTypeNo)>0}"
+										th:text="${auditTypeNo[0].pendingRequistion}">8</div>
+									<div class="no" th:unless="${#lists.size(auditTypeNo)>0}">
+
+										0</div>
+
+									<!-- <a href="/index-dashboard-supplementary-link" class="small-box-footer">Click
+Here <i class="fa fa-arrow-circle-right"></i>
+</a> -->
+								</div>
+							</div>
+							<!-- 				<div    class="col-lg-2 col-xs-4">
+								small box
+								<div class="small-box bg-yellow" th:attr="onclick=|rowClicked('${'/index-dashboard-audit-link?id='+ auditTypeList[0].key+'&name='+auditTypeList[0].name}')|">
+									
+										
+										<p th:text="${auditTypeList[0].docName}" th:value='${auditTypeList[0].key}' >Initiate Audit</p>
+									
+									<div class="no" th:if="${#lists.size(auditTypeNo)>0}" th:text="${auditTypeNo[0].totalImprovement}">
+									
+										8 
+									</div> 
+									<div class="no" th:unless="${#lists.size(auditTypeNo)>0}">
+									
+										0
+									</div> 
+									<a th:href="${'/index-dashboard-audit-link?id='+ auditTypeList[0].key+'&name='+auditTypeList[0].name}" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									<a th:if='${auditTypeList1[0].key}==ADTM001' href="/index-dashboard-supplementary-link" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div>
+							<div    class="col-lg-2 col-xs-4">
+								small box
+								<div class="small-box bg-red" th:attr="onclick=|rowClicked('${'/index-dashboard-audit-link?id='+ auditTypeList[1].key+'&name='+auditTypeList[1].name}')|">
+									
+										
+										<p th:text="${auditTypeList[1].docName}" th:value='${auditTypeList[1].key}' >Initiate Audit</p>
+									
+									<div class="no" th:if="${#lists.size(auditTypeNo)>0}" th:text="${auditTypeNo[0].totalPom}">
+									
+										8 
+									</div> 
+									<div class="no" th:unless="${#lists.size(auditTypeNo)>0}">
+									
+										0
+									</div> 
+									<a th:href="${'/index-dashboard-audit-link?id='+ auditTypeList[1].key+'&name='+auditTypeList[1].name}" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									
+								</div>
+							</div>
+							<div class="col-lg-2 col-xs-4">
+								small box
+								<div class="small-box bg-green" th:attr="onclick=|rowClicked('/index-dashboard-supplementary-link')|"> 
+									
+										
+										<p  >C & AG Audit</p>
+									
+									<div class="no" th:if="${#lists.size(auditTypeNo)>0}" th:text="${auditTypeNo[0].pendingRequistion}">
+									
+										8 
+									</div> 
+									<div class="no" th:unless="${#lists.size(auditTypeNo)>0}">
+									
+										0
+									</div> 
+									
+									<a  href="/index-dashboard-supplementary-link" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div> -->
+							<div class="col-lg-2 col-xs-4">
+								<!-- small box -->
+								<div class="small-box bg-aqua"
+									th:attr="onclick=|rowClicked('${'/index-dashboard-audit-link?id='+ auditTypeList[3].key+'&name='+auditTypeList[3].name}')|">
+
+
+									<p th:text="${auditTypeList[3].docName}"
+										th:value='${auditTypeList[3].key}'>Initiate Audit</p>
+
+									<div class="no" th:if="${#lists.size(auditTypeNo)>0}"
+										th:text="${auditTypeNo[0].totalNotObserved}">8</div>
+									<div class="no" th:unless="${#lists.size(auditTypeNo)>0}">
+
+										0</div>
+									<!-- <a th:href="${'/index-dashboard-audit-link?id='+ auditTypeList[3].key+'&name='+auditTypeList[3].name}" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									<a th:if='${auditTypeList1[3].key}==ADTM001' href="/index-dashboard-supplementary-link" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+							<div class="col-lg-2 col-xs-4">
+								<div class="small-box bg-blue" th:attr="onclick=|rowClicked('${'/audit/view-initiated-audit-inprogress?id='+''}')|" >
+									<p>In Progress</p>
+
+									<div class="no" th:if="${todaysPendingCase}!=null"
+										th:text="${todaysPendingCase}">5</div>
+									<div class="no" th:unless="${todaysPendingCase}!=null">0
+									</div>
+									<!-- <a href="/index-dashboard-audit-link" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+
+							<div class="col-lg-2 col-xs-4">
+								<div class="small-box bg-purple">
+									<p>Today's Case</p>
+
+									<div class="no" th:if="${todaysCase}!=null"
+										th:text="${todaysCase}">2</div>
+									<div class="no" th:unless="${todaysCase}!=null">0</div>
+									<!-- <a href="/index-dashboard-audit-link" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a> -->
+								</div>
+							</div>
+
+							<!-- new hanges ->
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') }"
+								class="col-lg-2 col-xs-4">
+								<div class="small-box bg-aqua">
+									<p>Schedule Meeting</p>
+									<a href="/audit/add-meeting-schedule" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div>
+
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') }"
+								class="col-lg-2 col-xs-4">
+								<div class="small-box bg-green">
+									<p>Upload Documents</p>
+
+
+									<a href="/audit/view-initiated-audit-upload-documents"
+										class="small-box-footer">Click Here <i
+										class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div>
+
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') }"
+								class="col-lg-2 col-xs-4">
+								<div class="small-box bg-yellow">
+									<p>View Documents</p>
+
+
+									<a href="/audit/view-initiated-audit-document-report"
+										class="small-box-footer">Click Here <i
+										class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div>
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') }"
+								class="col-lg-2 col-xs-4">
+								<div class="small-box bg-aqua">
+									<p>View Draft/Final Report</p>
+
+
+									<a href="/audit/view-audit-draft-report"
+										class="small-box-footer">Click Here <i
+										class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div>
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') }"
+								class="col-lg-2 col-xs-4">
+								<div class="small-box bg-red">
+									<p>Audit Document Report</p>
+
+
+									<a href="/audit/view-initiated-audit-report"
+										class="small-box-footer">Click Here <i
+										class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div>
+							<div th:if="${ #lists.contains(session.USER_ROLES, 'rol021') }"
+								class="col-lg-2 col-xs-4">
+								<div class="small-box bg-green">
+									<p>Audit Trail</p>
+
+
+									<a href="/audit/view-audit-history" class="small-box-footer">Click
+										Here <i class="fa fa-arrow-circle-right"></i>
+									</a>
+								</div>
+							</div-->
+
+						</div>
+						<div class="row" style="margin-top: 6px;">
+							<div class="col-lg-5" style="display: flex;">
+								<select class="form-control" id="financialYear"
+									style="height: 35px;">
+									<option th:each="c,iter:${financialYearList}"
+										th:value="${c.key}" th:text="${c.name}"></option>
+								</select> <input type="button" onclick="searchData();"
+									class="btn btn-success"
+									style="margin-left: 20px; height: fit-content;" value="Search" />
+							</div>
+
+						</div>
+						
+						
+						<!-- statutory auditor view -->
+
+
+
+
+
+						<div id="statutoryAudit">
+							<div class="col-md-12">
+								<p>Statutory Audit</p>
+							</div>
+							<div class="row">
+								<div class="col-lg-4 col-xs-6 paddingmin">
+									<!-- small box -->
+									<div class="newdshbrdbox">
+
+
+
+										<div class="boxheader">Requisition</div>
+										<div style="width: 57%; margin: 0 auto;">
+											<canvas id="myChart" width="189" height="144"></canvas>
+											<div class="icon">
+												<i class="ion ion-bag"></i>
+											</div>
+										</div>
+										<!--div><h4>Example Data</h4></div---->
+										<!--div class="viewbtn">
+									<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[0].key}"class="small-box-footer">More
+										info<i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div-->
+									</div>
+								</div>
+
+
+								<input type="hidden" id="userRole" th:value="${session.USER_ID}">
+
+
+								<div class="col-lg-4 col-xs-6 paddingmin">
+									<!-- small box -->
+									<div class="newdshbrdbox">
+
+										<div class="boxheader">POM</div>
+										<div style="width: 57%; margin: 0 auto;">
+											<canvas id="myChartone" width="189" height="144"></canvas>
+										</div>
+										<!--div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div--->
+									</div>
+
+								</div>
+
+								<div class="col-lg-4 col-xs-6 paddingmin">
+									<!-- small box -->
+									<div class="newdshbrdbox">
+
+										<div class="boxheader">Observation</div>
+										<div style="width: 57%; margin: 0 auto;">
+											<canvas id="myChartCagStat" width="189" height="144"></canvas>
+										</div>
+										<!--div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[2].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div-->
+									</div>
+								</div>
+								<!-- bikash -->
+								
+								<div class="row col-md-12">
+									<div class="col-md-12">
+										<table width="100%" border="0" id="myTable1"
+											class="table mrg-l" style="display: none">
+											<thead>
+												<tr>
+													<th>Audit Id 456</th>
+													<th>Section</th>
+													<th>Department</th>
+													<th>Raised</th>
+													<th>Replied</th>
+													<th>Pending</th>
+												</tr>
+											</thead>
+											<tbody id="tableBody1">
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+								
+								<!-- end -->
+
+								<!-- <div class="col-lg-12 col-xs-12 paddingmin"  id="secondBar" style="display:none">
+								small box
+								<div class="returnBtn" onclick="returnToPie();">RETURN</div>
+								<div style="float: right;margin-top: 13px;margin-right: 13px;"><input type="button" onclick="returnToPie();" class="btn btn-success" value="RETURN"/> </div>              
+								<div class="newdshbrdbox-chart">
+									<div class="boxheader">Each Audit Details</div>
+									<canvas id="barcharttwo" width="1200" height="330"></canvas>
+									<div class="viewbtn">
+									<a href="/audit/view-initiated-audit" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+								    </div>
+								</div>
+							</div> -->
+								<div class="col-lg-4 col-xs-6 paddingmin"></div>
+							</div>
+						</div>
+
+
+						<div id="internalAudit">
+							<div class="col-md-12">
+								<p>Internal Audit</p>
+							</div>
+							<div class="row">
+								<div class="col-lg-4 col-xs-6 paddingmin">
+									<!-- small box -->
+									<div class="newdshbrdbox">
+										<!-- <div class="row">
+								<div class="col-md-12"><select  class="form-control" id="auditType" style="height:35px;" onchange="Pie();">
+									<option th:each="c,iter:${TypeList}"
+												th:value="${c.key}" th:text="${c.name}"></option>
+								</select></div>
+								
+								</div> -->
+
+
+										<div class="boxheader">Requisition</div>
+										<div style="width: 57%; margin: 0 auto;">
+											<canvas id="myChartInt" width="189" height="144"></canvas>
+											<div class="icon">
+												<i class="ion ion-bag"></i>
+											</div>
+										</div>
+										<!--div><h4>Example Data</h4></div---->
+										<!--div class="viewbtn">
+									<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[0].key}"class="small-box-footer">More
+										info<i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div-->
+									</div>
+								</div>
+
+								<div class="col-lg-4 col-xs-6 paddingmin">
+									<!-- small box -->
+									<div class="newdshbrdbox">
+
+										<div class="boxheader">POM</div>
+										<div style="width: 57%; margin: 0 auto;">
+											<canvas id="myChartoneInt" width="189" height="144"></canvas>
+										</div>
+										<!--div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div--->
+									</div>
+								</div>
+								<div class="col-lg-4 col-xs-6 paddingmin">
+									<!-- small box -->
+									<div class="newdshbrdbox">
+
+										<div class="boxheader">Observation</div>
+										<div style="width: 57%; margin: 0 auto;">
+											<canvas id="myChartCagInt" width="189" height="144"></canvas>
+										</div>
+										<!--div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[2].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div-->
+									</div>
+								</div> 
+								<!--  bikash  -->
+							<!-- 	<div class="col-md-12 paddingmin-bgcolor" id="chartAllCag"
+									style="display: none">
+									<div class="col-lg-4 col-xs-6  ">
+										small box
+										<div class="newdshbrdbox">
+
+											<div class="boxheader" id="auditTypeSupl">Supplementary
+												Audit</div>
+											<div style="width: 57%; margin: 0 auto;">
+												<canvas id="myChartoneAll_0" width="189" height="144"></canvas>
+											</div>
+											div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div-
+										</div>
+									</div>
+									<div class="col-lg-4 col-xs-6 paddingmin paddingmin-bgcolor">
+										small box
+										<div class="newdshbrdbox">
+
+											<div class="boxheader" id="auditTypeTrans">Transaction
+												Audit</div>
+											<div style="width: 57%; margin: 0 auto;">
+												<canvas id="myChartoneAll_1" width="189" height="144"></canvas>
+											</div>
+											div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div-
+										</div>
+									</div>
+									<div class="col-lg-4 col-xs-6 paddingmin paddingmin-bgcolor">
+										small box
+										<div class="newdshbrdbox">
+
+											<div class="boxheader" id="auditTypePerf">Performance
+												Audit</div>
+											<div style="width: 57%; margin: 0 auto;">
+												<canvas id="myChartoneAll_2" width="189" height="144"></canvas>
+											</div>
+											div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div-
+										</div>
+									</div>
+									<div class="col-lg-4 col-xs-6 paddingmin paddingmin-bgcolor">
+										small box
+										<div class="newdshbrdbox">
+
+											<div class="boxheader" id="auditTypeThema">Thematic
+												Audit</div>
+											<div style="width: 57%; margin: 0 auto;">
+												<canvas id="myChartoneAll_3" width="189" height="144"></canvas>
+											</div>
+											div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div-
+										</div>
+									</div>
+								</div> -->
+								<!-- end -->
+								<!-- bikash table main -->
+								<div class="row col-md-12">
+									<div class="col-md-12">
+										<table width="100%" border="0" id="myTable"
+											class="table mrg-l" style="display: none">
+											<thead>
+												<tr>
+													<th>Audit Id </th>
+													<th>Section</th>
+													<th>Department</th>
+													<th>Raised</th>
+													<th>Replied</th>
+													<th>Pending</th>
+												</tr>
+											</thead>
+											<tbody id="tableBody">
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<!-- end -->
+
+								<!-- 	<div class="col-lg-12 col-xs-12 paddingmin"  id="secondBar" style="display:none">
+								small box
+								<div class="returnBtn" onclick="returnToPie();">RETURN</div>
+								<div style="float: right;margin-top: 13px;margin-right: 13px;"><input type="button" onclick="returnToPie();" class="btn btn-success" value="RETURN"/> </div>              
+								<div class="newdshbrdbox">
+									<div class="boxheader">Each Audit Details</div>
+									<canvas id="barcharttwo" width="1200" height="330"></canvas>
+									<div class="viewbtn">
+									<a href="/audit/view-initiated-audit" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+								    </div>
+								</div>
+							</div> -->
+								<div class="col-lg-4 col-xs-6 paddingmin"></div>
+							</div>
+						</div>
+
+
+						<div id="cagAudit">
+							<div class="col-md-12">
+								<p>C & AG Audit</p>
+							</div>
+							<div class="row">
+								<div class="col-lg-4 col-xs-6 paddingmin">
+									<!-- small box -->
+									<div class="newdshbrdbox">
+										<!-- <div class="row">
+								<div class="col-md-12"><select  class="form-control" id="auditType" style="height:35px;" onchange="getReqPie();">
+									<option th:each="c,iter:${TypeList}"
+												th:value="${c.key}" th:text="${c.name}"></option>
+								</select></div>
+								
+								</div> -->
+
+
+										<div class="boxheader">Requisition</div>
+										<div style="width: 57%; margin: 0 auto;">
+											<canvas id="myChartCag" width="189" height="144"></canvas>
+											<div class="icon">
+												<i class="ion ion-bag"></i>
+											</div>
+										</div>
+										<!--div><h4>Example Data</h4></div---->
+										<!--div class="viewbtn">
+									<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[0].key}"class="small-box-footer">More
+										info<i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div-->
+									</div>
+								</div>
+
+								<div class="col-lg-4 col-xs-6 paddingmin">
+									<!-- small box -->
+									<div class="newdshbrdbox">
+
+										<div class="boxheader">POM</div>
+										<div style="width: 57%; margin: 0 auto;">
+											<canvas id="myChartoneCag" width="189" height="144"></canvas>
+										</div>
+										<!--div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div--->
+									</div>
+								</div>
+								<div class="col-lg-4 col-xs-6 paddingmin">
+									<!-- small box -->
+									<div class="newdshbrdbox">
+
+										<div class="boxheader">Observation</div>
+										<div style="width: 57%; margin: 0 auto;">
+											<canvas id="myChartCagAll" width="189" height="144"></canvas>
+										</div>
+										<!--div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[2].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div-->
+									</div>
+									</div>
+									</div>
+									<!-- bikash 2 -->
+							<div class="row">
+								<div class="col-md-12 paddingmin-bgcolor" id="chartAllCag"
+									style="display: none">
+									<div class="col-lg-4 col-xs-6  ">
+										<!-- small box -->
+										<div class="newdshbrdbox">
+
+											<div class="boxheader" id="auditTypeSupl">Supplementary
+												Audit</div>
+											<div style="width: 57%; margin: 0 auto;">
+												<canvas id="myChartoneAll_0" width="189" height="144"></canvas>
+											</div>
+											<!--div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div--->
+										</div>
+									</div>
+									<div class="col-lg-4 col-xs-6 paddingmin paddingmin-bgcolor">
+										<!-- small box -->
+										<div class="newdshbrdbox">
+
+											<div class="boxheader" id="auditTypeTrans">Transaction
+												Audit</div>
+											<div style="width: 57%; margin: 0 auto;">
+												<canvas id="myChartoneAll_1" width="189" height="144"></canvas>
+											</div>
+											<!--div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div--->
+										</div>
+									</div>
+									<div class="col-lg-4 col-xs-6 paddingmin paddingmin-bgcolor">
+										<!-- small box -->
+										<div class="newdshbrdbox">
+
+											<div class="boxheader" id="auditTypePerf">Performance
+												Audit</div>
+											<div style="width: 57%; margin: 0 auto;">
+												<canvas id="myChartoneAll_2" width="189" height="144"></canvas>
+											</div>
+											<!--div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div--->
+										</div>
+									</div>
+									<div class="col-lg-4 col-xs-6 paddingmin paddingmin-bgcolor">
+										<!-- small box -->
+										<div class="newdshbrdbox">
+
+											<div class="boxheader" id="auditTypeThema">Thematic
+												Audit</div>
+											<div style="width: 57%; margin: 0 auto;">
+												<canvas id="myChartoneAll_3" width="189" height="144"></canvas>
+											</div>
+											<!--div class="viewbtn">
+										<a th:href="${'/audit/view-initiated-audit?id='+auditTypeList[1].key}" class="small-box-footer">More
+										info <i class="fa fa-arrow-circle-right"></i>
+									</a>
+									</div--->
+										</div>
+									</div>
+									<div class="col-lg-4 col-xs-6 paddingmin"></div>
+								</div>
+							</div>
+
+							<!-- </div> -->
+								
+								<!-- end -->
+									
+								</div>
+
+
+								<div class="col-lg-4 col-xs-6 paddingmin"></div>
+							</div>
+						</div>
+
+
+						<div id="myModal" class="modal fade" role="dialog">
+							<div class="modal-dialog">
+
+								<!-- Modal content-->
+								<div class="modal-content">
+									<div class="modal-header">
+										<h4 class="modal-title">View Details</h4>
+										<!--<button type="button" class="close" data-dismiss="modal"><i class="fa fa-close fa-2x"></i></button>--->
+									</div>
+									<!-- bikash doubt -->
+									<div class="modal-body">
+										<table width="100%" border="0" id="modalTable">
+											<thead>
+												<tr>
+													<th>Audit Id</th>
+													<th>No</th>
+													<th>Raised By</th>
+													<th>Date</th>
+													<th>Pending At</th>
+												</tr>
+											</thead>
+											<tbody id="mtableBody">
+
+											</tbody>
+										</table>
+									</div>
+									<!-- end -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-default"
+											data-dismiss="modal">Close</button>
+									</div>
+								</div>
+
+							</div>
+						</div>
+
+
+					</div>
+					<!-- ./col -->
+
+				</div>
+				<!-- <div class="row">
+                   <div class="col-md-12">
+                   <div class="card-title">
+				<h4>Year wise abstract Outstanding paras in respect of IRs issued up to December 2019 but not cleared by June 2020(OMC)</h4>
+			</div>
+<table class="table" style="text-align:center;">
+    <thead>
+      <tr>
+        <th  style="text-align:center;">Sl No</th>
+        <th  style="text-align:center;">Year</th>
+        <th  style="text-align:center;">Number of IRs</th>
+        <th  style="text-align:center;">Number Of Paras</th>
+        <th  style="text-align:center;">Money Value ( Rs in lakhs)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>2008-09</td>
+        <td>4</td>
+        <td>8</td>
+        <td>301.32</td>
+      </tr>
+      <tr>
+         <td>2</td>
+        <td>2009-10</td>
+        <td>3</td>
+        <td>5</td>
+        <td>547.88</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>2010-11</td>
+        <td>4</td>
+        <td>7</td>
+        <td>381.64</td>
+      </tr>
+         <tr>
+        <td>4</td>
+        <td>2011-12</td>
+        <td>4</td>
+        <td>16</td>
+        <td>1805.79</td>
+      </tr>
+         <tr>
+        <td>5</td>
+        <td>2012-13</td>
+        <td>16</td>
+        <td>67</td>
+        <td>32913.63</td>
+      </tr>
+         <tr>
+        <td>6</td>
+        <td>2013-14</td>
+        <td>7</td>
+        <td>21</td>
+        <td>164425.03</td>
+      </tr>
+         <tr>
+        <td>7</td>
+        <td>2014-15</td>
+        <td>8</td>
+        <td>35</td>
+        <td>30675.82</td>
+      </tr>
+         <tr>
+        <td>8</td>
+        <td>2015-16</td>
+        <td>4</td>
+        <td>17</td>
+        <td>111343.84</td>
+      </tr>
+         <tr>
+        <td>9</td>
+        <td>2016-17</td>
+        <td>8</td>
+        <td>15</td>
+        <td>106857.28</td>
+      </tr>
+         <tr>
+        <td>10</td>
+        <td>2017-18</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+         <tr>
+        <td>11</td>
+        <td>2018-19</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+         <tr>
+        <td>12</td>
+        <td>2019-20</td>
+        <td>1</td>
+        <td>17</td>
+        <td>51810.46</td>
+      </tr>
+         <tr>
+        <td>Total</td>
+        <td></td>
+        <td>59</td>
+        <td>208</td>
+        <td>501062.69</td>
+      </tr>
+    </tbody>
+  </table>
+                   </div>
+                   </div> -->
+
+			</div>
+
+		</div>
+
+		<!-- Modal Start-->
+<!-- 		<div id="myModal" class="modal fade" role="dialog">
+			<div class="modal-dialog">
+
+				Modal content
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">View Details</h4>
+						button type="button" class="close" data-dismiss="modal" style="float:right;"><i class="fa fa-close fa-2x"></i></button
+					</div>
+					<div class="modal-body">
+						<table width="100%" border="0" id="myTable">
+							<thead>
+								<tr>
+									<th>Audit No</th>
+									<th>Section</th>
+									<th>Department</th>
+									<th>Requisition</th>
+									<th>POM</th>
+									<th>Observation</th>
+								</tr>
+							</thead>
+							<tbody id="tableBody">
+
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+
+			</div>
+		</div> -->
+		<!-- Modal End-->
+
+	</div>
+</div>
+
+</html>

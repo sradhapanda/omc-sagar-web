@@ -1,0 +1,267 @@
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+
+<script type="text/javascript">
+
+function viewInModel(index){
+	$('#table1').empty();
+		$.ajax({
+			type 		:	"POST",
+			url 		:	"view-user-role-model",
+			dataType 	:	'json',
+			contentType :	'application/json',
+			data 		:	index,
+			success 	: 	function(response) {
+				if(response.message=="success"){
+					console.log(response.body.userRoleStatus);
+					var userRoleStatus = "";
+					if(response.body.userRoleStatus){
+						userRoleStatus = "Active";	
+					}else{
+						userRoleStatus = "Inactive";	
+					}
+				 
+					 table = '<tr><td>UserRole:</td>'+'<td align="left">'
+					    +response.body.userRoleName+'</td>'+'</tr><tr><td>Parent Name:</td><td align="left">'
+						+response.body.userParentUserRole+'</td>'+'</tr><tr><td>Cost Center:</td><td align="left">'
+						+response.body.userCostCenter+'</td>'+'</tr><tr><td>Description:</td><td align="left">'
+						+response.body.userDescription+'</td>'+'</tr><tr><td>Status:</td><td align="left">'
+						+userRoleStatus+'</td></tr>';
+					$('#myModal').modal('show');
+					$('#table1').append(table);
+				}				
+			},
+			error : function(data) {
+				console.log(data);
+			}
+		})
+	}  
+
+$(document).ready(function() {	
+		
+		
+		$('#table').DataTable({
+			'processing' : true,
+			'serverSide' : true,
+			'searching' : false,
+			'ordering' : false,
+			"ajax" : {
+				'url' : 'view-user-role-through-ajax',
+				'data' : function(d) {
+					d.param1 = $('#param1').val();
+					d.param2 = $('#param2').val(); 
+				}
+			},
+			'dataSrc' : "",
+		'columns' : [
+			{'data' : 'userRoleName'},
+			{'data' : 'userCostCenter'},
+		/* 	{'data' : 'userShow'}, */
+			{'data' : 'userParentUserRole'}, 
+			{'data' : 'showActiveRoleStatus'},
+			{'data' : 'action'}
+				]	
+		});
+	  });
+
+function searchData() {
+	//alert('hello');
+	$('#table').DataTable().draw();
+}	
+
+
+
+const ipAPI = 'https://api.ipify.org?format=json';
+function DeleteItem(index){
+ // alert(index);
+swal({
+		title				: "Are you sure want to Delete User Role?",
+		text				: "Once Deleted,Can't revert back !",
+		type 				: "warning",
+		showCancelButton	: true,
+		confirmButtonColor	: "#DD6BB5",
+		confirmButtonText	:"Yes",
+		showLoaderOnConfirm	: true,
+		reverseButtons : true,
+		confirmButtonAriaLabel : 'Thumbs up, great!',
+		cancelButtonText : '<i class="fa fa-thumbs-down">cancel</i>',
+		cancelButtonAriaLabel : 'Thumbs down',
+		preConfirm: () => {
+		    return fetch(ipAPI)
+		      .then(response => response.json())
+		      .then(data => Swal.insertQueueStep(data.ip))
+		      .catch(() => {
+		        Swal.insertQueueStep({
+		          type: 'error',
+		          title: 'Unable to get your public IP'
+		        })
+		      })
+		 }  
+	}).then((result) => {
+		if(result.value){
+		$.ajax({
+		type		: "POST",
+		url 		: "view-user-role-delete",
+		dataType	: "json",
+		contentType	: "application/json",
+		data		: JSON.stringify(index),
+		success		: function(response){
+			console.log(response);
+			if(response.message=="Success"){
+				swal({
+						title:"Data Deleted Successfully.",
+						type: "success",
+				}).then(function(){
+						location.reload(); 
+				})
+			}else{
+				console.log('i m in unsuccess');
+				swal({
+					title:response.code,
+					text: response.message,
+					type:"warning"
+				})
+			}
+		},error		: function(response){
+			swal(response.code);	
+		}
+	}) //ajax ends
+		}
+	})//swal function block ends
+}
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="main mrt_20">
+		<div class="col-md-12">
+			<ol class="breadcrumb breadcrumb-arrow">
+
+				<li><a href="/index-dashboard">Home</a></li>
+				<!-- <li class="active"><a th:href="@{/user/add-user-role}">Add
+						User Role</a></li> -->
+						<!-- <li class="active"><a style="color:#FFFFFF;">Add	User Role</a></li> -->
+
+				<li class="active"><span>List User Role</span></li>
+			</ol>
+		</div>
+		<div class="col-md-1">
+			<div class="form-group card-title">
+				<a class="btn btn-secondary" th:href="@{/user/add-user-role}">Add
+					User Role</a>
+			</div>
+		</div>
+		<div class="card-title">
+			<h4>List User Role</h4>
+		</div>
+		<div class="container-fluid">
+
+
+			<div class="card">
+				<div class="search-field">
+					<!-- 	<div class="row">
+							<div class="col-md-1">
+								<div class="form-group">
+									<a class="btn btn-secondary"
+										href="add-user-role">Create</a>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-info">Import</button>
+								</div>
+							</div>
+							<div class="col-md-1">
+								<div class="form-group">
+									<button class="btn btn-warning">
+										<i class="fa fa-download"> </i>
+									</button>
+								</div>
+							</div>
+							<div class="col-md-1"></div>
+						</div> -->
+					<div class="row">
+						<div class="col-md-2">
+							<label>User Role Name</label> <input type="text" class="form-control"
+								id="param1">
+						</div>
+						<div class="col-md-2">
+							<label>Department</label> <select class="org-name form-control"
+								id="param2">
+								<option th:each="c:${costCenterData}" th:value='${c.key}'
+									th:text="${c.name}"></option>
+							</select>
+						</div>
+
+						<div class="col-md-2 mrt_10">
+							<div class="form-group filtersearch">
+								<input type="button" class="btn btn-info" value="Search"
+									onclick="searchData()" />
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+
+
+				<div class="table-responsive" style="width: 100%;">
+					<table id="table" class="table table-bordered">
+						<thead>
+							<tr>
+								<th>User Role Name</th>
+								<th>Parent User Role</th>
+								<!--  <th>UserType</th> -->
+								<th>Department</th>
+								<th>Status</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+
+					</table>
+
+				</div>
+				<div style="clear: both;"></div>
+
+			</div>
+
+		</div>
+	</div>
+
+	<!-- Modal Start-->
+	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">View Details of User Role Details</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<i class="fa fa-close fa-2x"></i>
+					</button>
+				</div>
+				<div class="modal-body">
+					<table width="100%" border="0" id="table1">
+
+					</table>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!-- Modal End-->
+	<!-- /# row -->
+
+
+</div>
+</div>
+</html>

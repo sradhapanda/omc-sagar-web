@@ -1,0 +1,545 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script src="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+
+<script type="text/javascript">
+$(function () {
+// Replace the <textarea id="editor1"> with a CKEditor
+// instance, using default configuration.
+//CKEDITOR.replace('summary')
+//bootstrap WYSIHTML5 - text editor
+//$('.textarea').wysihtml5()
+
+
+// Replace the <textarea id="editor1"> with a CKEditor
+CKEDITOR.replace( 'summary',{height: 220,
+toolbar: [
+{ name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+{ name: 'basicstyles', items: [ 'Bold', 'Italic','S' ] },
+{ name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], 
+	items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] }
+
+]
+});
+
+/*CKEDITOR.config.fullPage = false;
+CKEDITOR.config.resize_enabled = false;
+CKEDITOR.config.removePlugins = 'resize,autogrow'*/
+
+});
+
+//Function for blank validation
+function checkEmpty(){
+ 	var purposeValue =true;
+	var amountValue =true;
+	$("#tbodyData > tr").each(function(){
+	if ($(this).find(".auditorNameCls").val()==''){
+		swal("please select auditor name..");
+		purposeValue=false;
+     return false;
+	}
+		
+	if(purposeValue){
+		if ($(this).find(".designationCls").val()==''){
+			amountValue=false;
+			swal("please enter designation..");
+     		return false;
+		}
+	}
+	});
+if(purposeValue && amountValue ){
+		
+		addMore();
+	}
+		
+
+}
+
+function addMore(){
+	var lengthOfTableRow = $("#tbodyData").children('tr').length;
+	var cloneHtml = $("#myTable tbody tr:first").clone();
+	$("#myTable tbody tr:last").find('td:last').html('');
+	$("#myTable tbody").append($("#myTable tbody tr:first").clone());
+	$("#myTable tbody tr td:last").html("");
+	var addMore='<button type="button" class="btn btn-omc tr_clone_add" name="add" onclick="checkEmpty();"><span class="ti-plus"></span></button>&nbsp;'
+	var removeMore = '<button type="button" class="btn btn-warning rmv" name="Remove"><span class="ti-minus"></span></button>';
+	
+	
+	$("#myTable tbody tr:last").find('td:last').append(addMore);
+	$("#myTable tbody tr:last").find('td:last').append(removeMore);
+	
+	var editTr = 0;
+	
+	if(lengthOfTableRow>editTr){
+		$("#myTable tbody tr").eq(lengthOfTableRow-1).find('td:last').append(removeMore);
+		
+	}
+			
+	// BLANK FIELD START
+
+	$("#myTable tbody tr:last").find(".designationCls").val('');
+	//$("#myTable tbody tr:last").find(".purposeCls").val('');
+	
+	
+	$("#myTable > tbody > tr").each(function(i){
+		var selectInput = $(this).find('select');
+		var textInput 	= $(this).find('input') ;
+		
+		selectInput.eq(0).attr('id',"auditorName_"+i);
+		textInput.eq(0).attr('id',"designation_"+i);
+		
+	})
+	
+}	
+$(document).ready(function(){
+	$('#listAllData').hide();
+
+	var lengthOfTableRow = $("#tbodyData").children('tr').length;
+	$('.tbll').on('click', '.rmv', function () {
+		$(this).closest('tr').remove();
+		
+		$("#myTable tbody tr:last").find('td:last').html('');
+		var add='<button type="button" class="btn btn-omc tr_clone_add" name="add" onclick="checkEmpty();"><span class="ti-plus"></span></button>&nbsp;'
+		var remove = '<button type="button" class="btn btn-warning rmv" name="Remove"><span class="ti-minus"></span></button>';
+	
+		if($("#tbodyData").children('tr').length > 1){
+			$("#myTable tbody tr:last").find('td:last').append(add);
+			$("#myTable tbody tr:last").find('td:last').append(remove);
+		}else{
+			$("#myTable tbody tr:last").find('td:last').append(add);
+		}
+		
+	
+	});
+});
+	$(document).ready(function() { 
+		
+		$.ajax({
+			type : 'GET',
+			url : 'initiate-audit-getSummery',
+			contentType : false,			
+			success : function(response) {	
+			var data=[];
+			if (response.message == "success") {				
+				CKEDITOR.instances['summary'].setData(response.body[0].name);
+				}
+		},
+			error : function(e) {
+				console.log("error");
+			}
+		});
+		
+		
+		 $("#submit").click(function(){
+			 var description = CKEDITOR.instances.summary.getData();
+				var x =Math.random().toString(36).slice(2); 
+				var dateValue =$("#date").val();
+				var randomId=(dateValue+'/'+x);
+				var name=$("#studentName").val();
+				var roll=$("#roll").val();
+				var year=$("#academic").val();
+				var amount=0.0;
+				var dataset = [];
+				var purposeValue=true;
+				var amountValue=true;			
+						var item = {};
+							item['auditInitiate']	 		   	=	$("#auditInitiate").val(),
+							item['auditType']	 		   		=	$("#auditType").val(),
+							item['financialYear']	        	=	$("#financialYear").val();
+							item['initiatedBy']    				=	$("#initiatedBy").val();								
+							item['initiatedDate']	  	       	=	$("#initiatedDate").val();
+							item['letterNo']		       		=	$("#letterNo").val();
+					  	 	item['organizaionName']             =	$("#organizaionName").val();					  	 
+					  	 	item['summary']             		=	description;
+					  	 						
+							dataset.push(item);	
+							console.log(dataset);
+							if ($(this).find(".auditorNameCls").val()==''){
+								swal("please select auditor name..");
+								purposeValue=false;
+						       return false;
+							}
+								
+						if(purposeValue){
+							if ($(this).find(".designationCls").val()==''){
+								amountValue=false;
+								swal("please enter designation..");
+						       return false;
+							}
+						}
+				
+				if(purposeValue && amountValue){
+				submitAudit(dataset);
+
+				}
+				});
+		
+		$("#auditType").on('change', function() {
+			var auditType=$("#auditType").val();
+			/* if($("#auditType").val()!='ADTM005'){
+			$("#initiatedBy").val('C & AG');	
+			} */
+			/* else{
+				$("#initiatedBy").val('');
+			} */
+		 // $("#organizaionDiv").show();
+			
+			$.ajax({
+				type : 'GET',
+				url : 'initiate-audit-getOrganization?auditType='+auditType,
+				contentType : false,
+				//data : audit,
+				success : function(response) {
+					if (response.message == "success") {
+						$("#organizaionName").empty();
+						var option = $("<option></option>");
+						$(option).val(null);
+						$(option).html("Select");
+						$("#organizaionName").append(option);
+						for (var i = 0; i < response.body.length; i++) {
+							var option = $("<option></option>");
+							$(option).val(response.body[i].auditInitiate);
+							$(option).html(response.body[i].financialYear);
+							$("#organizaionName").append(option);
+							//$(".designationCls").val(response.body[i].financialYear);
+						}
+					}
+
+				},
+				error : function(e) {
+					console.log("error");
+				}
+			});
+		});
+		
+		
+		var fYear = getCurrentFinancialYear();
+		$("#financialYear").val(fYear);
+
+		$("#initiatedDate").datetimepicker({
+			format : 'd-m-Y',
+			minDate:new Date(),
+			closeOnDateSelect : true,
+			timepicker : true,
+		})
+			$("#fromDate").datetimepicker({
+			format : 'd-m-Y',
+			minDate:new Date(),
+			closeOnDateSelect : true,
+			timepicker : false,
+		})
+			$("#toDate").datetimepicker({
+			format : 'd-m-Y',
+			minDate:new Date(),
+			closeOnDateSelect : true,
+			timepicker : false,
+		})
+		
+		 $("#save").click(function(){
+				var summery=  CKEDITOR.instances.summary.getData();
+				$.ajax({
+					type : 'POST',
+					url : 'initiate-audit-saveSummery',
+					contentType : false,
+					data : summery,
+					success : function(response) {
+						if (response.message == "success") {
+							
+						}
+
+					},
+					error : function(e) {
+						console.log("error");
+					}
+				});
+			});
+			
+	});
+	
+	
+	
+	//Function For Submit Pupup
+	function submitAudit(dataset){
+		swal.fire({
+			title				: "Are you sure want to Submit?",
+		//	text				: text,
+			type 				: "warning",
+			showCancelButton	: true,
+			confirmButtonColor	: "#ef5920",
+			confirmButtonText	:"Yes",
+			showLoaderOnConfirm	: true,
+			reverseButtons : true,
+			confirmButtonAriaLabel : 'Thumbs up, great!',
+			cancelButtonText : 'No',
+			cancelButtonAriaLabel : 'Thumbs down',
+			preConfirm: () => {
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						console.log("Doing async operation");
+						resolve()
+					}, 3000)
+				})
+			}
+		}).then((result) => {
+			if(result.value){
+				$.ajax({
+				type		: "POST",
+				url 		: "initiate-audit",
+				dataType	: "json",
+				contentType	: "application/json",
+				data		: JSON.stringify(dataset),
+				success		: function(response){
+					
+					if(response.message=="Success"){
+						swal({
+								title:"Data Saved Successfully.",
+								type: "success",
+						}).then(function(){
+							window.location.href = "/audit/view-initiated-audit" ;	
+						})
+					}else{
+						swal({
+							title:response.code,
+							text: response.message,
+							type:"warning"
+						})
+					}
+				},error		: function(response){
+					console.log(response.code);	
+				}
+			}) //ajax ends
+		}
+		})//swal function block ends
+	}//submit function ends 
+	
+
+	//function to check duplicate entry of spa table and staff name in add time
+	function disableStaffOption(){
+
+		$("#myTable > tbody > tr").each(function(i){
+			$(".auditorNameCls option").prop("visible", true); //enable everything
+
+			var arr = $.map(
+			$(".auditorNameCls option:selected"), function (n) {
+				return n.value;
+			});
+
+			$(".auditorNameCls option").filter(function () {
+				return $.inArray($(this).val(), arr) > -1; //if value is in the array of selected values
+			}).hide();
+
+			$(".auditorNameCls option").filter(function () {
+				return $.inArray($(this).val(), arr) == -1; //if value is not in the array of selected values
+			}).show();
+		})
+	}	
+		function displayStaff(){
+			$("#myTable > tbody > tr").each(function(i){
+				var arr = $.map(
+				$(".auditorNameCls option:selected"), function (n) {
+					return n.value;
+				});
+				$(".auditorNameCls option").filter(function () {
+					return $.inArray($(this).val(), arr) == -1; //if value is not in the array of selected values
+				}).show();
+			})
+		}
+
+
+	 function getAuditor() {
+		var organization=$("#organizaionName").val();
+		if (organization) {	
+		$.ajax({
+			type : 'GET',
+			url : 'initiate-audit-getAuditor?organization='+organization,
+			contentType : false,
+			//data : audit,
+			success : function(response) {
+				if (response.message == "success") {
+					$(".auditorNameCls").empty();
+					var option = $("<option></option>");
+					$(option).val(null);
+					$(option).html("Select");
+					$(".auditorNameCls").append(option);
+					for (var i = 0; i < response.body.length; i++) {
+						var option = $("<option></option>");
+						$(option).val(response.body[i].auditInitiate);
+						$(option).html(response.body[i].auditType);
+						$(".auditorNameCls").append(option);
+						//$(".designationCls").val(response.body[i].financialYear);
+					}
+				}
+
+			},
+			error : function(e) {
+				console.log("error");
+			}
+		});
+	} else {
+		console.log("error");
+		
+	}
+		
+}
+	 function getDesignation(event) {
+		 var currentId = event.currentTarget.id;
+			var l = currentId.split("_");
+			var counter = l[1];	
+			var auditor=$("#auditorName_"+counter).val();
+			if (auditor) {	
+			$.ajax({
+				type : 'GET',
+				url : 'initiate-audit-getDesignation?auditor='+auditor,
+				contentType : false,
+				//data : audit,
+				success : function(response) {
+					if (response.message == "success") {
+						$("#designation_"+counter).empty();
+						
+						for (var i = 0; i < response.body.length; i++) {						
+							$("#designation_"+counter).val(response.body[i].financialYear);
+						}
+					}
+
+				},
+				error : function(e) {
+					console.log("error");
+				}
+			});
+		} else {
+			console.log("error");
+			
+		}
+			
+	}
+	 
+	function validateForm() {
+		
+		if (!blankValidation("auditType", "SelectBox",
+				"Please Select Audit Type"))
+			return false;
+		if (!blankValidation("financialYear", "TextField",
+				"Please Enter Financial Year"))
+			return false;
+		
+		var audit=$("#auditType").val();
+		if (audit =='ADTM005' ) {
+			
+			if (!blankValidation("initiatedBy", "TextField",
+			"Please Enter Initiated By"))
+			return false;
+		}
+		if (!blankValidation("initiatedDate", "TextField",
+				"Please Enter Initiated Date"))
+			return false;
+		var audit=$("#auditType").val();
+		if (audit =='ADTM006') {
+			if (!blankValidation("organizaionName", "TextField",
+			"Please Enter Organization Name"))
+			return false;
+		}
+		if (!blankValidation("summary", "TextArea", "Please Enter Summary"))
+			return false;
+	
+	}
+	function saveFile() {
+		$("#upload_prev").empty();
+		var uFile = $('#fileUpload')[0].files[0];
+		var fileName = $('#fileUpload').val();
+
+		var lastIndex = fileName.lastIndexOf("\\");
+		if (lastIndex >= 0) {
+			fileName = fileName.substring(lastIndex + 1);
+		}
+		var iURL = URL.createObjectURL(uFile);
+		$("#uploadedImgDiv").html("");
+		var LightImg = "<a class='example-image-link' href='"+iURL+"' title='"+fileName+"' target='_blank'>Preview</a>";
+		$("#uploadedImgDiv").html(LightImg);
+
+		var fileData = new FormData();
+		fileData.append('file', uFile);
+		fileData.append('path', 'none');
+
+		$.ajax({
+			type : "POST",
+			url : "initiate-audit-uploadFile",
+			enctype : "multipart/form-data",
+			contentType : false,
+			data : fileData,
+			processData : false,
+			cache : false,
+			success : function(response) {
+
+			},
+			error : function(e) {
+
+			}
+		});
+	}
+	function getCurrentFinancialYear() {
+		var fiscalyear = "";
+		var today = new Date();
+		if ((today.getMonth() + 1) <= 3) {
+			fiscalyear = (today.getFullYear() - 1) + "-" + today.getFullYear()
+		} else {
+			fiscalyear = today.getFullYear() + "-" + (today.getFullYear() + 1)
+		}
+		return fiscalyear
+	}
+	
+	function getValidation(){
+		fromdateVal=$("#fromDate").val();
+		todateVal=$("#toDate").val();
+		if(fromdateVal && todateVal ){
+		dateValidation("fromDate","toDate","From Date","To Date")
+	}
+	}
+</script>
+</head>
+<div layout:fragment="content">
+
+	<div class="main mrt_20">
+		<!--Alert Box-->
+		<div class="alert alert-danger alert-dismissible"
+			th:if="${message != null}">
+			<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+			<span th:text="${message}"></span>
+		</div>
+		<!--Alert Box-->
+		<!-- <div class="col-md-12">
+			<ol class="breadcrumb breadcrumb-arrow">
+				<li><a href="index.html">Home</a></li>
+				<li class="active"><span>Initiate Audit</span></li>
+			</ol>
+		</div> -->
+		
+		<div class="container-fluid">
+			<div class="card">
+				<div class="card-body">
+					<div class="basic-elements">
+						<div class="row">
+									
+					<a th:each="c,iter:${draftNO}" th:value='${c.key}'
+									th:text="${c.name}"  th:href="${'/audit/view-audit-draft-report-detailss?id='+c.key}" ></a>
+				
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+		<div style="clear: both;"></div>
+	</div>
+</div>
+</div>
+</div>
+
+</html>

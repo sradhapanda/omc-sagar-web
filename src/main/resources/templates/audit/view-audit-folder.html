@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script
+	src="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<style type="text/css">
+textarea {
+	overflow: auto;
+	resize: vertical;
+	width: 350px;
+}
+
+.zoombox3 {
+	position: relative;
+	background: #f00;
+	height: 28px;
+	width: 18px;
+	color: #fff;
+	padding: 5px;
+	top: -35px;
+	right: -331px;
+	border-radius: 2px;
+}
+
+.Foldername {
+	color: #931b1e;
+	font-size: 18px;
+}
+</style>
+<style>
+.ui-autocomplete-loading {
+	background: white url("/static/images/ui-anim_basic_16x16.gif") right
+		center no-repeat;
+}
+</style>
+<script>
+	function insideFolder(folderId) {
+
+		var param1 = $("#param1").val();
+		var param2 = $("#param2").val();
+		var param3 = $("#param3").val();
+		var param4 = folderId;
+		var param5 = "";
+		var param6 = $("#param6").val();
+		window.location.href = "/audit/view-initiated-audit-documentAutoSearch-report?param1="
+				+ param1
+				+ "&param2="
+				+ param2
+				+ "&param3="
+				+ param3
+				+ "&param4="
+				+ param4
+				+ "&param5="
+				+ param5
+				+ "&param6="
+				+ param6;
+	}
+	function itemAutoComplete1() {
+		$
+				.ajax({
+					type : "POST",
+					url : "view-initiated-audit-AutocompleteList1",
+					dataType : 'json',
+					contentType : 'application/json',
+					data : $("#item1").val(),
+					success : function(res) {
+
+						if (res.message == "success") {
+							$("#tab1").empty();
+							console.log("biki123 " + res);
+							console.log(res);
+							for (var i = 0; i < res.body.length; i++) {
+								var data = '<div class="col-md-2"><div class="basic-elements align-c">'
+										+ '<a href="javascript:void(0)" onclick="insideFolder(\''
+										+ res.body[i].key
+										+ '\')"><i class="fa fa-folder-open-o fa-5x"></i>'
+										+ '</a><div><div  class="Foldername">'
+										+ res.body[i].name
+										+ '</div></div></div></div>';
+								$("#tab1").append(data);
+							}
+						}
+					},
+					error : function(data) {
+
+					}
+				})
+	}
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<!-- <li><a href="add-section-master">Audit Documents</a></li> -->
+				</ol>
+			</div>
+		</div>
+		<div class="card-title">
+			<h4>View Audit Report</h4>
+		</div>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="card">
+						<div id="demo">
+							<div class="row">
+								<div class="col-md-2">
+									<label>Folder</label> <input type="hidden" id="param9">
+									<input type="text" class="form-control" id="item1"
+										onkeyup="itemAutoComplete1();" />
+
+								</div>
+
+							</div>
+							<div class="row" id="tab1">
+								<input type="hidden" id="param1" th:value="${param1}"> <input
+									type="hidden" id="param2" th:value="${param2}"> <input
+									type="hidden" id="param3" th:value="${param3}"> <input
+									type="hidden" id="param6" th:value="${param6}">
+
+								<div class="col-md-2" th:each="c,iter:${folderNameList}">
+									<div class="basic-elements align-c">
+
+										<a href="javascript:vid(0)"
+											th:attr="onclick=|insideFolder('${c.key}')|"><i
+											class="fa fa-folder-open-o fa-5x"></i></a>
+										<div>
+											<div th:text="${c.name}" class="Foldername">(BARBIL)</div>
+										</div>
+									</div>
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+</html>

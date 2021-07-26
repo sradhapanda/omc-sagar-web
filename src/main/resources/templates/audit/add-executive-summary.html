@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<style>
+.autocomplete {
+	position: relative;
+	display: inline-block;
+}
+
+.autocomplete-items {
+	position: absolute;
+	border: 1px solid #d4d4d4;
+	border-bottom: none;
+	border-top: none;
+	z-index: 99;
+	/*position the autocomplete items to be the same width as the container:*/
+	top: 100%;
+	left: 0;
+	right: 0;
+}
+
+.autocomplete-items div {
+	padding: 10px;
+	cursor: pointer;
+	background-color: #fff;
+	border-bottom: 1px solid #d4d4d4;
+}
+
+/*when hovering an item:*/
+.autocomplete-items div:hover {
+	background-color: #e9e9e9;
+}
+
+/*when navigating through the items using the arrow keys:*/
+.autocomplete-active {
+	background-color: DodgerBlue !important;
+	color: #ffffff;
+}
+
+.brd-btm {
+	border-bottom: 1px solid #ccc;
+	padding: 4px 2px;
+}
+
+#autocomplete-list {
+	float: left;
+	list-style: none;
+	margin-top: -3px;
+	padding: 0;
+	width: 96%;
+	position: absolute;
+}
+
+#autocomplete-list li {
+	padding: 10px;
+	background: #f0f0f0;
+	border-bottom: #bbb9b9 1px solid;
+}
+
+#autocomplete-list li:hover {
+	background: #ece3d2;
+	cursor: pointer;
+}
+
+.amount_align_right {
+	width: 40%;
+	text-align: right;
+}
+
+.noBorder {
+	border: none !important;
+}
+.textarea-height{
+height:100px;
+overflow-y:scroll;
+}
+
+</style>
+
+
+<script>
+
+function checkempty(){
+
+	var observationValid = true;
+	$(".observationCls").each(function(){
+		if(!blankValidation($(this).attr('id'),"TextArea" ,"Please Enter observation")){
+			observationValid =false;
+	        return false;
+		}
+	});
+	
+
+	var resolveid = true;
+	if(observationValid){
+		$(".resolvedCls").each(function(){
+			var current_id = $(this).attr("id");
+			if (!blankValidation($(this).attr('id'),"TextArea" ,"Please Enter  Resolved")){
+				resolveid =false;
+		        return false;
+			}
+		});
+	}
+	
+	
+	var noResolveid = true;
+	if(observationValid && resolveid){
+		$(".notResolvedCls").each(function(){ 
+			if (!blankValidation($(this).attr('id'),"TextArea" ,"Please Enter Not Resolved")){
+				noResolveid =false;
+		        return false;
+			}
+			});
+	}
+	var pendingid =true;
+	if(observationValid && resolveid && noResolveid){
+		$('.pendingCls').each(function(){
+			if (!blankValidation($(this).attr('id'),"TextField" ,"Please Enter Pending")){
+				pendingid =false;
+		        return false;
+			}
+				
+		});
+	}
+	
+	if(observationValid && resolveid && noResolveid && pendingid ) {
+		addMore();
+	}
+}
+
+function addMore(){
+
+var lengthOfTableRow = $("#tbodyData").children('tr').length;
+var cloneHtml = $("#myTable tbody tr:first").clone();
+$("#myTable tbody tr:last").find('td:last').html('');
+$("#myTable tbody").append($("#myTable tbody tr:first").clone());
+
+$("#myTable tbody tr td:last").html("");
+var addMore='<button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="checkempty();"><span class="ti-plus"></span></button>&nbsp;'
+var removeMore = '<button type="button" class="btn btn-warning rmv" name="Remove"><span class="ti-minus"></span></button>';
+
+$("#myTable tbody tr:last").find('td:last').append(addMore);
+$("#myTable tbody tr:last").find('td:last').append(removeMore);
+$("#myTable tbody tr:last").find(".observationCls").val("");
+$("#myTable tbody tr:last").find(".resolvedCls").val("");
+$("#myTable tbody tr:last").find(".notResolvedCls").val("");
+$("#myTable tbody tr:last").find(".pendingCls").val("");
+
+
+var editTr = 0;
+
+if(lengthOfTableRow>editTr){
+
+$("#myTable tbody tr").eq(lengthOfTableRow-1).find('td:last').append(removeMore);
+}
+$("#myTable > tbody > tr").each(function(i){
+	
+var labelInput = $(this).find('label');
+var textInput = $(this).find('textarea');
+var fileInput = $(this).find('file');
+var divInput = $(this).find('div');
+labelInput.eq(0).attr('id', "slnoCls_" + i);
+labelInput.eq(0).html(i+1);
+textInput.eq(0).attr('id', "observationType_" + i);
+textInput.eq(1).attr('id', "selectEmp_" + i);
+textInput.eq(2).attr('id',"selectRemark_"+i);
+textInput.eq(3).attr('id',"selectPending_"+i);
+
+})
+
+}
+$(document).ready(function() {
+	
+ 
+//autocomplete end
+var lengthOfTableRow = $("#tbodyData").children('tr').length;
+$('.tbll').on('click', '.rmv', function () {
+$(this).closest('tr').remove();
+$("#myTable tbody tr:last").find('td:last').html('');
+var add='<button type="button" class="btn btn-primary tr_clone_add" name="add" onclick="checkempty();"><span class="ti-plus"></span></button>&nbsp;'
+var remove = '<button type="button" class="btn btn-warning rmv" name="Remove"><span class="ti-minus"></span></button>';
+
+if($("#tbodyData").children('tr').length > 1){
+$("#myTable tbody tr:last").find('td:last').append(add);
+$("#myTable tbody tr:last").find('td:last').append(remove);
+}else{
+$("#myTable tbody tr:last").find('td:last').append(add);
+}
+
+displayTable();
+});
+
+  
+
+
+
+
+$("#submit").click(function(){
+	var dataset = [];
+	$("#tbodyData > tr").each(function(){
+		item = {};
+		
+		item['financialYearId']	      	=	    $("#financialYearId").val();		
+		item['departmentId']       		=	    $("#departmentId").val();
+		item['auditId']       			=	    $("#auditNo").val();
+		item['checkListRefNo']       	=	    $("#typeId").val();
+		item['observation']            	=	    $(this).find(".observationCls").val();
+		item['resolved']		      	=	    $(this).find(".resolvedCls").val();
+		item['notResolved']		      	=     	$(this).find(".notResolvedCls").val();
+		item['pending']		      		=     	$(this).find(".pendingCls").val();
+		item['executiveId']	          	=	    $("#executiveId").val();
+		dataset.push(item);
+		//console.log(dataset);
+	});
+	
+	//Blank Validation
+	
+	
+	if (!blankValidation("financialYearId","SelectBox" ,"Please Select Financial year"))
+        return false;
+	
+	
+	if (!blankValidation("departmentId","SelectBox", "Please Seletct Department"))
+        return false;
+	
+
+	
+	
+	var observationValid =true;
+	$('.observationCls').each(function(){
+		if (!blankValidation($(this).attr('id'),"TextArea" ,"Please Enter Observation ")){
+			observationValid =false;
+	        return false;
+		}
+			
+	});
+
+	var resolveid =true;
+	if(observationValid){
+	$('.resolvedCls').each(function(){
+		if (!blankValidation($(this).attr('id'),"TextArea" ,"Please Enter resolve")){
+			resolveid =false;
+	        return false;
+		}
+			
+	});
+	}
+	var noResolveid =true;
+	if(observationValid && resolveid ){
+	$('.notResolvedCls').each(function(){
+		if (!blankValidation($(this).attr('id'),"TextArea" ,"Please Enter not resolve")){
+			noResolveid =false;
+	        return false;
+		}
+			
+	});
+	
+	}
+	var pendingid =true;
+	if(observationValid && resolveid && noResolveid){
+	$('.pendingCls').each(function(){
+		if (!blankValidation($(this).attr('id'),"TextField" ,"Please Enter Pending")){
+			pendingid =false;
+	        return false;
+		}
+			
+	});
+	
+	}
+
+	if(observationValid && resolveid && noResolveid && pendingid ){
+		//console.log(dataset);
+		submitItem(dataset);
+	}
+	
+});	
+
+});
+
+
+
+
+function submitItem(dataset){
+	
+		swal.fire({
+			title				: "Are you sure want to Submit?",
+			text				: "Once Submited,Can't revert back !",
+			type 				: "warning",
+			
+			showCancelButton	: true,
+			confirmButtonColor	: "#DD6BB5",
+			confirmButtonText	:"Yes",
+			reverseButtons : true,
+			confirmButtonAriaLabel : 'Thumbs up, great!',
+			cancelButtonText : 'No',
+			cancelButtonAriaLabel : 'Thumbs down', 
+		}).then((result) => {
+			if(result.value){
+				$.ajax({
+				type		: "POST",
+				url 		: "add-executive-summary-ajax",
+				dataType	: "json",
+				contentType	: "application/json",
+				data		: JSON.stringify(dataset),
+				success		: function(response){
+					//console.log(response);
+					if(response.message=="Success"){
+						swal({
+								title:"Data Saved Successfully.",
+								type: "success",
+						}).then(function(){
+								window.location.href = "/audit/view-executive-summary" ;
+						})
+					}else{
+						swal({
+							title:response.code,
+							text: response.message,
+							type:"warning"
+						})
+					}
+				},error		: function(data){
+					console.log(data);
+				}
+			}) //ajax ends
+		}
+		})//swal function block ends
+	}//submit function ends
+	
+
+function funcLoad(){
+	location.reload();
+}
+
+ </script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li class="active"><span>Audit Reserve</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Audit Reserve</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+					<div class="card-body">
+						<div class="basic-elements">
+
+
+
+							<form th:object="${auditExecutiveModel}" autocomplete="off">
+
+								<div class="row">
+									<input type="hidden" id="auditId" th:value="${auditId}">
+									<span style="color: red;" id="errorMsg"></span>
+									<div th:if="${message != null}">
+										<span th:text="${message}" style="color: red;"></span>
+									</div>
+								</div>
+								<div class="row">
+
+									<div class="col-md-6">
+										<input type="hidden" th:if="${itemReq}" id="executiveId"
+											th:value="${executive[0].executiveId}" />
+
+
+
+
+										<div class="form-group">
+											<label>Financial Year</label> <select class="form-control"
+												id="financialYearId">
+												<option th:value="null">--Select--</option>
+												<option th:each="c:${auditFinanceYearList}"
+													th:value='${c.key}' th:text="${c.name}"></option>
+
+											</select>
+										</div>
+										
+										<div class="form-group">
+											<label>Check List Ref No.</label> 
+											<input type="text" id="typeId" >
+										</div>
+
+									</div>
+
+
+
+									<div class="col-lg-6">
+
+
+										<div class="form-group">
+											<label>Department</label> <select class="form-control"
+												id="departmentId">
+
+												<option th:value="null">--Select--</option>
+												<option th:each="c:${departmentList}" th:value='${c.key}'
+													th:text="${c.name}"></option>
+
+											</select>
+										</div>
+										<div class="form-group">
+											<label>Audit No.</label> 
+											<input type="text" id="auditNo" >
+										</div>
+
+									</div>
+
+								</div>
+
+
+								<div class="row">
+									<div class="col-md-12" style="padding-top: 10px;">
+										<table class="tbll" id="myTable" width="100%" border="0"
+											cellspacing="1" cellpadding="5">
+											
+											<thead class="theadCls">
+												<tr>
+													<th width="50px">Slno</th>
+													<th width="300px">Observation</th>
+													<th width="300px">Replies Of Management</th>
+													<th width="300px">Final Observation</th>
+													<th width="200px">Risk Rating</th>
+													<th width="100px">Action</th>
+
+												</tr>
+											</thead>
+											<tbody id="tbodyData">
+												<tr class="tr_clone" th:if="${itemReq}"
+													th:each="a,iter:${auditExecutiveModel}">
+
+													<!-- <td><select id="observationType_"
+														class="form-control observationCls"
+														th:id="${'observationType_'+iter.index}">
+															<option value="">--Select--</option>
+															<option th:each="c:${shiftList}" th:value='${c.key}'
+																th:text="${c.name}" th:selected='${c.key==a.tShiftId}'></option>
+													</select></td>
+
+													<td>
+													<select id="selectEmp_"
+														class="form-control resolvedCls"
+														th:id="${'selectEmp_'+iter.index}">
+															<option value="">--Select--</option>
+															<option th:each="c:${empList}" th:value='${c.key}'
+																th:text="${c.name}" th:selected='${c.key==a.tEmp}'></option>
+													</select></td> -->
+													<td><span id="slno_" class="form-control slnoCls_"
+														th:value="${a.sNo}">1 </span>></td>
+
+													<td>
+													<textarea id="observationType_"
+															class="form-control observationCls textarea-height"
+															th:value="${a.Observation}">
+														</textarea></td>
+
+													<td>
+													<td><textarea id="selectEmp_"
+															class="form-control resolvedCls textarea-height" th:value="${a.resolved}">
+														</textarea></td>
+
+													<td>
+													<td><textarea id="selectRemark_"
+															class="form-control notResolvedCls textarea-height"
+															th:value="${a.notResolved}">
+														</textarea></td>
+
+													<td>
+													<td><input id="selectPending_"
+														class="form-control pendingCls" th:value="${a.pending}">
+													</td>
+
+													<td>
+														<button th:if="${iter.size == iter.index+1}" type="button"
+															class="btn btn-primary tr_clone_add" name="add"
+															onclick="checkempty();">
+															<span class="ti-plus"></span>
+														</button>
+														<button th:if="${iter.size != 1}" type="button"
+															class="btn btn-warning rmv" name="Remove">
+															<span class="ti-minus"></span>
+														</button>
+
+													</td>
+												</tr>
+
+												<tr class="tr_clone" th:unless="${itemReq}">
+													<td><label id="slno_0" class="form-control slnoCls_0">1
+													</label></td>
+
+													<td><textarea id="observationType_0"
+															class="form-control observationCls textarea-height"></textarea></td>
+													<td><textarea id="resolvedType_0"
+															class="form-control resolvedCls textarea-height"></textarea></td>
+
+													<td><textarea id="notResolvedType_0"
+															class="form-control notResolvedCls textarea-height"></textarea></td>
+													<td><input id="selectPending_0"
+														class="form-control pendingCls"></td>
+
+
+													<td><button type="button"
+															class="btn btn-primary tr_clone_add" name="add"
+															onclick="checkempty();">
+															<span class="ti-plus"></span>
+														</button>&nbsp;</td>
+												</tr>
+											</tbody>
+
+
+										</table>
+									</div>
+								</div>
+
+								<div class="col-md-12">
+									<div class="form-group">
+										<button type="button" id="submit" class="btn btn-success"
+											onclick="submitItem();">Submit</button>
+										<button type="button" class="btn btn-warning"
+											onclick="funcLoad();">Cancel</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div style="clear: both;"></div>
+		</div>
+
+	</div>
+</div>
+</html>

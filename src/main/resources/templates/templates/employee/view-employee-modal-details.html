@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<script>
+//Call Edit Function
+function myFunction() {
+var empId = $('#empId').val();
+window.location.href ="/employee/view-employee-edit?id="+window.btoa(empId);
+}
+
+//Call Change Status Function
+function myFun() {
+	var empId = $('#empId').val();
+	var empStatus = $('#empStatus').val();
+	var id = window.btoa(empId)+","+empStatus;
+	changeStatus(id);
+}
+//Chnage The Status Function
+function changeStatus(id){
+	var data = id.split(",");
+	if(data[1] == "false"){
+		data[1] = true;
+	}else{
+		data[1] = false;
+	}
+	if(data[1] == true){
+	swal({
+	title	: "Are you sure want \nto Active?",
+	//text	: "Once Deleted,Can't revert back !",
+	type : "warning",
+	showCancelButton	: true,
+	confirmButtonColor	: "#DD6BB5",
+	confirmButtonText	: "Active",
+	showLoaderOnConfirm	: true,
+	reverseButtons : true,
+	preConfirm: () => {
+	return new Promise((resolve) => {
+	setTimeout(() => {
+	console.log("Doing async operation");
+	resolve()
+	}, 3000)
+	})
+	}
+	}).then((result) => {
+	if(result.value){
+		$.ajax({
+		type :	"GET",
+		url :	"/employee/view-employee-change-status?id="+data[0]+"&status="+data[1],
+		success : function(response) {
+		
+			if(response.message=="success"){
+			swal({
+				title	: "Status Activated Successfully.",
+				type: "success",
+			}).then(function(){
+				location.reload(); 
+			})
+			}else{
+				swal({
+				title:response.code,
+				text: response.message,
+				type:"warning"
+			})
+			}	
+		},
+		error : function(data) {
+		console.log(data);
+		}
+		}) 
+	}
+   }) 
+	} else {
+	swal({
+		title	: "Are you sure want \nto Inactive?",
+		//text	: "Once Deleted,Can't revert back !",
+		type : "warning",
+		showCancelButton	: true,
+		confirmButtonColor	: "#DD6BB5",
+		confirmButtonText	: "Inactive",
+		showLoaderOnConfirm	: true,
+		reverseButtons : true,
+		preConfirm: () => {
+		return new Promise((resolve) => {
+		setTimeout(() => {
+		console.log("Doing async operation");
+		resolve()
+		}, 3000)
+		})
+		}
+		}).then((result) => {
+	if(result.value){
+		$.ajax({
+		type :	"GET",
+		url :	"/employee/view-employee-change-status?id="+data[0]+"&status="+data[1],
+		success : function(response) {
+		
+		if(response.message=="success"){
+			swal({
+			title	: "Status Inactivated Successfully.",
+			type: "success",
+			}).then(function(){
+			location.reload(); 
+			})
+	  }else{
+	swal({
+			title:response.code,
+			text: response.message,
+			type:"warning"
+		})
+	  }	
+   },
+	error : function(data) {
+	console.log(data);
+	 }
+   }) 
+  }
+ }) 
+ }
+}
+
+</script>
+<style>
+.tdheader {
+	border-bottom: 1px solid transparent;
+	border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+	background-color: #f0f5f5;
+}
+
+.table {
+	margin-bottom: 20px;
+	background-color: #fff;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+	border-color: #ddd;
+}
+
+.trClass {
+	border-top: 3px solid #fff;
+}
+
+.tdbody {
+	color: #3c8dbc;
+	font-weight: 500;
+}
+
+.spanCls {
+	font-size: 15px;
+	color: #373757;
+	font-family: inherit;
+	font-weight: 500;
+	line-height: 1.1;
+	margin-bottom: .5rem;
+}
+</style>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="index.html">Home</a></li>
+					<li><a href="/master/view-employee-master">Back</a></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>View Employee Details</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-md-2">
+						<img th:src="${image}" alt="" height="140" width="140"
+							style="border-radius: 10%;">
+					</div>
+					<div class="col-md-10">
+						<div class="row">
+							<input type="hidden" id="empId"
+								th:value="${employee[0].employeeNo}"> <input
+								type="hidden" id="empStatus" th:value="${employee[0].status}">
+							<table>
+								<tr th:if="${employee[0].employeeMname!=null}">
+									<td><h2
+											th:text="${employee[0].employeeFname +' '+ employee[0].employeeMname +' '+ employee[0].employeeLname }"></h2></td>
+
+								</tr>
+								<tr th:unless="${employee[0].employeeMname!=null}">
+									<td><h2
+											th:text="${employee[0].employeeFname +' '+ employee[0].employeeLname }"></h2></td>
+
+								</tr>
+								<tr>
+									<td colspan="3"><span class="spanCls"><i
+											class="fa fa-phone"></i></span><span class="spanCls"
+										th:text="${' '+employee[0].employeeMobilePhoneNo+' '}"></span>
+										<span class="spanCls"><i class="fa fa-envelope"></i></span><span
+										class="spanCls"
+										th:text="${' '+ employee[0].employeePersonalEmail}"></span></td>
+								</tr>
+								<tr>
+									<td colspan="3"><span class="spanCls">Employee
+											Number: </span><span class="tdbody"
+										th:text="${' '+ employee[0].employeeNo}"></span></td>
+								</tr>
+								<tr>
+									<td colspan="3"><span class="spanCls">Status: </span><span
+										class="tdbody" th:text="${' '+ employee[0].statusName}"></span></td>
+								</tr>
+
+								<tr th:if="${employee[0].status}">
+									<td colspan="3"><button class="btn btn-success"
+											onclick="myFunction();">
+											<i class="fa fa-edit"></i> Edit Info
+										</button>
+										<button class="btn btn-primary" onclick="myFun();">
+											<i class="fa fa-check"></i> Change Status
+										</button></td>
+								</tr>
+
+								<tr th:unless="${employee[0].status}">
+									<td colspan="3"><button class="btn btn-success"
+											onclick="myFunction();">
+											<i class="fa fa-edit"></i> Edit Info
+										</button>
+										<button class="btn btn-default" onclick="myFun();">
+											<i class="fa fa-ban"></i> Change Status
+										</button></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<table width="800px" class="table">
+							<tr>
+								<td class="tdheader" colspan="4"><h3>Personal
+										Information</h3></td>
+							</tr>
+							<tr>
+								<td width="200" class="tdbody"><h5>Adhar Number</h5>
+									<h6 th:text="${employee[0].employeeAdhar}"></h6></td>
+								<td width="200" class="tdbody"><h5>ESIC</h5>
+									<h6 th:text="${employee[0].employeeEsicNo}"></h6></td>
+								<td width="200" class="tdbody"><h5>Driving License No</h5>
+									<h6 th:text="${employee[0].employeeDl}"></h6></td>
+								<td width="200" class="tdbody"><h5>Other ID</h5>
+									<h6 th:text="${employee[0].employeeOtherId}"></h6></td>
+							</tr>
+							<tr class="trClass">
+								<td width="200" class="tdbody"><h5>Date Of Birth</h5>
+									<h6 th:text="${employee[0].employeeDob}"></h6></td>
+								<td width="200" class="tdbody"><h5>Gender</h5>
+									<h6 th:text="${employee[0].employeeGenderName}"></h6></td>
+								<td width="200" class="tdbody"><h5>Nationality</h5>
+									<h6 th:text="${employee[0].employeeNationality}"></h6></td>
+								<td width="200" class="tdbody"><h5>Marital Status</h5>
+									<h6 th:text="${employee[0].employeeMaritalName}"></h6></td>
+							</tr>
+							<!-- <tr class="trClass">
+								<td width="200" class="tdbody"><h5>Joined Date</h5>
+									<h6 th:text="${employee[0].employeeJoinDate}"></h6></td>
+								<td width="200" class="tdbody"><h5>Confirmation Date</h5>
+									<h6 th:text="${employee[0].employeeConfirmDate}"></h6></td>
+								<td width="200" class="tdbody"><h5>Terminated Date</h5>
+									<h6 th:text="${employee[0].employeeTerminateDate}"></h6></td>
+								<td width="200" class="tdbody"><h5>Login ID</h5>
+									<h6 th:text="${employee[0].employeeLoginID}"></h6></td>
+							</tr> -->
+						</table>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<table width="800px" class="table">
+							<tr>
+								<td class="tdheader" colspan="4"><h3>Contact
+										Information</h3></td>
+							</tr>
+							<tr>
+								<td width="200" class="tdbody"><h5>Address</h5>
+									<h6 th:text="${employee[0].employeeAddress}"></h6></td>
+								<td width="200" class="tdbody"><h5>City</h5>
+									<h6 th:text="${employee[0].employeeCity}"></h6></td>
+								<td width="200" class="tdbody"><h5>State</h5>
+									<h6 th:text="${employee[0].employeeStateName}"></h6></td>
+								<td width="200" class="tdbody"><h5>Country</h5>
+									<h6 th:text="${employee[0].employeeCountyName}"></h6></td>
+								
+							</tr>
+							
+							<tr  class="trClass">
+							<td width="200" class="tdbody"><h5>Pin Code</h5>
+									<h6 th:text="${employee[0].employeePin}"></h6></td>
+							</tr>
+							<tr class="trClass">
+								<td width="200" class="tdbody"><h5>Personal Number</h5>
+									<h6 th:text="${employee[0].employeeMobilePhoneNo}"></h6></td>
+								<td width="200" class="tdbody"><h5>Home Phone</h5>
+									<h6 th:text="${employee[0].employeeHomePhoneNo}"></h6></td>
+								<td width="200" class="tdbody"><h5>Work Phone</h5>
+									<h6 th:text="${employee[0].employeeWorkPhoneNo}"></h6></td>
+								<td width="200" class="tdbody"><h5>Personal Email</h5>
+									<h6 th:text="${employee[0].employeePersonalEmail}"></h6></td>
+
+
+							</tr>
+						</table>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<table width="800px" class="table">
+							<tr>
+								<td class="tdheader" colspan="4"><h3>Job Details</h3></td>
+							</tr>
+
+							<tr class="trClass">
+
+								<td width="200" class="tdbody"><h5>Department</h5>
+									<h6 th:text="${employee[0].employeeDepartment}"></h6></td>
+								<td width="200" class="tdbody"><h5>Job Title</h5>
+									<h6 th:text="${employee[0].empDesignationName}"></h6></td>
+								<td width="200" class="tdbody"><h5>Employment Status</h5>
+									<h6 th:text="${employee[0].employeeEmployment}"></h6></td>
+								<td width="200" class="tdbody"><h5>Pay Grade</h5>
+									<h6 th:text="${employee[0].employeePaygradeName}"></h6></td>
+
+							</tr>
+
+							<tr class="trClass">
+								<td width="200" class="tdbody"><h5>Join Date</h5>
+									<h6 th:text="${employee[0].employeeJoinDate}"></h6></td>
+								<td width="200" class="tdbody"><h5>Confirm Date</h5>
+									<h6 th:text="${employee[0].employeeConfirmDate}"></h6></td>
+								<td width="200" class="tdbody"><h5>Termination Date</h5>
+									<h6 th:text="${employee[0].employeeTerminateDate}"></h6></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				<!-- <div class="row">
+					<div class="col-md-12">
+						<table width="800px" class="table">
+							<tr>
+								<td class="tdheader" colspan="4"><h3>Supervisor
+										Details</h3></td>
+							</tr>
+
+							<tr class="trClass">
+								<td width="200" class="tdbody"><h5>Direct Supervisor
+										Name</h5>
+									<h6 th:text="${employee[0].employeeSupervisor}"></h6></td>
+								<td width="200" class="tdbody"><h5>InDirect Supervisor
+										Name</h5>
+									<h6 th:text="${employee[0].employeeIndSupervisor}"></h6></td>
+							</tr>
+							<tr class="trClass">
+								<td width="200" class="tdbody"><h5>First Label
+										Approver</h5>
+									<h6 th:text="${employee[0].employeeFirstApp}"></h6></td>
+								<td width="200" class="tdbody"><h5>Second Label
+										Approver</h5>
+									<h6 th:text="${employee[0].employeeSecApp}"></h6></td>
+								<td width="200" class="tdbody"><h5>Third Label
+										Approver</h5>
+									<h6 th:text="${employee[0].employeeThirdApp}"></h6></td>
+							</tr>
+						</table>
+					</div>
+				</div> -->
+
+
+			</div>
+		</div>
+	</div>
+</div>
+</html>

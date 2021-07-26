@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+
+<script type="text/javascript">
+$(function () { 
+
+	 CKEDITOR.replace('popupCommentView') 
+	 
+var id=$("#audit").val();
+$.ajax({
+    type: "GET",
+    url: "view-internal-audit-view-comment?id="+id,
+    dataType: 'json',
+    contentType: 'application/json',
+    //data: id,
+    success: function(response) {
+        if (response.message == "success") {
+           // console.log(response.body)
+           
+            if (response.body.length > 0) {
+                for (var i = 0; i < response.body.length; i++) {
+                    var c = i + 1;
+                    var html = response.body[i].comment;
+	                	html = html.replace(/<style([\s\S]*?)<\/style>/gi, '');
+	                	html = html.replace(/<script([\s\S]*?)<\/script>/gi, '');
+	                	html = html.replace(/<\/div>/ig, '\n');
+	                	html = html.replace(/<\/li>/ig, '\n');
+	                	html = html.replace(/<li>/ig, ' * ');
+	                	html = html.replace(/<\/ul>/ig, '\n');
+	                	html = html.replace(/<\/p>/ig, '\n');
+	                	html = html.replace(/<br\s*[\/]?>/gi, "\n");
+	                	html = html.replace(/<[^>]+>/ig, '');
+	                	//console.log(html);
+	                	var data=html.substr(0, 40);
+	                	var replyStatus="";
+	                	var status=response.body[i].replyStatus;
+	                	
+		                	if(status == "1"){
+		                		replyStatus="Replied";
+		                	}
+		                	 if(status == "2"){
+		                		replyStatus="Rejected";
+		                	}
+		                	 if(status == "0"){		                
+			                		replyStatus="Not Replied";
+			                	}
+		                	
+                    if (response.body[i].document != null && response.body[i].document != "") {
+                        table = '<tr><td>' +
+                            c +
+                            '</td><td><a href="/document/audit/' + response.body[i].document + '" target="_blank">' +
+                            response.body[i].document +
+                            '</a></td><td><div class="textareabox" id="commentData">'+data+'<div class="zoombox"><a id="zoomId_'+i+'" href=javascript:void(0) onclick="commentVal(event)"><i class="fa fa-expand"></i></a></div>'
+        					  +'</div></td><td><input type="hidden" id="comVal_'+i+'" value="'+response.body[i].comment+'">' +
+ 	                        response.body[i].createdOn +
+ 	                        '</td><td>' +
+ 	                       replyStatus +
+ 	                        '</td><td>' +
+ 	                        response.body[i].createdBy +
+ 	                        '</td></tr>';
+                     
+                        $('#table2').append(table);
+                    } else {
+                        table = '<tr><td>' +
+                            c +
+                            '</td><td>' +
+                            'N/A' +
+                            '</td><td><div class="textareabox" id="commentData">'+data+'<div class="zoombox"><a id="zoomId_'+i+'" href=javascript:void(0) onclick="commentVal(event)"><i class="fa fa-expand"></i></a></div>'
+      					  +'</div></td><td><input type="hidden" id="comVal_'+i+'" value="'+response.body[i].comment+'"/>'+
+ 	                        response.body[i].createdOn +
+ 	                        '</td><td>' +
+ 	                       replyStatus +
+ 	                        '</td><td>' +
+ 	                        response.body[i].createdBy +
+ 	                        '</td></tr>';
+                       
+                        $('#table2').append(table);
+                    }
+                }
+            } else {
+                table = "<tr><td colspan='3' align='center'>No Compliance</td></tr>";
+               
+                $('#table2').append(table);
+            }
+        }
+    },
+    error: function(data) {
+        console.log(data)
+    }
+});
+  })
+  
+  function commentVal(event){
+	var currentValue = event.currentTarget.value;
+	var currentId = event.currentTarget.getAttribute('id');
+	var l = currentId.split("_");
+	var counter = l[1];
+	var data=$("#comVal_"+counter).val();	
+	CKEDITOR.instances['popupCommentView'].setData(data);
+	$('#commentView').modal('show');
+}
+</script>
+
+
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li class="active"><span>View Compliance</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>View Compliance</h4>
+			</div>
+			<div class="container-fluid">
+		
+				<div class="card">
+					<div class="card-body">
+						<div class="basic-elements">
+							<input type="hidden" id="audit" th:value="${audit}">
+							
+							<div class="row">
+								<span style="color: red;" id="errorMsg"></span>
+								<div th:if="${message != null}">
+									<span th:text="${message}" style="color: red;"></span>
+								</div>
+							</div>
+
+							<div class="row">
+								<div class="col-lg-12">
+									<!-- id="table-data" -->
+									<table class="tbll table table-stripped" id="myTable"
+										width="100%" border="0" cellspacing="1" cellpadding="5">
+										<thead>
+											<tr>
+												<th>Sl. No.</th>
+												<th>Document</th>
+												<th>Comment</th>
+												<th>Date</th>
+												<th>Status</th>
+												<th>Commented By</th>
+											</tr>
+										</thead>
+										<tbody id="table2">
+											<!-- <tr class="tr_clone">
+											
+												<td><span class="slNoCls" id="slNo_0">1</span></td>
+												<td>asdfgh</td>
+												<td>ertfgh</td>
+												<td>ertgh</td>
+												<td>wewrty</td>
+												<td>wewrty</td>
+											</tr> -->
+
+										</tbody>
+									</table>
+									
+								</div>
+							</div>
+							<div class="row">
+								<div class="form-group">
+									
+									<button type="button" class="btn btn-warning" id="btnCancel" onclick="history.go(-1)">Close</button>
+								</div>
+							</div>
+							<!-- </form> onclick="funcLoad();" -->
+						</div>
+				<div id="commentView" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+
+					<!-- Modal content-->
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Observation Details</h4>
+						</div>
+						<div class="modal-body">
+						<div class="box-body pad">
+							<textarea id="popupCommentView" name="popupComment" rows="10" cols="80">
+		                                            
+		                    </textarea>
+						</div>
+							</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default"
+								data-dismiss="modal">Close</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+					</div>
+				</div>
+				<div style="clear: both;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

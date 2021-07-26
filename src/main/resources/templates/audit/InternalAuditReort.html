@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/master}">
+<head>
+<style type="text/css">
+.btm-section {
+	background-color: #eee;
+	padding: 5px;
+	margin: 20px 0px;
+}
+
+.btm-section i {
+	font-size: 18px;
+	color: #f43b03;
+	margin: 3px 0px;
+	cursor: pointer;
+}
+
+.icon-text {
+	font-size: 16px;
+	color: #000;
+	font-weight: 500;
+}
+
+.btn-txtlft {
+	text-align: left !important;
+}
+
+.accordion-toggle:after {
+	font-family: 'FontAwesome';
+	content: "\f078";
+	float: right;
+}
+
+.accordion-opened .accordion-toggle:after {
+	content: "\f054";
+}
+
+h5 {
+	font-size: 14px;
+	color: #06a74f;
+	padding: 8px 0px;
+}
+
+.heading {
+	background: #f5f5f5;
+	font-weight: bold;
+	color: #000000;
+	text-align: left;
+	padding: 5px;
+}
+
+.text {
+	padding: 5px;
+}
+
+.paraheading {
+	color: #931b1e;
+	padding: 10px 0px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.docheading {
+	color: #106436;
+	padding: 10px 0px;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.pdf {
+	color: #F00;
+}
+
+.excel {
+	color: #027d39;
+}
+
+.additionalinfo {
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 4px;
+	text-align: justify;
+}
+
+.cordinator span {
+	font-size: 12px;
+}
+
+.timeline {
+	position: relative;
+	margin: 10px 0 40px 0;
+	padding: 0;
+	list-style: none;
+}
+
+.timeline:before {
+	content: '';
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 4px;
+	background: #ddd;
+	left: 31px;
+	margin: 0;
+	border-radius: 2px;
+}
+
+.timeline>li {
+	position: relative;
+	margin-right: 10px;
+	margin-bottom: 15px;
+}
+
+.timeline>li:before, .timeline>li:after {
+	content: " ";
+	display: table;
+}
+
+.timeline>li:after {
+	clear: both;
+}
+
+.timeline>li>.timeline-item {
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+	border-radius: 3px;
+	margin-top: 0;
+	background: #fff;
+	color: #444;
+	margin-left: 60px;
+	margin-right: 15px;
+	padding: 0;
+	position: relative;
+}
+
+.timeline>li>.timeline-item>.time {
+	color: #999;
+	float: right;
+	padding: 10px 2px;
+	font-size: 12px;
+}
+
+.timeline>li>.timeline-item>.timeline-header {
+	margin: 0;
+	color: #555;
+	border-bottom: 1px solid #f4f4f4;
+	padding: 10px 2px;
+	font-size: 16px;
+	line-height: 1.1;
+}
+
+.timeline>li>.timeline-item>.timeline-header>a {
+	font-weight: 600;
+}
+
+.timeline>li>.timeline-item>.timeline-body, .timeline>li>.timeline-item>.timeline-footer
+	{
+	padding: 10px;
+}
+
+.timeline>li>.fa, .timeline>li>.glyphicon, .timeline>li>.ion {
+	width: 30px;
+	height: 30px;
+	font-size: 15px;
+	line-height: 30px;
+	position: absolute;
+	color: #FFF;
+	background: #d2d6de;
+	border-radius: 50%;
+	text-align: center;
+	left: 18px;
+	top: 0;
+}
+
+.timeline>.time-label>span {
+	font-weight: 600;
+	padding: 5px;
+	display: inline-block;
+	background-color: #fff;
+	border-radius: 4px;
+}
+
+.timeline-inverse>li>.timeline-item {
+	background: #f0f0f0;
+	border: 1px solid #ddd;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.timeline-inverse>li>.timeline-item>.timeline-header {
+	border-bottom-color: #ddd;
+}
+
+.txt_white {
+	color: #FFF;
+}
+
+.paddingless {
+	padding: 0 !important;
+}
+</style>
+<script
+	src="../../plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
+<script type="text/javascript">
+</script>
+<style>
+.ui-autocomplete-loading {
+	background: white url("/static/images/ui-anim_basic_16x16.gif") right
+		center no-repeat;
+}
+</style>
+
+<script type="text/javascript">
+function downloadA(){
+
+	var department=$("#department").val();
+	var section=$("#section").val();
+	var auditId=$("#auditId").val();
+	var type="A";
+	window.open("/audit/view-initiated-audit-internal-audit-report-download?section="+ section + "&department="+department+ "&auditId="+ auditId+"&type="+type, "_blank"); 
+	
+}
+function giveFinalObs(){
+	
+	var obs = CKEDITOR.instances.finalObs.getData();
+	console.log("Question ID:"+$("#ObsID").val())
+	console.log("Risk Rating:"+$("#riskRatting").val())
+	console.log("Final Observation:"+obs)
+	var data = {};
+	data['quesId'] = $("#ObsID").val();
+	data['observation'] = obs;
+	data['severity'] = $("#riskRatting").val()
+	swal.fire({
+		  title: "Are You Sure Want to send?",
+		  text: "Once sent,Can't revert back !",
+		  type: "warning",
+		  showCancelButton: true,
+		  confirmButtonColor: '#ef5920',
+		  cancelButtonColor: '#e7b63a',
+		  confirmButtonText: 'Yes',
+		  showLoaderOnConfirm		: true,
+		  //closeOnConfirm: false,
+		  reverseButtons : true,
+		  preConfirm: () => {
+				return new Promise((resolve) => {
+					setTimeout(() => {
+						console.log("Doing async operation");
+						resolve()
+					}, 1000)
+				})
+			}
+		}).then((result) => {
+			if(result.value){
+			 $.ajax({
+				 	type		:	"POST",
+				 	url			:	"view-internal-audit-final-Observation",
+					dataType	:	"json",
+					contentType	: 	'application/json; charset=utf-8',
+					data		:   JSON.stringify(data),						    
+				    success: function(response) {
+				    	console.log(response);
+				        if (response.message == "success") {
+				        	swal({
+				        		title: "Sent Successfully.",
+				        		type: "success"
+				        	}).then(function(){
+				        		location.reload(); 
+				        	})
+				        
+				        } else {
+				            swal({
+				                title: 'Unsuccess',
+				                text: response.code
+				            })
+				        }
+				    },
+				    error: function(data) {
+				    	swal({
+			                title: 'Error',
+			                type:"warning",
+			                text: data
+			            })
+				    }
+				})
+			}
+		  
+		});
+}
+function finalObservation(obsId){
+	$("#ObsID").val(obsId);
+	$("#finalObsModal").modal('show');
+	
+}
+$(function () { 
+	CKEDITOR.replace( 'finalObs',{height: 220,
+		toolbar: [
+		{ name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+		{ name: 'basicstyles', items: [ 'Bold', 'Italic','S' ] },
+		{ name: 'styles', items: [ 'Styles', 'Format', 'Font', 'FontSize' ] },
+		{ name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], 
+			items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote' ] }
+		]
+		});
+})
+</script>
+</head>
+<div layout:fragment="content">
+	<div class="content-wrap">
+		<div class="main mrt_20">
+			<div class="col-md-12">
+				<ol class="breadcrumb breadcrumb-arrow">
+					<li><a href="/index-dashboard">Home</a></li>
+					<li class="active"><span>Internal Audit Report</span></li>
+				</ol>
+			</div>
+			<div class="card-title">
+				<h4>Internal Audit Report</h4>
+			</div>
+			<div class="container-fluid">
+				<div class="card">
+					<div class="card-body">
+						<div class="basic-elements">
+							<div class="row">
+								<div class="col-md-12">
+									<div class="accordion">
+
+								<!-- A.Auditor's Observations -->
+								
+								<div class="accordion-group mrt_20" id="adtObs">
+									<div class="accordion-heading">
+										<button class="btn btn-warning btn-block accordion-toggle btn-txtlft"
+											data-toggle="collapse" data-parent="#accordion2"
+											href="#collapseTwo" style="text-align:center" >A.Auditor's Observations
+										</button>
+									</div>
+									<div id="collapseTwo" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<ul class="timeline">
+											<th:block th:if="${questions}" th:each="q,iter:${questions}">
+
+												<li class="time-label"><span class="bg-red txt_white"
+													th:text="${q.date}"> </span></li>
+												<!-- /.timeline-label -->
+												<!-- timeline item -->
+												<li><i class="fa bg-blue" th:text="'Q'+(${iter.index}+1)"></i>
+
+													<div class="timeline-item">
+
+														<span class="time"><i class="fa fa-clock-o"></i><span
+															th:text="${q.time}"></span></span> <span class="time"
+															th:utext="${q.document}"> </span>
+														<!-- span class="time"><i class="fa fa-file-excel-o fa-2x excel" title="document.xl"></i> </span--->
+
+														<h6 class="timeline-header" >
+															<!-- a href="#">Jinesh</a---><strong><p style="margin:0px;" th:text="${q.question}"></p></strong>
+														</h6>
+
+														<div class="timeline-body">
+														
+															<!-- <strong>Observation:</strong>
+
+															<div th:if="${q.observation}">
+																<span class="" th:text="${q.observation}"></span>
+															</div> -->
+															<div >
+																<span class=""><strong>ObservationType:</strong>
+																</span><span class="col-md-3" th:text="${q.obsTypeName}"></span>
+																<span class=""><strong>Severity:</strong> </span><span
+																	class="col-md-3" th:text="${q.severityType}"></span>
+																<!-- <span class=""><strong>Status:</strong> </span><span class="col-md-3" th:text="${q.observation}"></span> -->
+															</div>
+															<!-- <div th:unless="${q.observation}">
+																<span>N/A</span>
+															</div> -->
+														
+
+															<th:block th:each="compliance:${q.compliances}">
+															<div th:if="${compliance.comment != ''}">
+																<section style="display:flex;">
+																	<strong>Replies:</strong>
+																	<span class="" style="margin-left:20px;" th:text="${compliance.createdBy}"></span>
+																	<span class="" style="margin-left:20px;" th:text="${compliance.createdOn}"></span>
+																	<span class="time" style="margin-left:auto;" th:utext="${compliance.document}"></span>
+																</section>
+																<span class="" th:utext="${compliance.comment}"></span>
+															</div>
+															
+															<div th:unless="${compliance.comment}">
+																<span>N/A</span>
+															</div>
+															</th:block>
+															
+															<!-- FINAL OBSERVATION -->
+															
+															<div th:if="${q.finalObservation}" style="margin-top:10px;">
+																<div><strong>Final Observation:</strong></div>
+																<span class="" th:utext="${q.finalObservation}"></span>
+															</div>
+															<div th:if="${q.finalObservation}">
+																<span class=""><strong>Risk Rating:</strong></span>
+																<span class="col-md-3" th:if="${q.riskRating == '1'}">Blocker</span>
+																<span class="col-md-3" th:if="${q.riskRating == '2'}">High</span>
+																<span class="col-md-3" th:if="${q.riskRating == '3'}">Medium</span>
+																<span class="col-md-3" th:if="${q.riskRating == '4'}">Low</span>
+																
+															</div>
+															<div th:unless="${q.finalObservation}">
+																
+															</div>
+															<!-- FINAL OBSERVATION -->
+															
+														</div>
+
+														<a th:if="${(#lists.contains(session.USER_ROLES, 'rol024'))}" class="btn btn-danger btn-xs" style="color: #ffff;"
+															th:attr="onclick=|finalObservation('${q.quesId}')|">Final Observation</a>
+
+													</div></li>
+
+											<!--  observation comment deatils -->
+
+											</th:block>
+											<!-- END timeline item -->
+											<li><i class="fa fa-clock-o bg-gray"></i></li>
+										</ul>
+										<a th:if="${(#lists.contains(session.USER_ROLES, 'rol021'))}" class="btn btn-success" th:href="'view-initiated-audit-internal-audit-report-download?section='+${section}+'&department='+${department}+'&auditId='+${auditId}+'&type=A'+'&auditType='+${auditType}"> Download Report </a>
+									</div>
+									</div>
+								</div>
+								
+								<!-- B.Deviation Points Of Check List -->
+								<div class="accordion-group mrt_20" id="devObs" th:if="${#lists.size(DevQuestions)>0}">
+									<div class="accordion-heading">
+										<button class="btn btn-warning btn-block accordion-toggle btn-txtlft"
+											data-toggle="collapse" data-parent="#accordion2"
+											href="#collapseThree" style="text-align:center" >B.Deviation Points Of Check List
+										</button>
+									</div>
+									<div id="collapseThree" class="accordion-body collapse">
+										<div class="accordion-inner">
+											<ul class="timeline">
+											<th:block th:if="${DevQuestions}" th:each="q,iter:${DevQuestions}">
+
+												<li class="time-label"><span class="bg-red txt_white"
+													th:text="${q.date}"> </span></li>
+												<!-- /.timeline-label -->
+												<!-- timeline item -->
+												<li><i class="fa bg-blue" th:text="'Q'+(${iter.index}+1)"></i>
+
+													<div class="timeline-item">
+
+														<span class="time"><i class="fa fa-clock-o"></i><span
+															th:text="${q.time}"></span></span> <span class="time"
+															th:utext="${q.document}"> </span>
+														<!-- span class="time"><i class="fa fa-file-excel-o fa-2x excel" title="document.xl"></i> </span--->
+
+														<h6 class="timeline-header" >
+															<!-- a href="#">Jinesh</a---><strong><p style="margin:0px;" th:text="${q.question}"></p></strong>
+														</h6>
+
+														<div class="timeline-body">
+															<!--  strong>Department: </strong><span
+																th:text="${q.deptId}"></span>&nbsp&nbsp&nbsp<strong>Section:
+															</strong><span th:text="${q.sectionId}"></span><br> <strong>Question:</strong>
+															<div ></div-->
+
+															<!-- <strong>Observation:</strong>
+
+															<div th:if="${q.observation}">
+																<span class="" th:text="${q.observation}"></span>
+															</div> -->
+															<div >
+																<span class=""><strong>ObservationType:</strong>
+																</span><span class="col-md-3" th:text="${q.obsTypeName}"></span>
+																<span class=""><strong>Severity:</strong> </span>
+																<span class="col-md-3" th:text="${q.severityType}"></span>
+																<span class=""><strong>Check List Ref No:</strong> </span>
+																<span class="col-md-3" th:text="${q.checklistRef}"></span>
+															</div>
+															<!-- <div th:unless="${q.observation}">
+																<span>N/A</span>
+															</div> --> 
+																<!-- FINAL OBSERVATION -->
+															
+															<div th:if="${q.finalObservation}" style="margin-top:10px;">
+																<div><strong>Final Observation:</strong></div>
+																<span class="" th:utext="${q.finalObservation}"></span>
+															</div>
+															<div th:if="${q.finalObservation}">
+																<span class=""><strong>Risk Rating:</strong></span>
+																<span class="col-md-3" th:if="${q.riskRating == '1'}">Blocker</span>
+																<span class="col-md-3" th:if="${q.riskRating == '2'}">High</span>
+																<span class="col-md-3" th:if="${q.riskRating == '3'}">Medium</span>
+																<span class="col-md-3" th:if="${q.riskRating == '4'}">Low</span>
+																
+															</div>
+															<div th:unless="${q.finalObservation}">
+																
+															</div>
+														</div>
+														<a th:if="${(#lists.contains(session.USER_ROLES, 'rol024'))}" class="btn btn-danger btn-xs" style="color: #ffff;"
+															th:attr="onclick=|finalObs('${q.quesId}')|">Final Observation</a>
+													</div>
+												</li>
+
+											<!--  observation comment deatils -->
+
+											</th:block>
+											<!-- END timeline item -->
+											<li><i class="fa fa-clock-o bg-gray"></i></li>
+										</ul>
+										<a th:if="${(#lists.contains(session.USER_ROLES, 'rol021'))}"class="btn btn-success" th:href="'view-initiated-audit-internal-audit-report-download?section='+${section}+'&department='+${department}+'&auditId='+${auditId}+'&type=B'+'&auditType='+${auditType}"> Download Report </a>
+										
+									</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	</div>
+	</div>
+	
+	<!-- Modal start -->
+	<div id="finalObsModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title" id="modal-title-id">Final Observation</h4>
+					<button type="button" class="close" data-dismiss="modal">
+						<i class="fa fa-close fa-2x" style="color: #FFF; cursor: pointer;"></i>
+					</button>
+				</div>
+				<div class="" style="margin:15px 0px 0px 15px;">
+					<span id="buttonName"></span>
+					<button type="submit" class="btn btn-success" id="saveResponse">Save</button>
+					
+					<button type="button" class="btn btn-secondary" onclick="giveFinalObs()">Send</button>
+
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="ObsID" />
+					<div class="form-group">
+						<label>Risk Rating:</label>
+						<div class="box-body pad">
+							<select class="form-control" id="riskRatting">
+								<option value=null>Select</option>
+								<option value='1'>Blocker</option>
+								<option value='2'>High</option>
+								<option value='3'>Medium</option>
+								<option value='4'>Low</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Comment :</label>
+						<div class="box-body pad">
+							<textarea id="finalObs" name="finalObs" class="form-control textarea" rows="10" cols="80"></textarea>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+		</div>
+	</div>
+	<!-- Modal End -->
+	
+</div>
+</html>
