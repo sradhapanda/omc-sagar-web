@@ -100,7 +100,9 @@ public class AddAduitPartyNewController {
 		 * restClient.getForObject(env.getEmployeeUrl() +
 		 * "rest-get-organizationName-New", DropDownModel[].class); List<DropDownModel>
 		 * orgList = Arrays.asList(dropDownModel); model.addAttribute("orgList",
-		 * orgList); } catch (RestClientException e) { e.printStackTrace(); }
+		 * orgList); } catch (RestClientException e) { e.printStackTrace(); } 
+		 * 
+		 * 
 		 */
 
 		/*
